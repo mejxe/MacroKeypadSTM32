@@ -19,3 +19,4 @@ build/
 .mxproject
 *.launch
 .DS_Store
+/debug.md

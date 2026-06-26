@@ -23,6 +23,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 extern USBD_HandleTypeDef hUsbDeviceFS;
+#include "stdbool.h"
 #include "usbd_hid.h"
 
 /* USER CODE END Includes */
@@ -30,11 +31,56 @@ extern USBD_HandleTypeDef hUsbDeviceFS;
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
 
+/* Defines ------------------------------------------------------------*/
+#define KEY_1 0x1e // Keyboard 1 and !
+#define KEY_2 0x1f // Keyboard 2 and @
+#define KEY_3 0x20 // Keyboard 3 and #
+#define KEY_0 0x27 // Keyboard 0 and )
+
+#define KEEB_ROWS 3
+#define KEEB_COLS 3
+#define MAXIMUM_MACRO_LEN 16
+typedef enum
+{
+  NONE = 0,
+  LCTRL = 0x01,
+  LSHIFT = 0x02,
+  LALT = 0x04,
+  LSUPER = 0x08,
+  RCTRL = 0x1,
+  RSHIFT = 0x2,
+  RALT = 0x4,
+  RSUPER = 0x8,
+} ModifierEnum;
+typedef uint8_t Modifier;
+
+typedef struct
+{
+  uint8_t macro_len;
+  Modifier modifier;
+  uint8_t macro[MAXIMUM_MACRO_LEN];
+} Macro;
+
+typedef struct
+{
+  uint8_t down_counter;
+  bool logical_state;
+} KeySwitch;
+
+// God struct
+typedef struct
+{
+  KeySwitch Keyboard_State_Array[KEEB_ROWS][KEEB_COLS];
+  Macro Macros_Array[KEEB_ROWS][KEEB_COLS];
+  const uint16_t columns[KEEB_COLS];
+  const uint16_t rows[KEEB_ROWS];
+  volatile Macro *macro_To_Send;
+
+} MacroKeyboard;
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -43,46 +89,143 @@ extern USBD_HandleTypeDef hUsbDeviceFS;
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
+TIM_HandleTypeDef htim2;
 
 /* USER CODE BEGIN PV */
+MacroKeyboard MK_Struct = {
+    .columns = {col0_Pin, col1_Pin, col2_Pin},
+    .rows = {row0_Pin, row1_Pin, row2_Pin},
+    .macro_To_Send = NULL,
+    .Macros_Array = {0},
+};
 
 /* USER CODE END PV */
 
-/* Private function prototypes -----------------------------------------------*/
+/* Private function prototypes
+   -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
+static void MX_TIM2_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-volatile uint8_t button_pressed = 0;
-void send_usb_characters()
+
+// this function will in the future load macros from memory and set them up
+// now it only sets the default ones
+void setup_macros()
+{
+  MK_Struct.Macros_Array[0][0] = (Macro){
+      .macro_len = 1,
+      .macro = {KEY_0},
+  };
+  MK_Struct.Macros_Array[0][1] = (Macro){
+      .macro_len = 1,
+      .macro = {KEY_1},
+  };
+  MK_Struct.Macros_Array[1][0] = (Macro){
+      .macro_len = 1,
+      .macro = {KEY_2},
+  };
+  MK_Struct.Macros_Array[1][1] = (Macro){
+      .macro_len = 1,
+      .macro = {KEY_3},
+  };
+}
+void increment_switch_counter(KeySwitch *key) { key->down_counter += 1; }
+void reset_switch_counter(KeySwitch *key) { key->down_counter = 0; }
+bool should_register_keypress(KeySwitch *key)
+{
+  return (key->down_counter >= 8);
+}
+Macro *get_macro_by_row_col(uint8_t row_index, uint8_t col_index)
+{
+  return &MK_Struct.Macros_Array[row_index][col_index];
+}
+
+void delegate_macro(uint8_t row, uint8_t column)
+{
+  Macro *fetched_macro = get_macro_by_row_col(row, column);
+  if (fetched_macro == NULL)
+  {
+    Error_Handler();
+  }
+  MK_Struct.macro_To_Send = fetched_macro;
+}
+void send_macro_USB(Macro *macro)
 {
   uint8_t report[8] = {0};
-  report[2] = 0x06;
-  report[3] = 0x0B;
-  report[4] = 0x18;
-  report[5] = 0x0D;
-  USBD_HID_SendReport(&hUsbDeviceFS, report, 8);
-  HAL_Delay(50);
-  memset(report, 0, sizeof report);
-  USBD_HID_SendReport(&hUsbDeviceFS, report, 8);
-  button_pressed = 0;
+  report[0] = macro->modifier;
+  for (int i = 0; i < macro->macro_len; i++)
+  {
+    report[i + 2] = macro->macro[i];
+    if (i == 5 || i + 1 == macro->macro_len)
+    {
+      USBD_HID_SendReport(&hUsbDeviceFS, report, 8);
+
+      HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13); // blink the diode while sending
+
+      HAL_Delay(50);
+
+      // flush the usb
+      memset(report, 0, sizeof report);
+      USBD_HID_SendReport(&hUsbDeviceFS, report, 8);
+
+      report[0] = macro->modifier;
+
+      HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
+    }
+  }
 }
+// INTERRUPT HANDLER FROM GPIO PINS
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-  if (GPIO_Pin == GPIO_PIN_0)
+  switch (GPIO_Pin)
   {
+  case GPIO_PIN_0:
     for (volatile int i = 0; i < 10000; i++)
       ;
 
     if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) == GPIO_PIN_RESET)
     {
       HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
-      button_pressed = 1;
+      //    button_pressed = 1;
+      for (volatile int i = 0; i < 10000; i++)
+        ;
     }
+    break;
+  }
+}
+// TIM2 Interrupt generated by overflowing (every 1ms)
+// Scan the keyboard matrix and report presses
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+  for (int i = 0; i < 3; i++)
+  {
+    HAL_GPIO_WritePin(GPIOB, MK_Struct.columns[i],
+                      GPIO_PIN_RESET); // set to logical high
+    for (int j = 0; j < 3; j++)
+    {
+      GPIO_PinState row_in = HAL_GPIO_ReadPin(GPIOB, MK_Struct.rows[j]);
+      if (row_in == GPIO_PIN_RESET)
+      {
+        increment_switch_counter(&MK_Struct.Keyboard_State_Array[j][i]);
+      }
+      else if (row_in == GPIO_PIN_SET &&
+               should_register_keypress(&MK_Struct.Keyboard_State_Array[j][i]))
+      {
+        delegate_macro(j, i);
+        reset_switch_counter(&MK_Struct.Keyboard_State_Array[j][i]);
+      }
+      else
+      {
+        reset_switch_counter(&MK_Struct.Keyboard_State_Array[j][i]);
+      }
+    }
+    HAL_GPIO_WritePin(GPIOB, MK_Struct.columns[i],
+                      GPIO_PIN_SET); // set to logical low
   }
 }
 
@@ -99,13 +242,16 @@ int main(void)
 
   /* USER CODE END 1 */
 
-  /* MCU Configuration--------------------------------------------------------*/
+  /* MCU
+   * Configuration--------------------------------------------------------*/
 
-  /* Reset of all peripherals, Initializes the Flash interface and the Systick.
+  /* Reset of all peripherals, Initializes the Flash interface and the
+   * Systick.
    */
   HAL_Init();
 
   /* USER CODE BEGIN Init */
+  setup_macros();
 
   /* USER CODE END Init */
 
@@ -119,7 +265,11 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_USB_DEVICE_Init();
+  MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
+
+  HAL_TIM_Base_Start_IT(&htim2);
+  HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
 
   /* USER CODE END 2 */
 
@@ -127,15 +277,18 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    HAL_Delay(100);
-
-    /* USER CODE END WHILE */
-
-    /* USER CODE BEGIN 3 */
+    if (MK_Struct.macro_To_Send != NULL)
+    {
+      send_macro_USB(MK_Struct.macro_To_Send);
+      MK_Struct.macro_To_Send = NULL;
+    }
+    HAL_Delay(10);
   }
+  /* USER CODE END WHILE */
+
+  /* USER CODE BEGIN 3 */
   /* USER CODE END 3 */
 }
-
 /**
  * @brief System Clock Configuration
  * @retval None
@@ -182,6 +335,50 @@ void SystemClock_Config(void)
 }
 
 /**
+ * @brief TIM2 Initialization Function
+ * @param None
+ * @retval None
+ */
+static void MX_TIM2_Init(void)
+{
+
+  /* USER CODE BEGIN TIM2_Init 0 */
+
+  /* USER CODE END TIM2_Init 0 */
+
+  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+
+  /* USER CODE BEGIN TIM2_Init 1 */
+  htim2.Init.Prescaler = 479;
+  htim2.Init.Period = 999;
+
+  /* USER CODE END TIM2_Init 1 */
+  htim2.Instance = TIM2;
+  htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+  if (HAL_TIM_ConfigClockSource(&htim2, &sClockSourceConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim2, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM2_Init 2 */
+
+  /* USER CODE END TIM2_Init 2 */
+}
+
+/**
  * @brief GPIO Initialization Function
  * @param None
  * @retval None
@@ -203,8 +400,7 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_2,
-                    GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, col0_Pin | col1_Pin | col2_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin : PC13 */
   GPIO_InitStruct.Pin = GPIO_PIN_13;
@@ -213,30 +409,28 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : PA0 */
-  GPIO_InitStruct.Pin = GPIO_PIN_0;
+  /*Configure GPIO pin : button_Pin */
+  GPIO_InitStruct.Pin = button_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-
-  /*Configure GPIO pins : PB0 PB1 PB2 */
-  GPIO_InitStruct.Pin = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_2;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
+  HAL_GPIO_Init(button_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : col0_Pin col1_Pin col2_Pin */
+  GPIO_InitStruct.Pin = col0_Pin | col1_Pin | col2_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : PB4 PB6 PB8 */
-  GPIO_InitStruct.Pin = GPIO_PIN_4 | GPIO_PIN_6 | GPIO_PIN_8;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
+  /*Configure GPIO pins : row0_Pin row1_Pin row2_Pin */
+  GPIO_InitStruct.Pin = row0_Pin | row1_Pin | row2_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /* USER CODE BEGIN MX_GPIO_Init_2 */
   HAL_NVIC_SetPriority(EXTI0_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(EXTI0_IRQn);
-  HAL_NVIC_EnableIRQ(EXTI4_IRQn);
-  HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
   /* USER CODE END MX_GPIO_Init_2 */
 }
 
@@ -251,10 +445,13 @@ static void MX_GPIO_Init(void)
 void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
-  /* User can add his own implementation to report the HAL error return state */
+  /* User can add his own implementation to report the HAL error return state
+   */
   __disable_irq();
   while (1)
   {
+    HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
+    HAL_Delay(1000);
   }
   /* USER CODE END Error_Handler_Debug */
 }
@@ -270,8 +467,8 @@ void assert_failed(uint8_t *file, uint32_t line)
 {
   /* USER CODE BEGIN 6 */
   /* User can add his own implementation to report the file name and line
-     number, ex: printf("Wrong parameters value: file %s on line %d\r\n", file,
-     line) */
+     number, ex: printf("Wrong parameters value: file %s on line %d\r\n",
+     file, line) */
   /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */
