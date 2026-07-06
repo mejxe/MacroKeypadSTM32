@@ -36,10 +36,38 @@ extern USBD_HandleTypeDef hUsbDeviceFS;
 #define KEY_2 0x1f // Keyboard 2 and @
 #define KEY_3 0x20 // Keyboard 3 and #
 #define KEY_0 0x27 // Keyboard 0 and )
+#define KEY_A 0x04 // Keyboard a and A
+#define KEY_B 0x05 // Keyboard b and B
+#define KEY_C 0x06 // Keyboard c and C
+#define KEY_D 0x07 // Keyboard d and D
+#define KEY_E 0x08 // Keyboard e and E
+#define KEY_F 0x09 // Keyboard f and F
+#define KEY_G 0x0a // Keyboard g and G
+#define KEY_H 0x0b // Keyboard h and H
+#define KEY_I 0x0c // Keyboard i and I
+#define KEY_J 0x0d // Keyboard j and J
+#define KEY_K 0x0e // Keyboard k and K
+#define KEY_L 0x0f // Keyboard l and L
+#define KEY_M 0x10 // Keyboard m and M
+#define KEY_N 0x11 // Keyboard n and N
+#define KEY_O 0x12 // Keyboard o and O
+#define KEY_P 0x13 // Keyboard p and P
+#define KEY_Q 0x14 // Keyboard q and Q
+#define KEY_R 0x15 // Keyboard r and R
+#define KEY_S 0x16 // Keyboard s and S
+#define KEY_T 0x17 // Keyboard t and T
+#define KEY_U 0x18 // Keyboard u and U
+#define KEY_V 0x19 // Keyboard v and V
+#define KEY_W 0x1a // Keyboard w and W
+#define KEY_X 0x1b // Keyboard x and X
+#define KEY_Y 0x1c // Keyboard y and Y
+#define KEY_Z 0x1d // Keyboard z and Z
 
 #define KEEB_ROWS 3
 #define KEEB_COLS 3
-#define MAXIMUM_MACRO_LEN 16
+#define MAX_MACRO_LEN 16
+#define MACRO_VECTOR_SECTOR_STARTD_ADDRESS 0x08040000
+#define USB_SEND_DELAY 15
 typedef enum
 {
   NONE = 0,
@@ -58,7 +86,7 @@ typedef struct
 {
   uint8_t macro_len;
   Modifier modifier;
-  uint8_t macro[MAXIMUM_MACRO_LEN];
+  uint8_t macro[MAX_MACRO_LEN];
 } Macro;
 
 typedef struct
@@ -74,7 +102,7 @@ typedef struct
   Macro Macros_Array[KEEB_ROWS][KEEB_COLS];
   const uint16_t columns[KEEB_COLS];
   const uint16_t rows[KEEB_ROWS];
-  volatile Macro *macro_To_Send;
+  Macro *macro_To_Send;
 
 } MacroKeyboard;
 /* USER CODE END PTD */
@@ -112,27 +140,162 @@ static void MX_TIM2_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+void format_macros_for_writing(Macro *macros, uint8_t *buffer)
+{
+  uint8_t current_byte = 0;
+  for (int i = 0; i < 9; i++)
+  {
+    buffer[current_byte++] = macros[i].macro_len;
+    buffer[current_byte++] = macros[i].modifier;
+    buffer[current_byte++] = 0;
+    buffer[current_byte++] = 0;
+    for (int j = 0; j < MAX_MACRO_LEN; j++)
+    {
+      buffer[current_byte++] = macros[i].macro[j];
+    }
+  }
+}
+uint8_t GetSector(uint32_t StartSectorAddress)
+{
+  if (StartSectorAddress > 0x0803FFFF)
+  {
+    return 6;
+  }
+  else if ((StartSectorAddress > 0x0805FFFF))
+  {
+    return 7;
+  }
+}
+uint32_t Flash_Write_Data(uint32_t StartSectorAddress)
+{
+  const static uint8_t NUMBER_OF_WORDS =
+      (9 * (MAX_MACRO_LEN + 1) / 4) +
+      1; // (1 info byte + 16 macro bytes for each macro) / divided by 4bytes
+         // (word len) + 1 for safety
+  static FLASH_EraseInitTypeDef EraseInitStruct;
+  uint32_t SECTORError;
+  int sofar = 0;
 
+  /* Unlock the Flash to enable the flash control register access *************/
+  HAL_FLASH_Unlock();
+
+  /* Erase the user Flash area */
+
+  /* Get the number of sector to erase from 1st sector */
+
+  uint32_t StartSector = GetSector(StartSectorAddress);
+  uint32_t EndSectorAddress = StartSectorAddress + NUMBER_OF_WORDS * 4;
+  uint32_t EndSector = GetSector(EndSectorAddress);
+
+  /* Fill EraseInit structure*/
+  EraseInitStruct.TypeErase = FLASH_TYPEERASE_SECTORS;
+  EraseInitStruct.VoltageRange = FLASH_VOLTAGE_RANGE_3;
+  EraseInitStruct.Sector = StartSector;
+  EraseInitStruct.NbSectors = (EndSector - StartSector) + 1;
+
+  /* Note: If an erase operation in Flash memory also concerns data in the data
+     or instruction cache, you have to make sure that these data are rewritten
+     before they are accessed during code execution. If this cannot be done
+     safely, it is recommended to flush the caches by setting the DCRST and
+     ICRST bits in the FLASH_CR register. */
+  if (HAL_FLASHEx_Erase(&EraseInitStruct, &SECTORError) != HAL_OK)
+  {
+    return HAL_FLASH_GetError();
+  }
+
+  /* Program the user Flash area word by word
+    (area defined by FLASH_USER_START_ADDR and FLASH_USER_END_ADDR) ***********/
+
+  uint8_t Data[9 * (MAX_MACRO_LEN + 1)] = {0};
+  format_macros_for_writing(*MK_Struct.Macros_Array,
+                            Data); // TODO: FIX MACROS ARRAY TO BE FLAT 2D
+
+  while (sofar < NUMBER_OF_WORDS)
+  {
+    if (HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD, StartSectorAddress,
+                          Data[sofar]) == HAL_OK)
+    {
+      StartSectorAddress +=
+          4; // use StartPageAddress += 2 for half word and 8 for double word
+      sofar++;
+    }
+    else
+    {
+      /* Error occurred while writing data in Flash memory*/
+      return HAL_FLASH_GetError();
+    }
+  }
+
+  /* Lock the Flash to disable the flash control register access (recommended
+     to protect the FLASH memory against possible unwanted operation) *********/
+  HAL_FLASH_Lock();
+
+  return 0;
+}
+
+void read_macros_from_flash(uint32_t start_addr, uint8_t macros_to_read_amnt,
+                            MacroKeyboard *MK_Sruct)
+// first byte = macro_len
+// second byte = macro_modifier
+// 3rd & 4th = padding
+// then 4 * 4 bytes of macro
+{
+  Macro macro_array[9] = {0};
+  uint32_t curr_addr = start_addr;
+  for (int i = 0; i < macros_to_read_amnt; i++)
+  {
+    uint32_t curr_word = *(__IO uint32_t *)curr_addr;
+    uint8_t macro_len =
+        (curr_word >> 24) | 0xFF; // number of bytes needed for macro
+    uint8_t macro_modifier =
+        (curr_word >> 16) | 0xFF; // 1 byte for macro modifier
+    uint8_t macro[MAX_MACRO_LEN] = {0};
+    for (int j = 0; j < MAX_MACRO_LEN / 4; j++)
+    {
+      curr_addr += 4;
+      uint32_t curr_word = *(__IO uint32_t *)curr_addr;
+      macro[j] = (curr_word >> 0) | 0xFF;
+      macro[j] = (curr_word >> 8) | 0xFF;
+      macro[j] = (curr_word >> 16) | 0xFF;
+      macro[j] = (curr_word >> 24) | 0xFF;
+    }
+    macro_array[i] = (Macro){
+        .macro_len = macro_len, .modifier = macro_modifier, .macro = {*macro}};
+    curr_addr += 4;
+  }
+}
+
+void init_macro(uint8_t row, uint8_t col, uint8_t *macro, Modifier modifier)
+{
+  uint8_t macro_len;
+  for (uint8_t i = 0; i < MAX_MACRO_LEN; i++)
+  {
+    if (macro[i] == 0)
+    {
+      macro_len = i;
+    }
+  }
+  if (macro_len > MAX_MACRO_LEN)
+  {
+    return;
+  }
+  MK_Struct.Macros_Array[row][col] = (Macro){macro_len, modifier};
+  memcpy(MK_Struct.Macros_Array[row][col].macro, macro,
+         macro_len * sizeof(uint8_t));
+};
 // this function will in the future load macros from memory and set them up
 // now it only sets the default ones
 void setup_macros()
 {
-  MK_Struct.Macros_Array[0][0] = (Macro){
-      .macro_len = 1,
-      .macro = {KEY_0},
-  };
-  MK_Struct.Macros_Array[0][1] = (Macro){
-      .macro_len = 1,
-      .macro = {KEY_1},
-  };
-  MK_Struct.Macros_Array[1][0] = (Macro){
-      .macro_len = 1,
-      .macro = {KEY_2},
-  };
-  MK_Struct.Macros_Array[1][1] = (Macro){
-      .macro_len = 1,
-      .macro = {KEY_3},
-  };
+  uint8_t macro1[MAX_MACRO_LEN] = {KEY_P, KEY_P, KEY_P, KEY_P,
+                                   KEY_I, KEY_W, KEY_O};
+  uint8_t macro2[MAX_MACRO_LEN] = {KEY_U, KEY_M, KEY_Y, KEY_J};
+  uint8_t macro3[MAX_MACRO_LEN] = {KEY_Q};
+  uint8_t macro4[MAX_MACRO_LEN] = {KEY_C, KEY_H, KEY_U, KEY_J};
+  init_macro(0, 0, macro1, NONE);
+  init_macro(0, 1, macro2, NONE);
+  init_macro(1, 0, macro3, LSUPER);
+  init_macro(1, 1, macro4, NONE);
 }
 void increment_switch_counter(KeySwitch *key) { key->down_counter += 1; }
 void reset_switch_counter(KeySwitch *key) { key->down_counter = 0; }
@@ -154,30 +317,28 @@ void delegate_macro(uint8_t row, uint8_t column)
   }
   MK_Struct.macro_To_Send = fetched_macro;
 }
+void send_report_with_delay(uint8_t *report)
+{
+  USBD_HID_SendReport(&hUsbDeviceFS, report, 8);
+  HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13); // blink the diode while sending
+  HAL_Delay(USB_SEND_DELAY);
+}
 void send_macro_USB(Macro *macro)
 {
   uint8_t report[8] = {0};
-  report[0] = macro->modifier;
   for (int i = 0; i < macro->macro_len; i++)
   {
-    report[i + 2] = macro->macro[i];
-    if (i == 5 || i + 1 == macro->macro_len)
-    {
-      USBD_HID_SendReport(&hUsbDeviceFS, report, 8);
+    report[0] = macro->modifier;
+    report[3] = macro->macro[i];
+    send_report_with_delay(report);
 
-      HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13); // blink the diode while sending
-
-      HAL_Delay(50);
-
-      // flush the usb
-      memset(report, 0, sizeof report);
-      USBD_HID_SendReport(&hUsbDeviceFS, report, 8);
-
-      report[0] = macro->modifier;
-
-      HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
-    }
+    // flush the usb
+    report[0] = 0;
+    report[3] = 0;
+    send_report_with_delay(report);
   }
+  memset(report, 0, sizeof report);
+  USBD_HID_SendReport(&hUsbDeviceFS, report, 8);
 }
 // INTERRUPT HANDLER FROM GPIO PINS
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
@@ -445,7 +606,8 @@ static void MX_GPIO_Init(void)
 void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
-  /* User can add his own implementation to report the HAL error return state
+  /* User can add his own implementation to report the HAL error return
+   * state
    */
   __disable_irq();
   while (1)
