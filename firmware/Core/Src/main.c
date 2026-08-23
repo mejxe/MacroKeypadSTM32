@@ -22,8 +22,9 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "macros.h"
 #include "stdbool.h"
-#include "usb_descriptors.h"
+#include "utils.h"
 #include <stdio.h>
 
 /* USER CODE END Includes */
@@ -32,80 +33,9 @@
 /* USER CODE BEGIN PTD */
 
 /* Defines ------------------------------------------------------------*/
-#define KEY_1 0x1e // Keyboard 1 and !
-#define KEY_2 0x1f // Keyboard 2 and @
-#define KEY_3 0x20 // Keyboard 3 and #
-#define KEY_0 0x27 // Keyboard 0 and )
-#define KEY_A 0x04 // Keyboard a and A
-#define KEY_B 0x05 // Keyboard b and B
-#define KEY_C 0x06 // Keyboard c and C
-#define KEY_D 0x07 // Keyboard d and D
-#define KEY_E 0x08 // Keyboard e and E
-#define KEY_F 0x09 // Keyboard f and F
-#define KEY_G 0x0a // Keyboard g and G
-#define KEY_H 0x0b // Keyboard h and H
-#define KEY_I 0x0c // Keyboard i and I
-#define KEY_J 0x0d // Keyboard j and J
-#define KEY_K 0x0e // Keyboard k and K
-#define KEY_L 0x0f // Keyboard l and L
-#define KEY_M 0x10 // Keyboard m and M
-#define KEY_N 0x11 // Keyboard n and N
-#define KEY_O 0x12 // Keyboard o and O
-#define KEY_P 0x13 // Keyboard p and P
-#define KEY_Q 0x14 // Keyboard q and Q
-#define KEY_R 0x15 // Keyboard r and R
-#define KEY_S 0x16 // Keyboard s and S
-#define KEY_T 0x17 // Keyboard t and T
-#define KEY_U 0x18 // Keyboard u and U
-#define KEY_V 0x19 // Keyboard v and V
-#define KEY_W 0x1a // Keyboard w and W
-#define KEY_X 0x1b // Keyboard x and X
-#define KEY_Y 0x1c // Keyboard y and Y
-#define KEY_Z 0x1d // Keyboard z and Z
 
-#define KEEB_ROWS 3
-#define KEEB_COLS 3
-#define MAX_MACRO_LEN 16
 #define MACRO_VECTOR_SECTOR_STARTD_ADDRESS 0x08040000
-#define USB_SEND_DELAY 15
-#define MAX_KEYCODE = 0x28
-typedef enum
-{
-  NONE = 0,
-  LCTRL = 0x01,
-  LSHIFT = 0x02,
-  LALT = 0x04,
-  LSUPER = 0x08,
-  RCTRL = 0x10,
-  RSHIFT = 0x20,
-  RALT = 0x40,
-  RSUPER = 0x80,
-} ModifierEnum;
-typedef uint8_t Modifier;
 
-typedef struct
-{
-  uint8_t macro_len;
-  Modifier modifier;
-  uint8_t macro[MAX_MACRO_LEN];
-} Macro;
-
-typedef struct
-{
-  uint8_t down_counter;
-  bool logical_state;
-} KeySwitch;
-
-// God struct
-typedef struct
-{
-  KeySwitch Keyboard_State_Array[KEEB_ROWS][KEEB_COLS];
-  Macro Macros_Array[KEEB_ROWS][KEEB_COLS];
-  const uint16_t columns[KEEB_COLS];
-  const uint16_t rows[KEEB_ROWS];
-  Macro *macro_To_Send;
-
-} MacroKeyboard;
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -140,51 +70,7 @@ static void MX_TIM2_Init(void);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
-static const char keycode_names[] = {
-    [KEY_A] = 'a', [KEY_B] = 'b', [KEY_C] = 'c', [KEY_D] = 'd', [KEY_E] = 'e',
-    [KEY_F] = 'f', [KEY_G] = 'g', [KEY_H] = 'h', [KEY_I] = 'i', [KEY_J] = 'j',
-    [KEY_K] = 'k', [KEY_L] = 'l', [KEY_M] = 'm', [KEY_N] = 'n', [KEY_O] = 'o',
-    [KEY_P] = 'p', [KEY_Q] = 'q', [KEY_R] = 'r', [KEY_S] = 's', [KEY_T] = 't',
-    [KEY_U] = 'u', [KEY_V] = 'v', [KEY_W] = 'w', [KEY_X] = 'x', [KEY_Y] = 'y',
-    [KEY_Z] = 'z', [KEY_1] = '1', [KEY_2] = '2', [KEY_3] = '3', [KEY_0] = '0',
-};
-static const uint8_t char_to_keycode[128] = {
-    ['a'] = KEY_A, ['b'] = KEY_B, ['c'] = KEY_C, ['d'] = KEY_D, ['e'] = KEY_E,
-    ['f'] = KEY_F, ['g'] = KEY_G, ['h'] = KEY_H, ['i'] = KEY_I, ['j'] = KEY_J,
-    ['k'] = KEY_K, ['l'] = KEY_L, ['m'] = KEY_M, ['n'] = KEY_N, ['o'] = KEY_O,
-    ['p'] = KEY_P, ['q'] = KEY_Q, ['r'] = KEY_R, ['s'] = KEY_S, ['t'] = KEY_T,
-    ['u'] = KEY_U, ['v'] = KEY_V, ['w'] = KEY_W, ['x'] = KEY_X, ['y'] = KEY_Y,
-    ['z'] = KEY_Z, ['0'] = KEY_0, ['1'] = KEY_1, ['2'] = KEY_2, ['3'] = KEY_3,
-};
-
-uint8_t char_to_keycode_lookup(char c)
-{
-  uint8_t idx = (uint8_t)c;
-  return (idx < 128) ? char_to_keycode[idx] : 0; // 0 = "no key" sentinel
-}
-const char keycode_to_char_lookup(uint8_t keycode)
-{
-  return keycode_names[keycode];
-}
 /* USER CODE BEGIN 0 */
-void format_macros_for_writing(Macro macros[3][3], uint8_t *buffer)
-{
-  uint8_t current_byte = 0;
-  for (int i = 0; i < 3; i++)
-  {
-    for (int j = 0; j < 3; j++)
-    {
-      buffer[current_byte++] = macros[i][j].macro_len;
-      buffer[current_byte++] = macros[i][j].modifier;
-      buffer[current_byte++] = 0;
-      buffer[current_byte++] = 0;
-      for (int k = 0; k < MAX_MACRO_LEN; k++)
-      {
-        buffer[current_byte++] = macros[i][j].macro[k];
-      }
-    }
-  }
-}
 uint8_t GetSector(uint32_t StartSectorAddress)
 {
   if (StartSectorAddress < 0x08004000)
@@ -259,18 +145,6 @@ uint32_t Flash_Write_Data(uint32_t StartSectorAddress)
   return 0;
 }
 
-void init_macro(uint8_t row, uint8_t col, uint8_t *macro, Modifier modifier,
-                uint8_t macro_len, MacroKeyboard *MK_Struct)
-{
-  if (macro_len > MAX_MACRO_LEN)
-  {
-    return;
-  }
-  MK_Struct->Macros_Array[row][col] = (Macro){macro_len, modifier};
-  memcpy(MK_Struct->Macros_Array[row][col].macro, macro,
-         macro_len * sizeof(uint8_t));
-};
-
 void read_macros_from_flash(uint32_t start_addr, MacroKeyboard *MK_Struct)
 // first byte = macro_len
 // second byte = macro_modifier
@@ -305,51 +179,9 @@ void read_macros_from_flash(uint32_t start_addr, MacroKeyboard *MK_Struct)
 
 // this function will in the future load macros from memory and set them up
 // now it only sets the default ones
-void setup_macros()
-{
-  uint8_t macro1[MAX_MACRO_LEN] = {KEY_P, KEY_P, KEY_P, KEY_P,
-                                   KEY_I, KEY_W, KEY_O};
-  uint8_t macro2[MAX_MACRO_LEN] = {KEY_U, KEY_M, KEY_Y, KEY_J};
-  uint8_t macro3[MAX_MACRO_LEN] = {KEY_Q};
-  uint8_t macro4[MAX_MACRO_LEN] = {KEY_C, KEY_H, KEY_U, KEY_J};
-
-  init_macro(0, 0, macro1, LSHIFT, 7, &MK_Struct);
-  init_macro(0, 1, macro2, NONE, 4, &MK_Struct);
-  init_macro(1, 0, macro3, LSUPER, 1, &MK_Struct);
-  init_macro(1, 1, macro4, NONE, 4, &MK_Struct);
-}
 void setup_macros_from_memory()
 {
   read_macros_from_flash(MACRO_VECTOR_SECTOR_STARTD_ADDRESS, &MK_Struct);
-}
-void increment_switch_counter(KeySwitch *key) { key->down_counter += 1; }
-void reset_switch_counter(KeySwitch *key) { key->down_counter = 0; }
-
-bool should_register_keypress(KeySwitch *key)
-{
-  return (key->down_counter >= 8);
-}
-Macro *get_macro_by_row_col(uint8_t row_index, uint8_t col_index)
-{
-  return &MK_Struct.Macros_Array[row_index][col_index];
-}
-
-void delegate_macro(uint8_t row, uint8_t column)
-{
-  Macro *fetched_macro = get_macro_by_row_col(row, column);
-  if (fetched_macro == NULL)
-  {
-    Error_Handler();
-  }
-  MK_Struct.macro_To_Send = fetched_macro;
-}
-void usb_keyboard_send_report(uint8_t *keycode, uint8_t modifier)
-{
-  uint8_t const report_id = 0;
-  tud_hid_n_keyboard_report(ITF_NUM_KEYBOARD, report_id, modifier, keycode);
-  HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin); // blink the diode while sending
-  printf("sending key: %c and modifier: %x!\r\n",
-         keycode_to_char_lookup(keycode[0]), modifier);
 }
 // INTERRUPT HANDLER FROM GPIO PINS
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
@@ -362,7 +194,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
     if (HAL_GPIO_ReadPin(button_GPIO_Port, button_Pin) == GPIO_PIN_RESET)
     {
 
-      Macro *fetched_macro = get_macro_by_row_col(0, 0);
+      Macro *fetched_macro = get_macro_by_row_col(&MK_Struct, 0, 0);
       MK_Struct.macro_To_Send = fetched_macro;
       HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
     }
@@ -388,7 +220,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
       else if (row_in == GPIO_PIN_SET &&
                should_register_keypress(&MK_Struct.Keyboard_State_Array[j][i]))
       {
-        delegate_macro(j, i);
+        delegate_macro(&MK_Struct, j, i);
         reset_switch_counter(&MK_Struct.Keyboard_State_Array[j][i]);
       }
       else
@@ -401,57 +233,11 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   }
 }
 
-bool delay_non_blocking_ms(uint32_t interval)
-{
-  static uint32_t start_ms = 0;
-  if (HAL_GetTick() - start_ms < interval)
-  {
-    return false;
-  }
-  start_ms += interval;
-  return true;
-}
 void print_1s_task(uint32_t *tick)
 {
   if (delay_non_blocking_ms(1000))
   {
     printf("1 sec passed\r\n");
-  }
-}
-
-void macro_task(MacroKeyboard *MK)
-{
-  if (!tud_hid_n_ready(ITF_NUM_KEYBOARD) || MK->macro_To_Send == NULL)
-  {
-    // printf("returning because of: %d %d\r\n", tud_hid_n_ready(ITF_NUM_HID),
-    //           MK->macro_To_Send);
-    return;
-  }
-  uint8_t static macro_curr_index;
-  bool static need_flush;
-
-  uint8_t keycode[6] = {0};
-  uint8_t modifier;
-
-  if (need_flush) // flush with zeroes after every raport
-  {
-    keycode[0] = 0;
-    modifier = 0;
-    usb_keyboard_send_report(keycode, modifier);
-    need_flush = false;
-    macro_curr_index++;
-    if (macro_curr_index >= MK->macro_To_Send->macro_len)
-    {
-      MK->macro_To_Send = NULL;
-      macro_curr_index = 0;
-    }
-  }
-  else
-  {
-    keycode[0] = MK->macro_To_Send->macro[macro_curr_index];
-    modifier = MK->macro_To_Send->modifier;
-    usb_keyboard_send_report(keycode, modifier);
-    need_flush = true;
   }
 }
 
@@ -484,7 +270,7 @@ int main(void)
 
   HAL_Delay(1000);
 
-  setup_macros();
+  setup_macros(&MK_Struct);
 
   // Flash_Write_Data(MACRO_VECTOR_SECTOR_STARTD_ADDRESS);
   /* USER CODE BEGIN SysInit */
@@ -682,34 +468,6 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-uint16_t tud_hid_get_report_cb(uint8_t itf, uint8_t report_id,
-                               hid_report_type_t report_type, uint8_t *buffer,
-                               uint16_t reqlen)
-{
-  // TODO not Implemented
-  (void)itf;
-  (void)report_id;
-  (void)report_type;
-  (void)buffer;
-  (void)reqlen;
-
-  return 0;
-}
-
-// Invoked when received SET_REPORT control request or
-// received data on OUT endpoint ( Report ID = 0, Type = 0 )
-void tud_hid_set_report_cb(uint8_t itf, uint8_t report_id,
-                           hid_report_type_t report_type, uint8_t const *buffer,
-                           uint16_t bufsize)
-{
-  // This example doesn't use multiple report and report ID
-  (void)itf;
-  (void)report_id;
-  (void)report_type;
-
-  // echo back anything we received from host
-  tud_hid_report(0, buffer, bufsize);
-}
 
 /* USER CODE END 4 */
 

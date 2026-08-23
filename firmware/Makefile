@@ -40,6 +40,9 @@ Core/Src/main.c \
 Core/Src/stm32f4xx_it.c \
 Core/Src/stm32f4xx_hal_msp.c \
 Core/Src/usb_descriptors.c \
+Core/Src/macros.c \
+Core/Src/usb_hid.c \
+Core/Src/utils.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.c \
