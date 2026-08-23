@@ -65,6 +65,8 @@ extern "C"
 /* Private defines -----------------------------------------------------------*/
 #define button_Pin GPIO_PIN_0
 #define button_GPIO_Port GPIOA
+#define LED_Pin GPIO_PIN_13
+#define LED_GPIO_Port GPIOC
 #define col0_Pin GPIO_PIN_0
 #define col0_GPIO_Port GPIOB
 #define col1_Pin GPIO_PIN_1

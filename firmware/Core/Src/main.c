@@ -23,6 +23,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "stdbool.h"
+#include "usb_descriptors.h"
 #include <stdio.h>
 
 /* USER CODE END Includes */
@@ -67,6 +68,7 @@
 #define MAX_MACRO_LEN 16
 #define MACRO_VECTOR_SECTOR_STARTD_ADDRESS 0x08040000
 #define USB_SEND_DELAY 15
+#define MAX_KEYCODE = 0x28
 typedef enum
 {
   NONE = 0,
@@ -74,10 +76,10 @@ typedef enum
   LSHIFT = 0x02,
   LALT = 0x04,
   LSUPER = 0x08,
-  RCTRL = 0x1,
-  RSHIFT = 0x2,
-  RALT = 0x4,
-  RSUPER = 0x8,
+  RCTRL = 0x10,
+  RSHIFT = 0x20,
+  RALT = 0x40,
+  RSUPER = 0x80,
 } ModifierEnum;
 typedef uint8_t Modifier;
 
@@ -138,6 +140,32 @@ static void MX_TIM2_Init(void);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
+static const char keycode_names[] = {
+    [KEY_A] = 'a', [KEY_B] = 'b', [KEY_C] = 'c', [KEY_D] = 'd', [KEY_E] = 'e',
+    [KEY_F] = 'f', [KEY_G] = 'g', [KEY_H] = 'h', [KEY_I] = 'i', [KEY_J] = 'j',
+    [KEY_K] = 'k', [KEY_L] = 'l', [KEY_M] = 'm', [KEY_N] = 'n', [KEY_O] = 'o',
+    [KEY_P] = 'p', [KEY_Q] = 'q', [KEY_R] = 'r', [KEY_S] = 's', [KEY_T] = 't',
+    [KEY_U] = 'u', [KEY_V] = 'v', [KEY_W] = 'w', [KEY_X] = 'x', [KEY_Y] = 'y',
+    [KEY_Z] = 'z', [KEY_1] = '1', [KEY_2] = '2', [KEY_3] = '3', [KEY_0] = '0',
+};
+static const uint8_t char_to_keycode[128] = {
+    ['a'] = KEY_A, ['b'] = KEY_B, ['c'] = KEY_C, ['d'] = KEY_D, ['e'] = KEY_E,
+    ['f'] = KEY_F, ['g'] = KEY_G, ['h'] = KEY_H, ['i'] = KEY_I, ['j'] = KEY_J,
+    ['k'] = KEY_K, ['l'] = KEY_L, ['m'] = KEY_M, ['n'] = KEY_N, ['o'] = KEY_O,
+    ['p'] = KEY_P, ['q'] = KEY_Q, ['r'] = KEY_R, ['s'] = KEY_S, ['t'] = KEY_T,
+    ['u'] = KEY_U, ['v'] = KEY_V, ['w'] = KEY_W, ['x'] = KEY_X, ['y'] = KEY_Y,
+    ['z'] = KEY_Z, ['0'] = KEY_0, ['1'] = KEY_1, ['2'] = KEY_2, ['3'] = KEY_3,
+};
+
+uint8_t char_to_keycode_lookup(char c)
+{
+  uint8_t idx = (uint8_t)c;
+  return (idx < 128) ? char_to_keycode[idx] : 0; // 0 = "no key" sentinel
+}
+const char keycode_to_char_lookup(uint8_t keycode)
+{
+  return keycode_names[keycode];
+}
 /* USER CODE BEGIN 0 */
 void format_macros_for_writing(Macro macros[3][3], uint8_t *buffer)
 {
@@ -315,29 +343,13 @@ void delegate_macro(uint8_t row, uint8_t column)
   }
   MK_Struct.macro_To_Send = fetched_macro;
 }
-void send_report_with_delay(uint8_t *report)
+void usb_keyboard_send_report(uint8_t *keycode, uint8_t modifier)
 {
-  // USBD_HID_SendReport(&hUsbDeviceFS, report, 8);
-  HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13); // blink the diode while sending
-  HAL_Delay(USB_SEND_DELAY);
-}
-void send_macro_USB(Macro *macro)
-{
-  // TODO: NOT IMPLEMENTED FOR TINYUSB
-  uint8_t report[8] = {0};
-  for (int i = 0; i < macro->macro_len; i++)
-  {
-    report[0] = macro->modifier;
-    report[3] = macro->macro[i];
-    send_report_with_delay(report);
-
-    // flush the usb
-    report[0] = 0;
-    report[3] = 0;
-    send_report_with_delay(report);
-  }
-  memset(report, 0, sizeof report);
-  // USBD_HID_SendReport(&hUsbDeviceFS, report, 8);
+  uint8_t const report_id = 0;
+  tud_hid_n_keyboard_report(ITF_NUM_KEYBOARD, report_id, modifier, keycode);
+  HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin); // blink the diode while sending
+  printf("sending key: %c and modifier: %x!\r\n",
+         keycode_to_char_lookup(keycode[0]), modifier);
 }
 // INTERRUPT HANDLER FROM GPIO PINS
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
@@ -347,10 +359,12 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
     for (volatile int i = 0; i < 500000; i++)
       ;
 
-    if (HAL_GPIO_ReadPin(GPIOA, button_Pin) == GPIO_PIN_RESET)
+    if (HAL_GPIO_ReadPin(button_GPIO_Port, button_Pin) == GPIO_PIN_RESET)
     {
-      // setup_macros_from_memory();
-      HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
+
+      Macro *fetched_macro = get_macro_by_row_col(0, 0);
+      MK_Struct.macro_To_Send = fetched_macro;
+      HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
     }
 
     __HAL_GPIO_EXTI_CLEAR_IT(button_Pin);
@@ -387,12 +401,57 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   }
 }
 
-void print_1s_task(uint16_t *tick)
+bool delay_non_blocking_ms(uint32_t interval)
 {
-  if (HAL_GetTick() - *tick >= 1000)
+  static uint32_t start_ms = 0;
+  if (HAL_GetTick() - start_ms < interval)
   {
-    *tick += 1000;
-    printf("1 second passed\r\n");
+    return false;
+  }
+  start_ms += interval;
+  return true;
+}
+void print_1s_task(uint32_t *tick)
+{
+  if (delay_non_blocking_ms(1000))
+  {
+    printf("1 sec passed\r\n");
+  }
+}
+
+void macro_task(MacroKeyboard *MK)
+{
+  if (!tud_hid_n_ready(ITF_NUM_KEYBOARD) || MK->macro_To_Send == NULL)
+  {
+    // printf("returning because of: %d %d\r\n", tud_hid_n_ready(ITF_NUM_HID),
+    //           MK->macro_To_Send);
+    return;
+  }
+  uint8_t static macro_curr_index;
+  bool static need_flush;
+
+  uint8_t keycode[6] = {0};
+  uint8_t modifier;
+
+  if (need_flush) // flush with zeroes after every raport
+  {
+    keycode[0] = 0;
+    modifier = 0;
+    usb_keyboard_send_report(keycode, modifier);
+    need_flush = false;
+    macro_curr_index++;
+    if (macro_curr_index >= MK->macro_To_Send->macro_len)
+    {
+      MK->macro_To_Send = NULL;
+      macro_curr_index = 0;
+    }
+  }
+  else
+  {
+    keycode[0] = MK->macro_To_Send->macro[macro_curr_index];
+    modifier = MK->macro_To_Send->modifier;
+    usb_keyboard_send_report(keycode, modifier);
+    need_flush = true;
   }
 }
 
@@ -457,16 +516,12 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  uint16_t tick = 0;
+  uint32_t tick = 0;
   while (1)
   {
     tud_task();
     print_1s_task(&tick);
-    if (MK_Struct.macro_To_Send != NULL)
-    {
-      send_macro_USB(MK_Struct.macro_To_Send);
-      MK_Struct.macro_To_Send = NULL;
-    }
+    macro_task(&MK_Struct);
   }
   /* USER CODE END WHILE */
 

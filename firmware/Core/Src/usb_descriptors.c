@@ -24,6 +24,7 @@
  *
  */
 
+#include "usb_descriptors.h"
 #include "class/hid/hid_device.h"
 #include "tusb.h"
 #include "tusb_config.h"
@@ -87,14 +88,6 @@ uint8_t const *tud_hid_descriptor_report_cb(uint8_t itf)
 //--------------------------------------------------------------------+
 // Configuration Descriptor
 //--------------------------------------------------------------------+
-
-enum
-{
-  ITF_NUM_CDC = 0,
-  ITF_NUM_CDC_DATA,
-  ITF_NUM_HID,
-  ITF_NUM_TOTAL
-};
 
 #define EPNUM_CDC_NOTIF 0x81
 #define EPNUM_CDC_OUT 0x02
