@@ -63,10 +63,12 @@ extern "C"
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+// on board
 #define button_Pin GPIO_PIN_0
 #define button_GPIO_Port GPIOA
 #define LED_Pin GPIO_PIN_13
 #define LED_GPIO_Port GPIOC
+// keyboard
 #define col0_Pin GPIO_PIN_0
 #define col0_GPIO_Port GPIOB
 #define col1_Pin GPIO_PIN_1
@@ -75,10 +77,17 @@ extern "C"
 #define col2_GPIO_Port GPIOB
 #define row0_Pin GPIO_PIN_4
 #define row0_GPIO_Port GPIOB
-#define row1_Pin GPIO_PIN_7
+#define row1_Pin GPIO_PIN_5
 #define row1_GPIO_Port GPIOB
-#define row2_Pin GPIO_PIN_8
+#define row2_Pin GPIO_PIN_6
 #define row2_GPIO_Port GPIOB
+// encoder
+#define encoder_A_Pin GPIO_PIN_7
+#define encoder_B_Pin GPIO_PIN_8
+#define encoder_GPIO_PORT GPIOB
+#define encoder_Button_Pin GPIO_PIN_9
+#define encoder_Button_GND GPIO_PIN_10
+#define encoder_Button_GPIO_PORT GPIOA
 
   /* USER CODE BEGIN Private defines */
 

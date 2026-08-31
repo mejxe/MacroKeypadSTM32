@@ -3,7 +3,6 @@
 
 #include <stdbool.h>
 #include <stdint.h>
-
 #define MAX_KEYCODE = 0x28
 #define MAX_MACRO_LEN 16
 #define KEEB_ROWS 3
@@ -39,12 +38,12 @@ typedef struct
 {
   KeySwitch Keyboard_State_Array[KEEB_ROWS][KEEB_COLS];
   Macro Macros_Array[KEEB_ROWS][KEEB_COLS];
+  Macro Encoder_Macros[2];
   const uint16_t columns[KEEB_COLS];
   const uint16_t rows[KEEB_ROWS];
   Macro *macro_To_Send;
 
 } MacroKeyboard;
-
 void format_macros_for_writing(Macro macros[3][3], uint8_t *buffer);
 void init_macro(uint8_t row, uint8_t col, uint8_t *macro, Modifier modifier,
                 uint8_t macro_len, MacroKeyboard *MK_Struct);
@@ -60,3 +59,5 @@ void reset_switch_counter(KeySwitch *key);
 bool should_register_keypress(KeySwitch *key);
 
 #endif /* MACROS_H */
+
+void keyboard_scan(MacroKeyboard *MK_Struct);
