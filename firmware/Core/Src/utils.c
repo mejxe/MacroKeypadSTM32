@@ -1,5 +1,5 @@
 #include "utils.h"
-#include "stm32f4xx_hal.h"
+#include "main.h"
 
 const char keycode_names[] = {
     [KEY_A] = 'a', [KEY_B] = 'b', [KEY_C] = 'c', [KEY_D] = 'd', [KEY_E] = 'e',
@@ -26,13 +26,68 @@ const char keycode_to_char_lookup(uint8_t keycode)
 {
   return keycode_names[keycode];
 }
-bool delay_non_blocking_ms(uint32_t interval)
+bool delay_non_blocking_ms(uint32_t interval, uint32_t *start_ms)
 {
-  static uint32_t start_ms = 0;
-  if (HAL_GetTick() - start_ms < interval)
+  if (HAL_GetTick() - *start_ms < interval)
   {
     return false;
   }
-  start_ms += interval;
+  (*start_ms) += interval;
   return true;
+}
+bool debounce_ok(uint32_t interval, uint32_t *start_ms)
+{
+  if (HAL_GetTick() - *start_ms < interval)
+  {
+    return false;
+  }
+  *start_ms = interval;
+  return true;
+}
+
+bool button_scan(GPIO_PinState *previous_state, uint8_t *button_ticks,
+                 MacroKeyboard *MK, GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin,
+                 uint32_t *last_ms, bool *held_down)
+{
+  bool pressed = false;
+
+  if (!debounce_ok(30, last_ms))
+    return pressed;
+
+  GPIO_PinState current_state = HAL_GPIO_ReadPin(GPIOx, GPIO_Pin);
+  if (current_state == GPIO_PIN_RESET && current_state == *previous_state)
+  {
+    (*button_ticks)++;
+  }
+  else
+  {
+    *button_ticks = 0;
+    *held_down = false;
+  }
+  if (!(*held_down) && *button_ticks == 3)
+  {
+    *button_ticks = 0;
+    *held_down = true;
+    pressed = true;
+  }
+  *previous_state = current_state;
+  return pressed;
+}
+bool on_board_button_scan(MacroKeyboard *MK)
+{
+  static uint32_t last_ms = 0;
+  static bool held_down = false;
+  static GPIO_PinState prev_state = GPIO_PIN_SET;
+  static uint8_t button_ticks = 0;
+  return button_scan(&prev_state, &button_ticks, MK, button_GPIO_Port,
+                     button_Pin, &last_ms, &held_down);
+}
+bool encoder_button_scan(MacroKeyboard *MK)
+{
+  static uint32_t last_ms = 0;
+  static bool held_down = false;
+  static GPIO_PinState prev_state = GPIO_PIN_SET;
+  static uint8_t button_ticks = 0;
+  return button_scan(&prev_state, &button_ticks, MK, encoder_Button_GPIO_PORT,
+                     encoder_Button_Pin, &last_ms, &held_down);
 }

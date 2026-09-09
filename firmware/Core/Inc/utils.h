@@ -1,5 +1,7 @@
 #ifndef UTILS_H_
 #define UTILS_H_
+#include "macros.h"
+#include "stm32f4xx_hal.h"
 #include <stdbool.h>
 #include <stdint.h>
 #define KEY_1 0x1e // Keyboard 1 and !
@@ -37,6 +39,9 @@ extern const char keycode_names[];
 extern const uint8_t char_to_keycode[128];
 uint8_t char_to_keycode_lookup(char c);
 const char keycode_to_char_lookup(uint8_t keycode);
-bool delay_non_blocking_ms(uint32_t interval);
+bool delay_non_blocking_ms(uint32_t interval, uint32_t *last_ms);
+bool debounce_ok(uint32_t interval, uint32_t *start_ms);
+bool on_board_button_scan(MacroKeyboard *MK);
+bool encoder_button_scan(MacroKeyboard *MK);
 
 #endif // UTILS_H_

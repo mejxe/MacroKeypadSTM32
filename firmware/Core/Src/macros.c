@@ -31,15 +31,16 @@ void format_macros_for_writing(Macro macros[3][3], uint8_t *buffer)
     }
   }
 }
-void init_macro(uint8_t row, uint8_t col, uint8_t *macro, Modifier modifier,
-                uint8_t macro_len, MacroKeyboard *MK_Struct)
+void init_macro(uint8_t row, uint8_t col, uint8_t macro_profile, uint8_t *macro,
+                Modifier modifier, uint8_t macro_len, MacroKeyboard *MK_Struct)
 {
-  if (macro_len > MAX_MACRO_LEN)
+  if (macro_len > MAX_MACRO_LEN || macro_profile > MACRO_PROFILES)
   {
     return;
   }
-  MK_Struct->Macros_Array[row][col] = (Macro){macro_len, modifier};
-  memcpy(MK_Struct->Macros_Array[row][col].macro, macro,
+  MK_Struct->Macros_Array[row][col][macro_profile] =
+      (Macro){macro_len, modifier};
+  memcpy(MK_Struct->Macros_Array[row][col][macro_profile].macro, macro,
          macro_len * sizeof(uint8_t));
 };
 void init_encoder_macro(ROTATION_DIRECTION direction, uint8_t *macro,
@@ -65,19 +66,21 @@ void setup_macros(MacroKeyboard *MK_Struct)
   uint8_t macro7[MAX_MACRO_LEN] = {KEY_2, KEY_0};
   uint8_t macro8[MAX_MACRO_LEN] = {KEY_2, KEY_1};
   uint8_t macro9[MAX_MACRO_LEN] = {KEY_2, KEY_2};
+  uint8_t macro10[MAX_MACRO_LEN] = {KEY_0, KEY_0, KEY_1};
 
   uint8_t macro_left[MAX_MACRO_LEN] = {KEY_0};
   uint8_t macro_right[MAX_MACRO_LEN] = {KEY_1};
 
-  init_macro(0, 0, macro1, NONE, 2, MK_Struct);
-  init_macro(0, 1, macro2, NONE, 2, MK_Struct);
-  init_macro(0, 2, macro3, NONE, 2, MK_Struct);
-  init_macro(1, 0, macro4, NONE, 2, MK_Struct);
-  init_macro(1, 1, macro5, NONE, 2, MK_Struct);
-  init_macro(1, 2, macro6, NONE, 2, MK_Struct);
-  init_macro(2, 0, macro7, NONE, 2, MK_Struct);
-  init_macro(2, 1, macro8, NONE, 2, MK_Struct);
-  init_macro(2, 2, macro9, NONE, 2, MK_Struct);
+  init_macro(0, 0, 0, macro1, NONE, 2, MK_Struct);
+  init_macro(0, 0, 1, macro10, NONE, 3, MK_Struct);
+  init_macro(0, 1, 0, macro2, NONE, 2, MK_Struct);
+  init_macro(0, 2, 0, macro3, NONE, 2, MK_Struct);
+  init_macro(1, 0, 0, macro4, NONE, 2, MK_Struct);
+  init_macro(1, 1, 0, macro5, NONE, 2, MK_Struct);
+  init_macro(1, 2, 0, macro6, NONE, 2, MK_Struct);
+  init_macro(2, 0, 0, macro7, NONE, 2, MK_Struct);
+  init_macro(2, 1, 0, macro8, NONE, 2, MK_Struct);
+  init_macro(2, 2, 0, macro9, NONE, 2, MK_Struct);
 
   init_encoder_macro(DIRECTION_LEFT, macro_left, NONE, 1, MK_Struct);
   init_encoder_macro(DIRECTION_RIGHT, macro_right, NONE, 1, MK_Struct);
@@ -85,7 +88,8 @@ void setup_macros(MacroKeyboard *MK_Struct)
 Macro *get_macro_by_row_col(MacroKeyboard *MK_Struct, uint8_t row_index,
                             uint8_t col_index)
 {
-  return &MK_Struct->Macros_Array[row_index][col_index];
+  return &MK_Struct
+              ->Macros_Array[row_index][col_index][MK_Struct->macro_profile];
 }
 
 void delegate_macro(MacroKeyboard *MK_Struct, uint8_t row, uint8_t column)
@@ -124,4 +128,13 @@ void keyboard_scan(MacroKeyboard *MK_Struct)
     HAL_GPIO_WritePin(GPIOB, MK_Struct->columns[i],
                       GPIO_PIN_SET); // set to logical low
   }
+}
+void cycle_profiles(MacroKeyboard *MK_Struct)
+{
+  if (MK_Struct->macro_profile == MACRO_PROFILES - 1)
+  {
+    MK_Struct->macro_profile = 0;
+    return;
+  }
+  MK_Struct->macro_profile++;
 }

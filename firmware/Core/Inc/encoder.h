@@ -2,6 +2,7 @@
 #define ENCODER_H
 
 #include "macros.h"
+#include "stm32f4xx_hal.h"
 #include <stdbool.h>
 #include <stdint.h>
 typedef enum

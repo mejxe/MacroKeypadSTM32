@@ -1,5 +1,6 @@
 #include "encoder.h"
 #include "main.h"
+#include "utils.h"
 void encoder_reset(Encoder *encoder)
 {
   encoder->previous_state = low_low;
