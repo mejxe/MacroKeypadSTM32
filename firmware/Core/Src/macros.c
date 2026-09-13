@@ -1,7 +1,9 @@
 #include "macros.h"
 #include "encoder.h"
+#include "flash.h"
 #include "stm32f4xx_hal.h"
 #include "utils.h"
+#include <stdio.h>
 #include <string.h>
 
 #define MAX_KEYCODE = 0x28
@@ -13,23 +15,51 @@ bool should_register_keypress(KeySwitch *key)
 {
   return (key->down_counter >= 8);
 }
-void format_macros_for_writing(Macro macros[3][3], uint8_t *buffer)
+
+/*
+ * _Format_
+ * [macro_len, macro_modifier, 0, 0, [macro_len characters padded to
+ * MAX_MACRO_LEN with zeroes]]
+ */
+void format_macros_for_writing(MacroKeyboard *MK, uint8_t *buffer)
 {
-  uint8_t current_byte = 0;
-  for (int i = 0; i < 3; i++)
+  uint32_t current_byte = 0;
+  const uint32_t max_len = 2048;
+  char buf[max_len];
+  uint32_t used_up = 0;
+  for (int p = 0; p < MACRO_PROFILES; p++)
   {
-    for (int j = 0; j < 3; j++)
+    used_up +=
+        snprintf(buf + used_up, max_len - used_up, "PROFILE: %d\r\n", p) + 1;
+    for (int i = 0; i < KEEB_ROWS; i++)
     {
-      buffer[current_byte++] = macros[i][j].macro_len;
-      buffer[current_byte++] = macros[i][j].modifier;
-      buffer[current_byte++] = 0;
-      buffer[current_byte++] = 0;
-      for (int k = 0; k < MAX_MACRO_LEN; k++)
+      for (int j = 0; j < KEEB_COLS; j++)
       {
-        buffer[current_byte++] = macros[i][j].macro[k];
+        used_up += snprintf(buf + used_up, max_len - used_up,
+                            "macro: %d %d\r\n", i, j) +
+                   1;
+        uint8_t mlen = MK->Macros_Array[i][j][p].macro_len;
+        Modifier mmod = MK->Macros_Array[i][j][p].modifier;
+        buffer[current_byte++] = mlen;
+        buffer[current_byte++] = mmod;
+        used_up += snprintf(buf + used_up, max_len - used_up,
+                            "macro_len: %d, macro_mod:  %d\r\n", mlen, mmod) +
+                   1;
+        buffer[current_byte++] = 0;
+        buffer[current_byte++] = 0;
+        for (int k = 0; k < MAX_MACRO_LEN; k++)
+        {
+          char macro_key =
+              keycode_to_char_lookup(MK->Macros_Array[i][j][p].macro[k]);
+          buffer[current_byte++] = MK->Macros_Array[i][j][p].macro[k];
+          used_up +=
+              snprintf(buf + used_up, max_len - used_up, "%c", macro_key) + 1;
+        }
+        used_up += snprintf(buf + used_up, max_len - used_up, "\r\n") + 1;
       }
     }
   }
+  // print_buffered(buf, used_up);
 }
 void init_macro(uint8_t row, uint8_t col, uint8_t macro_profile, uint8_t *macro,
                 Modifier modifier, uint8_t macro_len, MacroKeyboard *MK_Struct)
@@ -55,7 +85,7 @@ void init_encoder_macro(ROTATION_DIRECTION direction, uint8_t *macro,
   memcpy(MK_Struct->Encoder_Macros[direction].macro, macro,
          macro_len * sizeof(uint8_t));
 };
-void setup_macros(MacroKeyboard *MK_Struct)
+void old_setup_macros(MacroKeyboard *MK_Struct)
 {
   uint8_t macro1[MAX_MACRO_LEN] = {KEY_0, KEY_0};
   uint8_t macro2[MAX_MACRO_LEN] = {KEY_0, KEY_1};
@@ -85,6 +115,7 @@ void setup_macros(MacroKeyboard *MK_Struct)
   init_encoder_macro(DIRECTION_LEFT, macro_left, NONE, 1, MK_Struct);
   init_encoder_macro(DIRECTION_RIGHT, macro_right, NONE, 1, MK_Struct);
 }
+void setup_macros(MacroKeyboard *MK) { setup_macros_from_memory(MK); }
 Macro *get_macro_by_row_col(MacroKeyboard *MK_Struct, uint8_t row_index,
                             uint8_t col_index)
 {
@@ -137,4 +168,52 @@ void cycle_profiles(MacroKeyboard *MK_Struct)
     return;
   }
   MK_Struct->macro_profile++;
+}
+
+//
+// debug methods
+//
+int32_t print_macro(Macro macro, char *buf, uint32_t bufsize)
+{
+  int32_t used_buf = 0;
+  used_buf +=
+      snprintf(buf + used_buf, bufsize - used_buf, "len: %d, modifier: %x\r\n",
+               macro.macro_len, macro.modifier) +
+      1;
+  used_buf += snprintf(buf + used_buf, bufsize - used_buf, "macro: ") + 1;
+  for (int i = 0; i < macro.macro_len; i++)
+  {
+    used_buf += snprintf(buf + used_buf, bufsize - used_buf, "%c ",
+                         keycode_to_char_lookup(macro.macro[i])) +
+                1;
+  }
+  used_buf += snprintf(buf + used_buf, bufsize - used_buf, "\r\n") + 1;
+  return used_buf;
+}
+
+void print_macro_array(MacroKeyboard *MK_Struct)
+{
+  uint32_t bufsize = 2048;
+  char buf[bufsize];
+  uint32_t used_up = 0;
+  used_up += snprintf(buf + used_up, bufsize - used_up, "MacroArray {\r\n") + 1;
+  for (int p = 0; p < MACRO_PROFILES; p++)
+  {
+    used_up +=
+        snprintf(buf + used_up, bufsize - used_up, "PROFILE %d\r\n", p) + 1;
+    for (int i = 0; i < KEEB_ROWS; i++)
+    {
+      for (int j = 0; j < KEEB_COLS; j++)
+      {
+        used_up += snprintf(buf + used_up, bufsize - used_up,
+                            "Macro r: %d c: %d p: %d {", i, j, p) +
+                   1;
+        used_up += print_macro(MK_Struct->Macros_Array[i][j][p], buf + used_up,
+                               bufsize - used_up);
+        used_up += snprintf(buf + used_up, bufsize - used_up, "}\r\n") + 1;
+      }
+    }
+  }
+  used_up += snprintf(buf + used_up, bufsize - used_up, "}\r\n") + 1;
+  print_buffered(buf, used_up);
 }

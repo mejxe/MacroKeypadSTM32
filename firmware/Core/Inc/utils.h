@@ -43,5 +43,6 @@ bool delay_non_blocking_ms(uint32_t interval, uint32_t *last_ms);
 bool debounce_ok(uint32_t interval, uint32_t *start_ms);
 bool on_board_button_scan(MacroKeyboard *MK);
 bool encoder_button_scan(MacroKeyboard *MK);
+void print_buffered(char *buf, uint32_t bufsize);
 
 #endif // UTILS_H_

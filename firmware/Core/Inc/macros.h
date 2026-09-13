@@ -47,7 +47,7 @@ typedef struct
   uint8_t macro_profile;
 
 } MacroKeyboard;
-void format_macros_for_writing(Macro macros[3][3], uint8_t *buffer);
+void format_macros_for_writing(MacroKeyboard *MK, uint8_t *buffer);
 void init_macro(uint8_t row, uint8_t col, uint8_t macro_profiles,
                 uint8_t *macro, Modifier modifier, uint8_t macro_len,
                 MacroKeyboard *MK_Struct);
@@ -62,7 +62,9 @@ void reset_switch_counter(KeySwitch *key);
 
 bool should_register_keypress(KeySwitch *key);
 
-#endif /* MACROS_H */
-
 void keyboard_scan(MacroKeyboard *MK_Struct);
 void cycle_profiles(MacroKeyboard *MK_Struct);
+
+void print_macro_array(MacroKeyboard *MK_Struct);
+int32_t print_macro(Macro macro, char *buf, uint32_t bufsize);
+#endif /* MACROS_H */

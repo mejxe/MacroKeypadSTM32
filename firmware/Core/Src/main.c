@@ -18,13 +18,14 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "tusb.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "encoder.h"
+#include "flash.h"
 #include "macros.h"
 #include "stdbool.h"
+#include "tusb.h"
 #include "utils.h"
 #include <stdio.h>
 
@@ -34,8 +35,6 @@
 /* USER CODE BEGIN PTD */
 
 /* Defines ------------------------------------------------------------*/
-
-#define MACRO_VECTOR_SECTOR_STARTD_ADDRESS 0x08040000
 
 /* USER CODE END PTD */
 
@@ -78,148 +77,31 @@ static void MX_TIM2_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-uint8_t GetSector(uint32_t StartSectorAddress)
-{
-  if (StartSectorAddress < 0x08004000)
-    return FLASH_SECTOR_0;
-  if (StartSectorAddress < 0x08008000)
-    return FLASH_SECTOR_1;
-  if (StartSectorAddress < 0x0800C000)
-    return FLASH_SECTOR_2;
-  if (StartSectorAddress < 0x08010000)
-    return FLASH_SECTOR_3;
-  if (StartSectorAddress < 0x08020000)
-    return FLASH_SECTOR_4;
-  if (StartSectorAddress < 0x08040000)
-    return FLASH_SECTOR_5;
-  if (StartSectorAddress < 0x08060000)
-    return FLASH_SECTOR_6;
-  return FLASH_SECTOR_7;
-}
-uint32_t Flash_Write_Data(uint32_t StartSectorAddress)
-{
-  const static uint8_t NUMBER_OF_WORDS =
-      (9 * (MAX_MACRO_LEN + 1)) +
-      1; // (1 info byte + 16 macro bytes for each macro) / divided by 4bytes
-         // (word len) + 1 for safety
-  static FLASH_EraseInitTypeDef EraseInitStruct;
-  uint32_t SECTORError;
-  int sofar = 0;
-
-  /* Unlock the Flash to enable the flash control register access *************/
-  HAL_FLASH_Unlock();
-
-  uint32_t StartSector = GetSector(StartSectorAddress);
-  uint32_t EndSectorAddress = StartSectorAddress + NUMBER_OF_WORDS;
-  uint32_t EndSector = GetSector(EndSectorAddress);
-
-  /* Fill EraseInit structure*/
-  EraseInitStruct.TypeErase = FLASH_TYPEERASE_SECTORS;
-  EraseInitStruct.VoltageRange = FLASH_VOLTAGE_RANGE_3;
-  EraseInitStruct.Sector = StartSector;
-  EraseInitStruct.NbSectors = (EndSector - StartSector) + 1;
-
-  if (HAL_FLASHEx_Erase(&EraseInitStruct, &SECTORError) != HAL_OK)
-  {
-    HAL_FLASH_Lock();
-    return HAL_FLASH_GetError();
-  }
-
-  uint8_t Data[9 * (MAX_MACRO_LEN + 1)] = {0};
-  // format_macros_for_writing(MK_Struct.Macros_Array,
-  //                          Data);
-
-  while (sofar < NUMBER_OF_WORDS)
-  {
-    if (HAL_FLASH_Program(FLASH_TYPEPROGRAM_BYTE, StartSectorAddress,
-                          Data[sofar]) == HAL_OK)
-    {
-      StartSectorAddress += 1;
-      sofar++;
-    }
-    else
-    {
-      /* Error occurred while writing data in Flash memory*/
-      HAL_FLASH_Lock();
-      return HAL_FLASH_GetError();
-    }
-  }
-
-  /* Lock the Flash to disable the flash control register access (recommended
-     to protect the FLASH memory against possible unwanted operation) *********/
-  HAL_FLASH_Lock();
-
-  return 0;
-}
-
-void read_macros_from_flash(uint32_t start_addr, MacroKeyboard *MK_Struct)
-// first byte = macro_len
-// second byte = macro_modifier
-// 3rd & 4th = padding
-// after that: 4 * 4 bytes of macro
-{
-  uint32_t curr_addr = start_addr;
-  for (int i = 0; i < 3; i++)
-  {
-    for (int j = 0; j < 3; j++)
-    {
-      uint32_t curr_word = *(__IO uint32_t *)curr_addr;
-      uint8_t macro_len =
-          (curr_word >> 24) & 0xFF; // number of bytes needed for macro
-      uint8_t macro_modifier =
-          (curr_word >> 16) & 0xFF; // 1 byte for macro modifier
-      uint8_t macro[MAX_MACRO_LEN] = {0};
-      for (int k = 0; k < MAX_MACRO_LEN / 4; k++)
-      {
-        curr_addr += 4;
-        uint32_t curr_word = *(__IO uint32_t *)curr_addr;
-        macro[k * 4] = (curr_word >> 0) & 0xFF;
-        macro[k * 4 + 1] = (curr_word >> 8) & 0xFF;
-        macro[k * 4 + 2] = (curr_word >> 16) & 0xFF;
-        macro[k * 4 + 3] = (curr_word >> 24) & 0xFF;
-      }
-      //      init_macro(i, j, macro, macro_modifier, macro_len, MK_Struct);
-      //      TODO: update to profiles
-      curr_addr += 4;
-    }
-  }
-}
-
-// this function will in the future load macros from memory and set them up
-// now it only sets the default ones
-void setup_macros_from_memory()
-{
-  read_macros_from_flash(MACRO_VECTOR_SECTOR_STARTD_ADDRESS, &MK_Struct);
-}
-// INTERRUPT HANDLER FROM GPIO PINS
-static bool button_press = false;
-static bool encoder_button_press = false;
-
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
-{
-  if (GPIO_Pin == button_Pin)
-  {
-    button_press = true;
-  }
-  else if (GPIO_Pin == encoder_Button_Pin)
-  {
-    encoder_button_press = true;
-  }
-}
+static bool encoder_button_pressed = false;
+static bool onboard_button_pressed = false;
 
 void buttons_scan(MacroKeyboard *MK)
 {
   if (on_board_button_scan(MK))
-  {
-    Macro *fetched_macro = get_macro_by_row_col(MK, 0, 0);
-    MK_Struct.macro_To_Send = fetched_macro;
-  }
+    onboard_button_pressed = true;
   else if (encoder_button_scan(MK))
-  {
-    cycle_profiles(MK);
-  }
+    encoder_button_pressed = true;
 
   HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
+}
+void buttons_task(MacroKeyboard *MK)
+{
+
+  if (encoder_button_pressed)
+  {
+    cycle_profiles(MK);
+    encoder_button_pressed = false;
+  }
+
+  if (onboard_button_pressed)
+  {
+    onboard_button_pressed = false;
+  }
 }
 
 // TIM2 Interrupt generated by overflowing (every 1ms)
@@ -228,16 +110,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   keyboard_scan(&MK_Struct);
   encoder_scan(&Encoder_Struct, &MK_Struct);
   buttons_scan(&MK_Struct);
-}
-
-void print_1s_task(uint32_t *tick)
-{
-  static uint32_t start_ms = 0;
-  const uint32_t interval = 1000;
-  if (delay_non_blocking_ms(interval, &start_ms))
-  {
-    printf("1 sec passed\r\n");
-  }
 }
 
 /* USER CODE END 0 */
@@ -255,6 +127,9 @@ int main(void)
 
   /* MCU
    * Configuration--------------------------------------------------------*/
+  SystemClock_Config();
+  MX_GPIO_Init();
+  MX_TIM2_Init();
 
   /* Reset of all peripherals, Initializes the Flash interface and the
    * Systick.
@@ -264,31 +139,15 @@ int main(void)
   /* USER CODE BEGIN Init */
   /* USER CODE END Init */
 
-  /* Configure the system clock */
-  SystemClock_Config();
-
-  HAL_Delay(1000);
-
-  setup_macros(&MK_Struct);
-
-  // Flash_Write_Data(MACRO_VECTOR_SECTOR_STARTD_ADDRESS);
   /* USER CODE BEGIN SysInit */
 
   /* USER CODE END SysInit */
 
-  /* Initialize all configured peripherals */
-  MX_GPIO_Init();
-  MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
 
   HAL_TIM_Base_Start_IT(&htim2);
 
-  uint8_t macro4[MAX_MACRO_LEN] = {KEY_D, KEY_U, KEY_P, KEY_A};
-
   HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
-  HAL_Delay(2000);
-  HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
-  // init_macro(1, 1, macro4, NONE, 4, &MK_Struct);
 
   // USB NVIC INTERRUPTS
   HAL_NVIC_SetPriority(OTG_FS_IRQn, 5, 0);
@@ -297,19 +156,16 @@ int main(void)
   tusb_rhport_init_t dev_init = {.role = TUSB_ROLE_DEVICE,
                                  .speed = TUSB_SPEED_AUTO};
   tusb_init(0, &dev_init);
+
+  setup_macros(&MK_Struct);
   /* USER CODE END 2 */
 
-  /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  uint32_t tick = 0;
-  uint32_t button_start_ms = 0;
-  uint8_t encoder_presses = 0;
-  uint32_t encoder_start_ms = 0;
   while (1)
   {
     tud_task();
-    print_1s_task(&tick);
     macro_task(&MK_Struct);
+    buttons_task(&MK_Struct);
   }
   /* USER CODE END WHILE */
 

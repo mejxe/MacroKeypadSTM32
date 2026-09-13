@@ -1,4 +1,6 @@
 #include "utils.h"
+#include "class/cdc/cdc_device.h"
+#include "device/usbd.h"
 #include "main.h"
 
 const char keycode_names[] = {
@@ -90,4 +92,25 @@ bool encoder_button_scan(MacroKeyboard *MK)
   static uint8_t button_ticks = 0;
   return button_scan(&prev_state, &button_ticks, MK, encoder_Button_GPIO_PORT,
                      encoder_Button_Pin, &last_ms, &held_down);
+}
+
+void print_buffered(char *buf, uint32_t bufsize)
+{
+  char *p = buf;
+  while (bufsize != 0)
+  {
+    if (tud_cdc_connected())
+    {
+      uint32_t avail = tud_cdc_write_available();
+      if (avail == 0)
+      {
+        tud_cdc_write_flush();
+        tud_task();
+      }
+      uint32_t wrote = tud_cdc_write(p, bufsize > avail ? avail : bufsize);
+      tud_cdc_write_flush();
+      bufsize -= wrote;
+      p += wrote;
+    }
+  }
 }
