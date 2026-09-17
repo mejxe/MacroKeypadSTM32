@@ -1,0 +1,30 @@
+[general]
+profiles_num = 2 # 1, 2 or 3, has to match declared profiles
+
+[[profile]]
+encoder.left = {seq = 'l'}
+encoder.right = {seq = 'r'}
+[profile.macros]
+1 = {seq = '00', modifier = "LCTRL"}
+2 = {seq = '01', modifier = "LCTRL"}
+3 = {seq = '02', modifier = "LCTRL"}
+4 = {seq = '10', modifier = "LCTRL"}
+5 = {seq = '11', modifier = "LCTRL"}
+6 = {seq = '12', modifier = "LCTRL"}
+7 = {seq = '20', modifier = "LCTRL"}
+8 = {seq = '21', modifier = "LCTRL"}
+9 = {seq = '22', modifier = "LCTRL"}
+
+[[profile]]
+encoder.left = {seq = 'r1'}
+encoder.right = {seq = 'r1'}
+[profile.macros]
+1 = {seq = '00', modifier = "LCTRL"}
+2 = {seq = '01', modifier = "LCTRL"}
+3 = {seq = '02', modifier = "LCTRL"}
+4 = {seq = '10', modifier = "LCTRL"}
+5 = {seq = '11', modifier = "LCTRL"}
+6 = {seq = '12', modifier = "LCTRL"}
+7 = {seq = '20', modifier = "LCTRL"}
+8 = {seq = '21', modifier = "LCTRL"}
+9 = {seq = '22', modifier = "LCTRL"}
