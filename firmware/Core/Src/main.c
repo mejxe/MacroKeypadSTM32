@@ -40,6 +40,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+#define MESSAGE_LENGTH_BYTES 668
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -58,6 +59,7 @@ MacroKeyboard MK_Struct = {
     .Macros_Array = {{0}},
     .Encoder_Macros = {0},
     .macro_profile = 0,
+    .active_profiles = 3,
 };
 Encoder Encoder_Struct = {
     .previous_state = low_low,
@@ -77,6 +79,46 @@ static void MX_TIM2_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+void parse_message(uint8_t *msg, uint32_t msg_len)
+{
+  read_macros_from_buf(msg + 6, &MK_Struct);
+  // print_macro_array(&MK_Struct);
+}
+void cdc_task()
+{
+  static uint8_t message_buf[MESSAGE_LENGTH_BYTES];
+  static uint32_t used = 0;
+  static bool magic_number_read = false;
+  if (tud_cdc_available())
+  {
+    uint8_t temp_buf[CFG_TUD_CDC_TX_BUFSIZE];
+    uint32_t read = tud_cdc_read(temp_buf, 64);
+    if (!magic_number_read)
+    {
+      if (temp_buf[0] == 0x25 && temp_buf[1] == 0x07 && temp_buf[2] == 0xa0 &&
+          temp_buf[3] == 0x7a)
+      {
+        printf("Read magic number\r\n");
+        magic_number_read = true;
+      }
+      else
+      {
+        return;
+      }
+    }
+
+    memcpy(message_buf + used, temp_buf, read);
+    used += read;
+
+    if (used >= MESSAGE_LENGTH_BYTES)
+    {
+      parse_message(message_buf, MESSAGE_LENGTH_BYTES);
+      used = 0;
+      memset(message_buf, 0, MESSAGE_LENGTH_BYTES);
+      magic_number_read = false;
+    }
+  }
+}
 static bool encoder_button_pressed = false;
 static bool onboard_button_pressed = false;
 
@@ -158,6 +200,7 @@ int main(void)
   tusb_init(0, &dev_init);
 
   setup_macros(&MK_Struct);
+  // Flash_Write_Data(MACRO_VECTOR_SECTOR_START_ADDRESS, &MK_Struct);
   /* USER CODE END 2 */
 
   /* USER CODE BEGIN WHILE */
@@ -166,6 +209,7 @@ int main(void)
     tud_task();
     macro_task(&MK_Struct);
     buttons_task(&MK_Struct);
+    cdc_task();
   }
   /* USER CODE END WHILE */
 

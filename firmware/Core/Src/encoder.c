@@ -18,12 +18,12 @@ bool encoder_transition(Encoder *encoder, ENCODER_STATE current_state)
     if (encoder->previous_state == low_low && current_state == high_low)
     {
       encoder->previous_state = current_state;
-      encoder->direction = DIRECTION_LEFT;
+      encoder->direction = DIRECTION_RIGHT;
     }
     else if (encoder->previous_state == low_low && current_state == low_high)
     {
       encoder->previous_state = current_state;
-      encoder->direction = DIRECTION_RIGHT;
+      encoder->direction = DIRECTION_LEFT;
     }
     return false;
   }
@@ -74,10 +74,12 @@ void encoder_scan(Encoder *encoder, MacroKeyboard *MK)
     switch (encoder->direction)
     {
     case DIRECTION_LEFT:
-      MK->macro_To_Send = &MK->Encoder_Macros[DIRECTION_LEFT];
+      MK->macro_To_Send =
+          &MK->Encoder_Macros[DIRECTION_LEFT][MK->macro_profile];
       break;
     case DIRECTION_RIGHT:
-      MK->macro_To_Send = &MK->Encoder_Macros[DIRECTION_RIGHT];
+      MK->macro_To_Send =
+          &MK->Encoder_Macros[DIRECTION_RIGHT][MK->macro_profile];
       break;
     case DIRECTION_NONE:
       return; // illegal state btw, probably call error or smthing

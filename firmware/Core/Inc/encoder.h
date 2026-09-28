@@ -20,14 +20,14 @@ typedef enum
   DIRECTION_RIGHT = 1,
   DIRECTION_NONE = 2,
 } ROTATION_DIRECTION;
-static const uint8_t encoder_order_to_state_left[0b101] = {
+static const uint8_t encoder_order_to_state_right[0b101] = {
     [low_low] = 0,
     [high_low] = 1,
     [high_high] = 2,
     [low_high] = 3,
 };
 
-static const uint8_t encoder_order_to_state_right[0b101] = {
+static const uint8_t encoder_order_to_state_left[0b101] = {
     [low_low] = 0,
     [low_high] = 1,
     [high_high] = 2,
