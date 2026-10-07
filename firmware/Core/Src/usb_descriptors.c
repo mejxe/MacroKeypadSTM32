@@ -30,11 +30,9 @@
 #include "tusb_config.h"
 #include <stdio.h>
 
-// Unique PID per example: guarantees re-enumeration on re-flash and a fresh
-// host driver match.
-#define USB_PID 0x4007
+#define USB_PID 0x2507
 
-#define USB_VID 0xCafe
+#define USB_VID 0xA07A
 #define USB_BCD 0x0200
 #define STM32_UUID ((uint32_t *)0x1FFF7A10)
 

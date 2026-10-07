@@ -1,5 +1,7 @@
 #include "flash.h"
 #include "stm32f4xx_hal.h"
+#include "utils.h"
+#include <stdio.h>
 #include <string.h>
 void setup_macros_from_memory(MacroKeyboard *MK)
 {
@@ -76,11 +78,26 @@ uint32_t Flash_Write_Data(uint32_t StartSectorAddress, MacroKeyboard *MK)
   return 0;
 }
 
-void read_macros_from_flash(uint32_t start_addr, MacroKeyboard *MK_Struct)
+void deserialize_macro(uint8_t *buffer, uint32_t buf_pos, Macro *macro_slot)
 {
-  uint8_t buffer[FLASH_MACRO_MEMORY_SIZE];
-  memcpy(buffer, (void *)start_addr, sizeof(buffer));
+  uint8_t macro_len = buffer[buf_pos++];
+  uint8_t macro_modifier = buffer[buf_pos++];
+  buf_pos += 2; // skip padding
+
+  uint8_t macro[MAX_MACRO_LEN] = {0};
+  for (int macro_b = 0; macro_b < MAX_MACRO_LEN; macro_b++)
+  {
+    macro[macro_b] = buffer[buf_pos++];
+  }
+  init_macro(macro_slot, macro, macro_modifier, macro_len);
+}
+
+void read_macros_from_buf(uint8_t *buffer, MacroKeyboard *MK_Struct)
+{
   uint32_t buf_pos = 0;
+
+  MK_Struct->active_profiles = buffer[buf_pos];
+  buf_pos += 2;
 
   for (int p = 0; p < MACRO_PROFILES; p++)
   {
@@ -88,17 +105,70 @@ void read_macros_from_flash(uint32_t start_addr, MacroKeyboard *MK_Struct)
     {
       for (int j = 0; j < KEEB_COLS; j++)
       {
-        uint8_t macro_len = buffer[buf_pos++];
-        uint8_t macro_modifier = buffer[buf_pos++];
-        buf_pos += 2; // skip padding
-
-        uint8_t macro[MAX_MACRO_LEN] = {0};
-        for (int macro_b = 0; macro_b < MAX_MACRO_LEN; macro_b++)
-        {
-          macro[macro_b] = buffer[buf_pos++];
-        }
-        init_macro(i, j, p, macro, macro_modifier, macro_len, MK_Struct);
+        deserialize_macro(buffer, buf_pos, &MK_Struct->Macros_Array[i][j][p]);
+        buf_pos += 20;
       }
     }
+
+    for (int e = 0; e < 2; e++)
+    {
+      deserialize_macro(buffer, buf_pos, &MK_Struct->Encoder_Macros[e][p]);
+      buf_pos += 20;
+    }
   }
+}
+void read_macros_from_flash(uint32_t start_addr, MacroKeyboard *MK_Struct)
+{
+  uint8_t buffer[FLASH_MACRO_MEMORY_SIZE];
+  memcpy(buffer, (void *)start_addr, sizeof(buffer));
+
+  read_macros_from_buf(buffer, MK_Struct);
+}
+
+void serialize_macro(const Macro *macro, uint8_t *buffer, uint32_t current_byte)
+{
+  uint8_t mlen = macro->macro_len;
+  Modifier mmod = macro->modifier;
+  buffer[current_byte++] = mlen;
+  buffer[current_byte++] = mmod;
+
+  buffer[current_byte++] = 0;
+  buffer[current_byte++] = 0;
+  for (int k = 0; k < MAX_MACRO_LEN; k++)
+  {
+    buffer[current_byte++] = macro->macro[k];
+  }
+}
+
+void format_macros_for_writing(MacroKeyboard *MK, uint8_t *buffer)
+{
+  uint32_t current_byte = 0;
+
+  buffer[current_byte++] = MK->active_profiles;
+  buffer[current_byte++] = 0;
+
+  for (int p = 0; p < MACRO_PROFILES; p++)
+  {
+    for (int i = 0; i < KEEB_ROWS; i++)
+    {
+      for (int j = 0; j < KEEB_COLS; j++)
+      {
+        serialize_macro(&MK->Macros_Array[i][j][p], buffer, current_byte);
+        current_byte += 20;
+      }
+    }
+    // print_buffered(buf, used_up);
+    for (int e = 0; e < 2; e++)
+    {
+      serialize_macro(&MK->Encoder_Macros[e][p], buffer, current_byte);
+      current_byte += 20;
+    }
+  }
+}
+
+void reset_macros_and_flash(MacroKeyboard *MK)
+{
+  default_setup_macros(MK);
+  printf("RESET MACROS AND FLASH TO DEFAULT\r\n");
+  Flash_Write_Data(MACRO_VECTOR_SECTOR_START_ADDRESS, MK);
 }

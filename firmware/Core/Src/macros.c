@@ -21,71 +21,19 @@ bool should_register_keypress(KeySwitch *key)
  * [macro_len, macro_modifier, 0, 0, [macro_len characters padded to
  * MAX_MACRO_LEN with zeroes]]
  */
-void format_macros_for_writing(MacroKeyboard *MK, uint8_t *buffer)
-{
-  uint32_t current_byte = 0;
-  const uint32_t max_len = 2048;
-  char buf[max_len];
-  uint32_t used_up = 0;
-  for (int p = 0; p < MACRO_PROFILES; p++)
-  {
-    used_up +=
-        snprintf(buf + used_up, max_len - used_up, "PROFILE: %d\r\n", p) + 1;
-    for (int i = 0; i < KEEB_ROWS; i++)
-    {
-      for (int j = 0; j < KEEB_COLS; j++)
-      {
-        used_up += snprintf(buf + used_up, max_len - used_up,
-                            "macro: %d %d\r\n", i, j) +
-                   1;
-        uint8_t mlen = MK->Macros_Array[i][j][p].macro_len;
-        Modifier mmod = MK->Macros_Array[i][j][p].modifier;
-        buffer[current_byte++] = mlen;
-        buffer[current_byte++] = mmod;
-        used_up += snprintf(buf + used_up, max_len - used_up,
-                            "macro_len: %d, macro_mod:  %d\r\n", mlen, mmod) +
-                   1;
-        buffer[current_byte++] = 0;
-        buffer[current_byte++] = 0;
-        for (int k = 0; k < MAX_MACRO_LEN; k++)
-        {
-          char macro_key =
-              keycode_to_char_lookup(MK->Macros_Array[i][j][p].macro[k]);
-          buffer[current_byte++] = MK->Macros_Array[i][j][p].macro[k];
-          used_up +=
-              snprintf(buf + used_up, max_len - used_up, "%c", macro_key) + 1;
-        }
-        used_up += snprintf(buf + used_up, max_len - used_up, "\r\n") + 1;
-      }
-    }
-  }
-  // print_buffered(buf, used_up);
-}
-void init_macro(uint8_t row, uint8_t col, uint8_t macro_profile, uint8_t *macro,
-                Modifier modifier, uint8_t macro_len, MacroKeyboard *MK_Struct)
-{
-  if (macro_len > MAX_MACRO_LEN || macro_profile > MACRO_PROFILES)
-  {
-    return;
-  }
-  MK_Struct->Macros_Array[row][col][macro_profile] =
-      (Macro){macro_len, modifier};
-  memcpy(MK_Struct->Macros_Array[row][col][macro_profile].macro, macro,
-         macro_len * sizeof(uint8_t));
-};
-void init_encoder_macro(ROTATION_DIRECTION direction, uint8_t *macro,
-                        Modifier modifier, uint8_t macro_len,
-                        MacroKeyboard *MK_Struct)
+
+void init_macro(Macro *macro_slot, uint8_t *macro, Modifier modifier,
+                uint8_t macro_len)
 {
   if (macro_len > MAX_MACRO_LEN)
   {
     return;
   }
-  MK_Struct->Encoder_Macros[direction] = (Macro){macro_len, modifier};
-  memcpy(MK_Struct->Encoder_Macros[direction].macro, macro,
-         macro_len * sizeof(uint8_t));
+  macro_slot->macro_len = macro_len;
+  macro_slot->modifier = modifier;
+  memcpy(macro_slot->macro, macro, macro_len * sizeof(uint8_t));
 };
-void old_setup_macros(MacroKeyboard *MK_Struct)
+void default_setup_macros(MacroKeyboard *MK_Struct)
 {
   uint8_t macro1[MAX_MACRO_LEN] = {KEY_0, KEY_0};
   uint8_t macro2[MAX_MACRO_LEN] = {KEY_0, KEY_1};
@@ -96,26 +44,30 @@ void old_setup_macros(MacroKeyboard *MK_Struct)
   uint8_t macro7[MAX_MACRO_LEN] = {KEY_2, KEY_0};
   uint8_t macro8[MAX_MACRO_LEN] = {KEY_2, KEY_1};
   uint8_t macro9[MAX_MACRO_LEN] = {KEY_2, KEY_2};
-  uint8_t macro10[MAX_MACRO_LEN] = {KEY_0, KEY_0, KEY_1};
 
   uint8_t macro_left[MAX_MACRO_LEN] = {KEY_0};
   uint8_t macro_right[MAX_MACRO_LEN] = {KEY_1};
 
-  init_macro(0, 0, 0, macro1, NONE, 2, MK_Struct);
-  init_macro(0, 0, 1, macro10, NONE, 3, MK_Struct);
-  init_macro(0, 1, 0, macro2, NONE, 2, MK_Struct);
-  init_macro(0, 2, 0, macro3, NONE, 2, MK_Struct);
-  init_macro(1, 0, 0, macro4, NONE, 2, MK_Struct);
-  init_macro(1, 1, 0, macro5, NONE, 2, MK_Struct);
-  init_macro(1, 2, 0, macro6, NONE, 2, MK_Struct);
-  init_macro(2, 0, 0, macro7, NONE, 2, MK_Struct);
-  init_macro(2, 1, 0, macro8, NONE, 2, MK_Struct);
-  init_macro(2, 2, 0, macro9, NONE, 2, MK_Struct);
+  init_macro(&MK_Struct->Macros_Array[0][0][0], macro1, NONE, 2);
+  init_macro(&MK_Struct->Macros_Array[0][1][0], macro2, NONE, 2);
+  init_macro(&MK_Struct->Macros_Array[0][2][0], macro3, NONE, 2);
+  init_macro(&MK_Struct->Macros_Array[1][0][0], macro4, NONE, 2);
+  init_macro(&MK_Struct->Macros_Array[1][1][0], macro5, NONE, 2);
+  init_macro(&MK_Struct->Macros_Array[1][2][0], macro6, NONE, 2);
+  init_macro(&MK_Struct->Macros_Array[2][0][0], macro7, NONE, 2);
+  init_macro(&MK_Struct->Macros_Array[2][1][0], macro8, NONE, 2);
+  init_macro(&MK_Struct->Macros_Array[2][2][0], macro9, NONE, 2);
 
-  init_encoder_macro(DIRECTION_LEFT, macro_left, NONE, 1, MK_Struct);
-  init_encoder_macro(DIRECTION_RIGHT, macro_right, NONE, 1, MK_Struct);
+  init_macro(&MK_Struct->Encoder_Macros[DIRECTION_LEFT][0], macro_left, NONE,
+             1);
+  init_macro(&MK_Struct->Encoder_Macros[DIRECTION_RIGHT][0], macro_right, NONE,
+             1);
 }
-void setup_macros(MacroKeyboard *MK) { setup_macros_from_memory(MK); }
+void setup_macros(MacroKeyboard *MK)
+{
+  // old_setup_macros(MK);
+  setup_macros_from_memory(MK);
+}
 Macro *get_macro_by_row_col(MacroKeyboard *MK_Struct, uint8_t row_index,
                             uint8_t col_index)
 {
@@ -162,7 +114,7 @@ void keyboard_scan(MacroKeyboard *MK_Struct)
 }
 void cycle_profiles(MacroKeyboard *MK_Struct)
 {
-  if (MK_Struct->macro_profile == MACRO_PROFILES - 1)
+  if (MK_Struct->macro_profile == MK_Struct->active_profiles - 1)
   {
     MK_Struct->macro_profile = 0;
     return;
@@ -212,6 +164,15 @@ void print_macro_array(MacroKeyboard *MK_Struct)
                                bufsize - used_up);
         used_up += snprintf(buf + used_up, bufsize - used_up, "}\r\n") + 1;
       }
+    }
+    for (int e = 0; e < 2; e++)
+    {
+      used_up += snprintf(buf + used_up, bufsize - used_up,
+                          "Encoder Macro dir: %d p: %d {", e, p) +
+                 1;
+      used_up += print_macro(MK_Struct->Encoder_Macros[e][p], buf + used_up,
+                             bufsize - used_up);
+      used_up += snprintf(buf + used_up, bufsize - used_up, "}\r\n") + 1;
     }
   }
   used_up += snprintf(buf + used_up, bufsize - used_up, "}\r\n") + 1;

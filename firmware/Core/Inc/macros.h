@@ -40,17 +40,17 @@ typedef struct
 {
   KeySwitch Keyboard_State_Array[KEEB_ROWS][KEEB_COLS];
   Macro Macros_Array[KEEB_ROWS][KEEB_COLS][MACRO_PROFILES];
-  Macro Encoder_Macros[2];
+  Macro Encoder_Macros[2][MACRO_PROFILES];
   const uint16_t columns[KEEB_COLS];
   const uint16_t rows[KEEB_ROWS];
   Macro *macro_To_Send;
   uint8_t macro_profile;
+  uint8_t active_profiles;
 
 } MacroKeyboard;
-void format_macros_for_writing(MacroKeyboard *MK, uint8_t *buffer);
-void init_macro(uint8_t row, uint8_t col, uint8_t macro_profiles,
-                uint8_t *macro, Modifier modifier, uint8_t macro_len,
-                MacroKeyboard *MK_Struct);
+
+void init_macro(Macro *macro_slot, uint8_t *macro, Modifier modifier,
+                uint8_t macro_len);
 Macro *get_macro_by_row_col(MacroKeyboard *MK_Struct, uint8_t row_index,
                             uint8_t col_index);
 
@@ -67,4 +67,5 @@ void cycle_profiles(MacroKeyboard *MK_Struct);
 
 void print_macro_array(MacroKeyboard *MK_Struct);
 int32_t print_macro(Macro macro, char *buf, uint32_t bufsize);
+void default_setup_macros(MacroKeyboard *MK_Struct);
 #endif /* MACROS_H */
