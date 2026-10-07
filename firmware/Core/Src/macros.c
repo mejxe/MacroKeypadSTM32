@@ -33,7 +33,7 @@ void init_macro(Macro *macro_slot, uint8_t *macro, Modifier modifier,
   macro_slot->modifier = modifier;
   memcpy(macro_slot->macro, macro, macro_len * sizeof(uint8_t));
 };
-void old_setup_macros(MacroKeyboard *MK_Struct)
+void default_setup_macros(MacroKeyboard *MK_Struct)
 {
   uint8_t macro1[MAX_MACRO_LEN] = {KEY_0, KEY_0};
   uint8_t macro2[MAX_MACRO_LEN] = {KEY_0, KEY_1};

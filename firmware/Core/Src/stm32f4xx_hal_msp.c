@@ -1,21 +1,21 @@
 /* USER CODE BEGIN Header */
 /**
-  ******************************************************************************
-  * @file         stm32f4xx_hal_msp.c
-  * @brief        This file provides code for the MSP Initialization
-  *               and de-Initialization codes.
-  ******************************************************************************
-  * @attention
-  *
-  * Copyright (c) 2026 STMicroelectronics.
-  * All rights reserved.
-  *
-  * This software is licensed under terms that can be found in the LICENSE file
-  * in the root directory of this software component.
-  * If no LICENSE file comes with this software, it is provided AS-IS.
-  *
-  ******************************************************************************
-  */
+ ******************************************************************************
+ * @file         stm32f4xx_hal_msp.c
+ * @brief        This file provides code for the MSP Initialization
+ *               and de-Initialization codes.
+ ******************************************************************************
+ * @attention
+ *
+ * Copyright (c) 2026 STMicroelectronics.
+ * All rights reserved.
+ *
+ * This software is licensed under terms that can be found in the LICENSE file
+ * in the root directory of this software component.
+ * If no LICENSE file comes with this software, it is provided AS-IS.
+ *
+ ******************************************************************************
+ */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
@@ -57,8 +57,8 @@
 
 /* USER CODE END 0 */
 /**
-  * Initializes the Global MSP.
-  */
+ * Initializes the Global MSP.
+ */
 void HAL_MspInit(void)
 {
 
@@ -77,14 +77,14 @@ void HAL_MspInit(void)
 }
 
 /**
-  * @brief TIM_Base MSP Initialization
-  * This function configures the hardware resources used in this example
-  * @param htim_base: TIM_Base handle pointer
-  * @retval None
-  */
-void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim_base)
+ * @brief TIM_Base MSP Initialization
+ * This function configures the hardware resources used in this example
+ * @param htim_base: TIM_Base handle pointer
+ * @retval None
+ */
+void HAL_TIM_Base_MspInit(TIM_HandleTypeDef *htim_base)
 {
-  if(htim_base->Instance==TIM2)
+  if (htim_base->Instance == TIM2)
   {
     /* USER CODE BEGIN TIM2_MspInit 0 */
 
@@ -97,20 +97,24 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim_base)
     /* USER CODE BEGIN TIM2_MspInit 1 */
 
     /* USER CODE END TIM2_MspInit 1 */
-
   }
-
+  else if (htim_base->Instance == TIM9)
+  {
+    __HAL_RCC_TIM9_CLK_ENABLE();
+    HAL_NVIC_SetPriority(TIM1_BRK_TIM9_IRQn, 0, 0);
+    HAL_NVIC_EnableIRQ(TIM1_BRK_TIM9_IRQn);
+  }
 }
 
 /**
-  * @brief TIM_Base MSP De-Initialization
-  * This function freeze the hardware resources used in this example
-  * @param htim_base: TIM_Base handle pointer
-  * @retval None
-  */
-void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* htim_base)
+ * @brief TIM_Base MSP De-Initialization
+ * This function freeze the hardware resources used in this example
+ * @param htim_base: TIM_Base handle pointer
+ * @retval None
+ */
+void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef *htim_base)
 {
-  if(htim_base->Instance==TIM2)
+  if (htim_base->Instance == TIM2)
   {
     /* USER CODE BEGIN TIM2_MspDeInit 0 */
 
@@ -124,7 +128,6 @@ void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* htim_base)
 
     /* USER CODE END TIM2_MspDeInit 1 */
   }
-
 }
 
 /* USER CODE BEGIN 1 */

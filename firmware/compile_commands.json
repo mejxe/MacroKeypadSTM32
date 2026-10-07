@@ -280,6 +280,41 @@
     "output": "build/utils.o"
   },
   {
+    "file": "Core/Src/buttons.c",
+    "arguments": [
+      "/usr/bin/arm-none-eabi-gcc",
+      "-c",
+      "-mcpu=cortex-m4",
+      "-mthumb",
+      "-mfpu=fpv4-sp-d16",
+      "-mfloat-abi=hard",
+      "-DUSE_HAL_DRIVER",
+      "-DSTM32F411xE",
+      "-ICore/Inc",
+      "-IDrivers/STM32F4xx_HAL_Driver/Inc",
+      "-IDrivers/STM32F4xx_HAL_Driver/Inc/Legacy",
+      "-IDrivers/CMSIS/Device/ST/STM32F4xx/Include",
+      "-IDrivers/CMSIS/Include",
+      "-Ilibs/tinyusb",
+      "-Ilibs/tinyusb/src",
+      "-Og",
+      "-Wall",
+      "-fdata-sections",
+      "-ffunction-sections",
+      "-g",
+      "-gdwarf-2",
+      "-MMD",
+      "-MP",
+      "-MFbuild/buttons.d",
+      "-Wa,-a,-ad,-alms=build/buttons.lst",
+      "Core/Src/buttons.c",
+      "-o",
+      "build/buttons.o"
+    ],
+    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/firmware",
+    "output": "build/buttons.o"
+  },
+  {
     "file": "Core/Src/flash.c",
     "arguments": [
       "/usr/bin/arm-none-eabi-gcc",

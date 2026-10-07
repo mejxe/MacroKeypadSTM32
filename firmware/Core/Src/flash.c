@@ -1,6 +1,7 @@
 #include "flash.h"
 #include "stm32f4xx_hal.h"
 #include "utils.h"
+#include <stdio.h>
 #include <string.h>
 void setup_macros_from_memory(MacroKeyboard *MK)
 {
@@ -163,4 +164,11 @@ void format_macros_for_writing(MacroKeyboard *MK, uint8_t *buffer)
       current_byte += 20;
     }
   }
+}
+
+void reset_macros_and_flash(MacroKeyboard *MK)
+{
+  default_setup_macros(MK);
+  printf("RESET MACROS AND FLASH TO DEFAULT\r\n");
+  Flash_Write_Data(MACRO_VECTOR_SECTOR_START_ADDRESS, MK);
 }

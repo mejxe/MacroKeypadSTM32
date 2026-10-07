@@ -20,4 +20,6 @@ void format_macros_for_writing(MacroKeyboard *MK, uint8_t *buffer);
 void read_macros_from_flash(uint32_t start_addr, MacroKeyboard *MK_Struct);
 void read_macros_from_buf(uint8_t *buffer, MacroKeyboard *MK_Struct);
 
+void reset_macros_and_flash(MacroKeyboard *MK);
+
 #endif /* FLASH_H */

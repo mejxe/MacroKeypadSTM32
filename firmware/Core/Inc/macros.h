@@ -48,6 +48,7 @@ typedef struct
   uint8_t active_profiles;
 
 } MacroKeyboard;
+
 void init_macro(Macro *macro_slot, uint8_t *macro, Modifier modifier,
                 uint8_t macro_len);
 Macro *get_macro_by_row_col(MacroKeyboard *MK_Struct, uint8_t row_index,
@@ -66,4 +67,5 @@ void cycle_profiles(MacroKeyboard *MK_Struct);
 
 void print_macro_array(MacroKeyboard *MK_Struct);
 int32_t print_macro(Macro macro, char *buf, uint32_t bufsize);
+void default_setup_macros(MacroKeyboard *MK_Struct);
 #endif /* MACROS_H */
