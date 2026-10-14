@@ -46,8 +46,6 @@ void macro_task(MacroKeyboard *MK)
 {
   if (!tud_hid_n_ready(ITF_NUM_KEYBOARD) || MK->macro_To_Send == NULL)
   {
-    // printf("returning because of: %d %d\r\n", tud_hid_n_ready(ITF_NUM_HID),
-    //           MK->macro_To_Send);
     return;
   }
   uint8_t static macro_curr_index;

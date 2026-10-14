@@ -36,6 +36,18 @@ typedef struct
   uint8_t macro[MAX_MACRO_LEN];
 } Macro;
 
+typedef struct MacroLink
+{
+  Macro *self;
+  struct MacroLink *next;
+} MacroLink;
+typedef struct
+{
+  uint8_t max_size;
+  uint8_t curr_size;
+  MacroLink *head;
+} MacroQueue;
+
 typedef struct
 {
   KeySwitch Keyboard_State_Array[KEEB_ROWS][KEEB_COLS];
@@ -46,6 +58,7 @@ typedef struct
   Macro *macro_To_Send;
   uint8_t macro_profile;
   uint8_t active_profiles;
+  MacroQueue MQ;
 
 } MacroKeyboard;
 
@@ -54,7 +67,7 @@ void init_macro(Macro *macro_slot, uint8_t *macro, Modifier modifier,
 Macro *get_macro_by_row_col(MacroKeyboard *MK_Struct, uint8_t row_index,
                             uint8_t col_index);
 
-void delegate_macro(MacroKeyboard *MK_Struct, uint8_t row, uint8_t column);
+void delegate_macro(MacroKeyboard *MK_Struct, Macro *macro);
 void macro_task(MacroKeyboard *MK);
 void setup_macros(MacroKeyboard *MK_Struct);
 void increment_switch_counter(KeySwitch *key);
@@ -68,4 +81,8 @@ void cycle_profiles(MacroKeyboard *MK_Struct);
 void print_macro_array(MacroKeyboard *MK_Struct);
 int32_t print_macro(Macro macro, char *buf, uint32_t bufsize);
 void default_setup_macros(MacroKeyboard *MK_Struct);
+
+bool mq_is_empty(MacroQueue *mq);
+Macro *mq_dequeue(MacroQueue *mq);
+void print_mq(MacroKeyboard *MK);
 #endif /* MACROS_H */
