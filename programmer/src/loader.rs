@@ -68,6 +68,6 @@ where
         .collect::<std::result::Result<_, _>>()
         .map_err(serde::de::Error::custom)?;
 
-    pairs.sort_by_key(|(n, _)| *n);
+    pairs.sort_by_key(|(k, _)| (k - 1) % 3);
     Ok(pairs.into_iter().map(|(_, v)| v).collect())
 }
