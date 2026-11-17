@@ -1,0 +1,11 @@
+[package]
+name = "macro_uploader"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+anyhow = "1.0.104"
+serde = { version = "1.0.229", features = ["derive", "serde_derive"] }
+serialport = "4.10.1"
+thiserror = "2.0.20"
+toml = "1.1.6"

@@ -1,0 +1,44 @@
+[general]
+profiles_num = 3 # 1, 2 or 3, has to match declared profiles
+
+[[profile]]
+encoder.left = {seq = 'l00'}
+encoder.right = {seq = 'r00'}
+[profile.macros]
+1 = {seq = 'test1'}
+2 = {seq = 'test2'}
+3 = {seq = 'test3'}
+4 = {seq = '100'}
+5 = {seq = '110'}
+6 = {seq = '120'}
+7 = {seq = '200'}
+8 = {seq = '210'}
+9 = {seq = '220'}
+
+[[profile]]
+encoder.left = {seq = 'l10'}
+encoder.right = {seq = 'l10'}
+[profile.macros]
+1 = {seq = '001'}
+2 = {seq = '011'}
+3 = {seq = '021'}
+4 = {seq = '101'}
+5 = {seq = '111'}
+6 = {seq = '121'}
+7 = {seq = '201'}
+8 = {seq = '211'}
+9 = {seq = '221'}
+
+[[profile]]
+encoder.left = {seq = 'l20'}
+encoder.right = {seq = 'l20'}
+[profile.macros]
+1 = {seq = '002'}
+2 = {seq = '012'}
+3 = {seq = '022'}
+4 = {seq = '102'}
+5 = {seq = '112'}
+6 = {seq = '122'}
+7 = {seq = '202'}
+8 = {seq = '212'}
+9 = {seq = '222'}
