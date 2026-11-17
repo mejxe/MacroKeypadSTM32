@@ -1,0 +1,3507 @@
+ARM GAS  /tmp/cct4789Y.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 2
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"usbd.c"
+  16              		.text
+  17              		.section	.text.tud_vendor_control_xfer_cb,"ax",%progbits
+  18              		.align	1
+  19              		.p2align 2,,3
+  20              		.weak	tud_vendor_control_xfer_cb
+  21              		.syntax unified
+  22              		.thumb
+  23              		.thumb_func
+  25              	tud_vendor_control_xfer_cb:
+  26              		@ args = 0, pretend = 0, frame = 0
+  27              		@ frame_needed = 0, uses_anonymous_args = 0
+  28              		@ link register save eliminated.
+  29 0000 0020     		movs	r0, #0
+  30 0002 7047     		bx	lr
+  32              		.thumb_set tud_vendor_control_xfer_cb.localalias,tud_vendor_control_xfer_cb
+  33              		.section	.text.configuration_reset,"ax",%progbits
+  34              		.align	1
+  35              		.p2align 2,,3
+  36              		.syntax unified
+  37              		.thumb
+  38              		.thumb_func
+  40              	configuration_reset:
+  41              		@ args = 0, pretend = 0, frame = 0
+  42              		@ frame_needed = 0, uses_anonymous_args = 0
+  43 0000 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+  44 0004 204E     		ldr	r6, .L25
+  45 0006 3278     		ldrb	r2, [r6]	@ zero_extendqisi2
+  46 0008 FF2A     		cmp	r2, #255
+  47 000a 24D0     		beq	.L4
+  48 000c 0024     		movs	r4, #0
+  49 000e DFF88480 		ldr	r8, .L25+12
+  50 0012 0746     		mov	r7, r0
+  51 0014 2146     		mov	r1, r4
+  52 0016 0EE0     		b	.L10
+  53              	.L24:
+  54 0018 D8F80030 		ldr	r3, [r8]
+  55 001c 13EB8003 		adds	r3, r3, r0, lsl #2
+  56 0020 10D0     		beq	.L6
+  57 0022 DB68     		ldr	r3, [r3, #12]
+  58              	.L8:
+  59 0024 3846     		mov	r0, r7
+  60 0026 9847     		blx	r3
+ARM GAS  /tmp/cct4789Y.s 			page 2
+
+
+  61 0028 3278     		ldrb	r2, [r6]	@ zero_extendqisi2
+  62 002a 0134     		adds	r4, r4, #1
+  63 002c 531C     		adds	r3, r2, #1
+  64 002e DBB2     		uxtb	r3, r3
+  65 0030 E1B2     		uxtb	r1, r4
+  66 0032 8B42     		cmp	r3, r1
+  67 0034 0FD9     		bls	.L4
+  68              	.L10:
+  69 0036 9142     		cmp	r1, r2
+  70 0038 04EBC400 		add	r0, r4, r4, lsl #3
+  71 003c ECD3     		bcc	.L24
+  72 003e 01D1     		bne	.L6
+  73 0040 124B     		ldr	r3, .L25+4
+  74 0042 EFE7     		b	.L8
+  75              	.L6:
+  76 0044 4FF0E023 		mov	r3, #-536813568
+  77 0048 D3F8F03D 		ldr	r3, [r3, #3568]
+  78 004c DB07     		lsls	r3, r3, #31
+  79 004e 00D5     		bpl	.L3
+  80              		.syntax unified
+  81              	@ 634 "libs/tinyusb/device/usbd.c" 1
+  82 0050 00BE     		BKPT #0
+  83              	
+  84              	@ 0 "" 2
+  85              		.thumb
+  86              		.syntax unified
+  87              	.L3:
+  88 0052 BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+  89              	.L4:
+  90 0056 4422     		movs	r2, #68
+  91 0058 0D48     		ldr	r0, .L25+8
+  92 005a 0021     		movs	r1, #0
+  93 005c FFF7FEFF 		bl	memset
+  94 0060 0B4A     		ldr	r2, .L25+8
+  95 0062 4FF0FF33 		mov	r3, #-1
+  96 0066 C2F81B30 		str	r3, [r2, #27]	@ unaligned
+  97 006a C2F81F30 		str	r3, [r2, #31]	@ unaligned
+  98 006e C2F82330 		str	r3, [r2, #35]	@ unaligned
+  99 0072 C2F82730 		str	r3, [r2, #39]	@ unaligned
+ 100 0076 C2F82B30 		str	r3, [r2, #43]	@ unaligned
+ 101 007a C2F82F30 		str	r3, [r2, #47]	@ unaligned
+ 102 007e C2F83330 		str	r3, [r2, #51]	@ unaligned
+ 103 0082 BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 104              	.L26:
+ 105 0086 00BF     		.align	2
+ 106              	.L25:
+ 107 0088 00000000 		.word	_app_driver_count
+ 108 008c 00000000 		.word	cdcd_reset
+ 109 0090 00000000 		.word	_usbd_dev
+ 110 0094 00000000 		.word	_app_driver
+ 112              		.section	.text.usbd_int_set,"ax",%progbits
+ 113              		.align	1
+ 114              		.p2align 2,,3
+ 115              		.global	usbd_int_set
+ 116              		.syntax unified
+ 117              		.thumb
+ 118              		.thumb_func
+ARM GAS  /tmp/cct4789Y.s 			page 3
+
+
+ 120              	usbd_int_set:
+ 121              		@ args = 0, pretend = 0, frame = 0
+ 122              		@ frame_needed = 0, uses_anonymous_args = 0
+ 123              		@ link register save eliminated.
+ 124 0000 044B     		ldr	r3, .L29
+ 125 0002 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 126 0004 10B1     		cbz	r0, .L28
+ 127 0006 1846     		mov	r0, r3
+ 128 0008 FFF7FEBF 		b	dcd_int_enable
+ 129              	.L28:
+ 130 000c 1846     		mov	r0, r3
+ 131 000e FFF7FEBF 		b	dcd_int_disable
+ 132              	.L30:
+ 133 0012 00BF     		.align	2
+ 134              	.L29:
+ 135 0014 00000000 		.word	_usbd_rhport
+ 137              		.section	.text.tud_event_hook_cb,"ax",%progbits
+ 138              		.align	1
+ 139              		.p2align 2,,3
+ 140              		.weak	tud_event_hook_cb
+ 141              		.syntax unified
+ 142              		.thumb
+ 143              		.thumb_func
+ 145              	tud_event_hook_cb:
+ 146              		@ args = 0, pretend = 0, frame = 0
+ 147              		@ frame_needed = 0, uses_anonymous_args = 0
+ 148              		@ link register save eliminated.
+ 149 0000 7047     		bx	lr
+ 151 0002 00BF     		.section	.text.tud_sof_cb,"ax",%progbits
+ 152              		.align	1
+ 153              		.p2align 2,,3
+ 154              		.weak	tud_sof_cb
+ 155              		.syntax unified
+ 156              		.thumb
+ 157              		.thumb_func
+ 159              	tud_sof_cb:
+ 160              		@ args = 0, pretend = 0, frame = 0
+ 161              		@ frame_needed = 0, uses_anonymous_args = 0
+ 162              		@ link register save eliminated.
+ 163 0000 7047     		bx	lr
+ 165 0002 00BF     		.section	.text.tud_descriptor_bos_cb,"ax",%progbits
+ 166              		.align	1
+ 167              		.p2align 2,,3
+ 168              		.weak	tud_descriptor_bos_cb
+ 169              		.syntax unified
+ 170              		.thumb
+ 171              		.thumb_func
+ 173              	tud_descriptor_bos_cb:
+ 174              		@ args = 0, pretend = 0, frame = 0
+ 175              		@ frame_needed = 0, uses_anonymous_args = 0
+ 176              		@ link register save eliminated.
+ 177 0000 0020     		movs	r0, #0
+ 178 0002 7047     		bx	lr
+ 180              		.section	.text.tud_descriptor_device_qualifier_cb,"ax",%progbits
+ 181              		.align	1
+ 182              		.p2align 2,,3
+ 183              		.weak	tud_descriptor_device_qualifier_cb
+ARM GAS  /tmp/cct4789Y.s 			page 4
+
+
+ 184              		.syntax unified
+ 185              		.thumb
+ 186              		.thumb_func
+ 188              	tud_descriptor_device_qualifier_cb:
+ 189              		@ args = 0, pretend = 0, frame = 0
+ 190              		@ frame_needed = 0, uses_anonymous_args = 0
+ 191              		@ link register save eliminated.
+ 192 0000 0020     		movs	r0, #0
+ 193 0002 7047     		bx	lr
+ 195              		.section	.text.tud_descriptor_other_speed_configuration_cb,"ax",%progbits
+ 196              		.align	1
+ 197              		.p2align 2,,3
+ 198              		.weak	tud_descriptor_other_speed_configuration_cb
+ 199              		.syntax unified
+ 200              		.thumb
+ 201              		.thumb_func
+ 203              	tud_descriptor_other_speed_configuration_cb:
+ 204              		@ args = 0, pretend = 0, frame = 0
+ 205              		@ frame_needed = 0, uses_anonymous_args = 0
+ 206              		@ link register save eliminated.
+ 207 0000 0020     		movs	r0, #0
+ 208 0002 7047     		bx	lr
+ 210              		.section	.text.tud_mount_cb,"ax",%progbits
+ 211              		.align	1
+ 212              		.p2align 2,,3
+ 213              		.weak	tud_mount_cb
+ 214              		.syntax unified
+ 215              		.thumb
+ 216              		.thumb_func
+ 218              	tud_mount_cb:
+ 219              		@ args = 0, pretend = 0, frame = 0
+ 220              		@ frame_needed = 0, uses_anonymous_args = 0
+ 221              		@ link register save eliminated.
+ 222 0000 7047     		bx	lr
+ 224 0002 00BF     		.section	.text.tud_umount_cb,"ax",%progbits
+ 225              		.align	1
+ 226              		.p2align 2,,3
+ 227              		.weak	tud_umount_cb
+ 228              		.syntax unified
+ 229              		.thumb
+ 230              		.thumb_func
+ 232              	tud_umount_cb:
+ 233              		@ args = 0, pretend = 0, frame = 0
+ 234              		@ frame_needed = 0, uses_anonymous_args = 0
+ 235              		@ link register save eliminated.
+ 236 0000 7047     		bx	lr
+ 238 0002 00BF     		.section	.text.tud_suspend_cb,"ax",%progbits
+ 239              		.align	1
+ 240              		.p2align 2,,3
+ 241              		.weak	tud_suspend_cb
+ 242              		.syntax unified
+ 243              		.thumb
+ 244              		.thumb_func
+ 246              	tud_suspend_cb:
+ 247              		@ args = 0, pretend = 0, frame = 0
+ 248              		@ frame_needed = 0, uses_anonymous_args = 0
+ 249              		@ link register save eliminated.
+ARM GAS  /tmp/cct4789Y.s 			page 5
+
+
+ 250 0000 7047     		bx	lr
+ 252 0002 00BF     		.section	.text.tud_resume_cb,"ax",%progbits
+ 253              		.align	1
+ 254              		.p2align 2,,3
+ 255              		.weak	tud_resume_cb
+ 256              		.syntax unified
+ 257              		.thumb
+ 258              		.thumb_func
+ 260              	tud_resume_cb:
+ 261              		@ args = 0, pretend = 0, frame = 0
+ 262              		@ frame_needed = 0, uses_anonymous_args = 0
+ 263              		@ link register save eliminated.
+ 264 0000 7047     		bx	lr
+ 266 0002 00BF     		.section	.text.dcd_deinit,"ax",%progbits
+ 267              		.align	1
+ 268              		.p2align 2,,3
+ 269              		.weak	dcd_deinit
+ 270              		.syntax unified
+ 271              		.thumb
+ 272              		.thumb_func
+ 274              	dcd_deinit:
+ 275              		@ args = 0, pretend = 0, frame = 0
+ 276              		@ frame_needed = 0, uses_anonymous_args = 0
+ 277              		@ link register save eliminated.
+ 278 0000 0020     		movs	r0, #0
+ 279 0002 7047     		bx	lr
+ 281              		.section	.text.dcd_connect,"ax",%progbits
+ 282              		.align	1
+ 283              		.p2align 2,,3
+ 284              		.weak	dcd_connect
+ 285              		.syntax unified
+ 286              		.thumb
+ 287              		.thumb_func
+ 289              	dcd_connect:
+ 290              		@ args = 0, pretend = 0, frame = 0
+ 291              		@ frame_needed = 0, uses_anonymous_args = 0
+ 292              		@ link register save eliminated.
+ 293 0000 7047     		bx	lr
+ 295 0002 00BF     		.section	.text.dcd_disconnect,"ax",%progbits
+ 296              		.align	1
+ 297              		.p2align 2,,3
+ 298              		.weak	dcd_disconnect
+ 299              		.syntax unified
+ 300              		.thumb
+ 301              		.thumb_func
+ 303              	dcd_disconnect:
+ 304              		@ args = 0, pretend = 0, frame = 0
+ 305              		@ frame_needed = 0, uses_anonymous_args = 0
+ 306              		@ link register save eliminated.
+ 307 0000 7047     		bx	lr
+ 309 0002 00BF     		.section	.text.dcd_dcache_clean,"ax",%progbits
+ 310              		.align	1
+ 311              		.p2align 2,,3
+ 312              		.weak	dcd_dcache_clean
+ 313              		.syntax unified
+ 314              		.thumb
+ 315              		.thumb_func
+ARM GAS  /tmp/cct4789Y.s 			page 6
+
+
+ 317              	dcd_dcache_clean:
+ 318              		@ args = 0, pretend = 0, frame = 0
+ 319              		@ frame_needed = 0, uses_anonymous_args = 0
+ 320              		@ link register save eliminated.
+ 321 0000 0120     		movs	r0, #1
+ 322 0002 7047     		bx	lr
+ 324              		.section	.text.dcd_dcache_invalidate,"ax",%progbits
+ 325              		.align	1
+ 326              		.p2align 2,,3
+ 327              		.weak	dcd_dcache_invalidate
+ 328              		.syntax unified
+ 329              		.thumb
+ 330              		.thumb_func
+ 332              	dcd_dcache_invalidate:
+ 333              		@ args = 0, pretend = 0, frame = 0
+ 334              		@ frame_needed = 0, uses_anonymous_args = 0
+ 335              		@ link register save eliminated.
+ 336 0000 0120     		movs	r0, #1
+ 337 0002 7047     		bx	lr
+ 339              		.section	.text.dcd_dcache_clean_invalidate,"ax",%progbits
+ 340              		.align	1
+ 341              		.p2align 2,,3
+ 342              		.weak	dcd_dcache_clean_invalidate
+ 343              		.syntax unified
+ 344              		.thumb
+ 345              		.thumb_func
+ 347              	dcd_dcache_clean_invalidate:
+ 348              		@ args = 0, pretend = 0, frame = 0
+ 349              		@ frame_needed = 0, uses_anonymous_args = 0
+ 350              		@ link register save eliminated.
+ 351 0000 0120     		movs	r0, #1
+ 352 0002 7047     		bx	lr
+ 354              		.section	.text.usbd_app_driver_get_cb,"ax",%progbits
+ 355              		.align	1
+ 356              		.p2align 2,,3
+ 357              		.weak	usbd_app_driver_get_cb
+ 358              		.syntax unified
+ 359              		.thumb
+ 360              		.thumb_func
+ 362              	usbd_app_driver_get_cb:
+ 363              		@ args = 0, pretend = 0, frame = 0
+ 364              		@ frame_needed = 0, uses_anonymous_args = 0
+ 365              		@ link register save eliminated.
+ 366 0000 0023     		movs	r3, #0
+ 367 0002 0370     		strb	r3, [r0]
+ 368 0004 1846     		mov	r0, r3
+ 369 0006 7047     		bx	lr
+ 371              		.section	.text.dcd_edpt_xfer_fifo,"ax",%progbits
+ 372              		.align	1
+ 373              		.p2align 2,,3
+ 374              		.weak	dcd_edpt_xfer_fifo
+ 375              		.syntax unified
+ 376              		.thumb
+ 377              		.thumb_func
+ 379              	dcd_edpt_xfer_fifo:
+ 380              		@ args = 4, pretend = 0, frame = 0
+ 381              		@ frame_needed = 0, uses_anonymous_args = 0
+ARM GAS  /tmp/cct4789Y.s 			page 7
+
+
+ 382              		@ link register save eliminated.
+ 383 0000 0020     		movs	r0, #0
+ 384 0002 7047     		bx	lr
+ 386              		.section	.text.dcd_configure,"ax",%progbits
+ 387              		.align	1
+ 388              		.p2align 2,,3
+ 389              		.weak	dcd_configure
+ 390              		.syntax unified
+ 391              		.thumb
+ 392              		.thumb_func
+ 394              	dcd_configure:
+ 395              		@ args = 0, pretend = 0, frame = 0
+ 396              		@ frame_needed = 0, uses_anonymous_args = 0
+ 397              		@ link register save eliminated.
+ 398 0000 0020     		movs	r0, #0
+ 399 0002 7047     		bx	lr
+ 401              		.section	.text.tud_speed_get,"ax",%progbits
+ 402              		.align	1
+ 403              		.p2align 2,,3
+ 404              		.global	tud_speed_get
+ 405              		.syntax unified
+ 406              		.thumb
+ 407              		.thumb_func
+ 409              	tud_speed_get:
+ 410              		@ args = 0, pretend = 0, frame = 0
+ 411              		@ frame_needed = 0, uses_anonymous_args = 0
+ 412              		@ link register save eliminated.
+ 413 0000 014B     		ldr	r3, .L50
+ 414 0002 587E     		ldrb	r0, [r3, #25]	@ zero_extendqisi2
+ 415 0004 7047     		bx	lr
+ 416              	.L51:
+ 417 0006 00BF     		.align	2
+ 418              	.L50:
+ 419 0008 00000000 		.word	_usbd_dev
+ 421              		.section	.text.tud_connected,"ax",%progbits
+ 422              		.align	1
+ 423              		.p2align 2,,3
+ 424              		.global	tud_connected
+ 425              		.syntax unified
+ 426              		.thumb
+ 427              		.thumb_func
+ 429              	tud_connected:
+ 430              		@ args = 0, pretend = 0, frame = 0
+ 431              		@ frame_needed = 0, uses_anonymous_args = 0
+ 432              		@ link register save eliminated.
+ 433 0000 024B     		ldr	r3, .L53
+ 434 0002 187D     		ldrb	r0, [r3, #20]	@ zero_extendqisi2
+ 435 0004 0038     		subs	r0, r0, #0
+ 436 0006 18BF     		it	ne
+ 437 0008 0120     		movne	r0, #1
+ 438 000a 7047     		bx	lr
+ 439              	.L54:
+ 440              		.align	2
+ 441              	.L53:
+ 442 000c 00000000 		.word	_usbd_dev
+ 444              		.section	.text.tud_mounted,"ax",%progbits
+ 445              		.align	1
+ARM GAS  /tmp/cct4789Y.s 			page 8
+
+
+ 446              		.p2align 2,,3
+ 447              		.global	tud_mounted
+ 448              		.syntax unified
+ 449              		.thumb
+ 450              		.thumb_func
+ 452              	tud_mounted:
+ 453              		@ args = 0, pretend = 0, frame = 0
+ 454              		@ frame_needed = 0, uses_anonymous_args = 0
+ 455              		@ link register save eliminated.
+ 456 0000 024B     		ldr	r3, .L56
+ 457 0002 187E     		ldrb	r0, [r3, #24]	@ zero_extendqisi2
+ 458 0004 0038     		subs	r0, r0, #0
+ 459 0006 18BF     		it	ne
+ 460 0008 0120     		movne	r0, #1
+ 461 000a 7047     		bx	lr
+ 462              	.L57:
+ 463              		.align	2
+ 464              	.L56:
+ 465 000c 00000000 		.word	_usbd_dev
+ 467              		.section	.text.tud_suspended,"ax",%progbits
+ 468              		.align	1
+ 469              		.p2align 2,,3
+ 470              		.global	tud_suspended
+ 471              		.syntax unified
+ 472              		.thumb
+ 473              		.thumb_func
+ 475              	tud_suspended:
+ 476              		@ args = 0, pretend = 0, frame = 0
+ 477              		@ frame_needed = 0, uses_anonymous_args = 0
+ 478              		@ link register save eliminated.
+ 479 0000 024B     		ldr	r3, .L59
+ 480 0002 987D     		ldrb	r0, [r3, #22]	@ zero_extendqisi2
+ 481 0004 0038     		subs	r0, r0, #0
+ 482 0006 18BF     		it	ne
+ 483 0008 0120     		movne	r0, #1
+ 484 000a 7047     		bx	lr
+ 485              	.L60:
+ 486              		.align	2
+ 487              	.L59:
+ 488 000c 00000000 		.word	_usbd_dev
+ 490              		.section	.text.tud_remote_wakeup,"ax",%progbits
+ 491              		.align	1
+ 492              		.p2align 2,,3
+ 493              		.global	tud_remote_wakeup
+ 494              		.syntax unified
+ 495              		.thumb
+ 496              		.thumb_func
+ 498              	tud_remote_wakeup:
+ 499              		@ args = 0, pretend = 0, frame = 0
+ 500              		@ frame_needed = 0, uses_anonymous_args = 0
+ 501 0000 08B5     		push	{r3, lr}
+ 502 0002 074B     		ldr	r3, .L70
+ 503 0004 9A7D     		ldrb	r2, [r3, #22]	@ zero_extendqisi2
+ 504 0006 12B1     		cbz	r2, .L64
+ 505 0008 DB7D     		ldrb	r3, [r3, #23]	@ zero_extendqisi2
+ 506 000a 9B07     		lsls	r3, r3, #30
+ 507 000c 01D4     		bmi	.L69
+ARM GAS  /tmp/cct4789Y.s 			page 9
+
+
+ 508              	.L64:
+ 509 000e 0020     		movs	r0, #0
+ 510 0010 08BD     		pop	{r3, pc}
+ 511              	.L69:
+ 512 0012 044B     		ldr	r3, .L70+4
+ 513 0014 1878     		ldrb	r0, [r3]	@ zero_extendqisi2
+ 514 0016 FFF7FEFF 		bl	dcd_remote_wakeup
+ 515 001a 0120     		movs	r0, #1
+ 516 001c 08BD     		pop	{r3, pc}
+ 517              	.L71:
+ 518 001e 00BF     		.align	2
+ 519              	.L70:
+ 520 0020 00000000 		.word	_usbd_dev
+ 521 0024 00000000 		.word	_usbd_rhport
+ 523              		.section	.text.tud_disconnect,"ax",%progbits
+ 524              		.align	1
+ 525              		.p2align 2,,3
+ 526              		.global	tud_disconnect
+ 527              		.syntax unified
+ 528              		.thumb
+ 529              		.thumb_func
+ 531              	tud_disconnect:
+ 532              		@ args = 0, pretend = 0, frame = 0
+ 533              		@ frame_needed = 0, uses_anonymous_args = 0
+ 534 0000 08B5     		push	{r3, lr}
+ 535 0002 034B     		ldr	r3, .L74
+ 536 0004 1878     		ldrb	r0, [r3]	@ zero_extendqisi2
+ 537 0006 FFF7FEFF 		bl	dcd_disconnect
+ 538 000a 0120     		movs	r0, #1
+ 539 000c 08BD     		pop	{r3, pc}
+ 540              	.L75:
+ 541 000e 00BF     		.align	2
+ 542              	.L74:
+ 543 0010 00000000 		.word	_usbd_rhport
+ 545              		.section	.text.tud_connect,"ax",%progbits
+ 546              		.align	1
+ 547              		.p2align 2,,3
+ 548              		.global	tud_connect
+ 549              		.syntax unified
+ 550              		.thumb
+ 551              		.thumb_func
+ 553              	tud_connect:
+ 554              		@ args = 0, pretend = 0, frame = 0
+ 555              		@ frame_needed = 0, uses_anonymous_args = 0
+ 556 0000 08B5     		push	{r3, lr}
+ 557 0002 034B     		ldr	r3, .L78
+ 558 0004 1878     		ldrb	r0, [r3]	@ zero_extendqisi2
+ 559 0006 FFF7FEFF 		bl	dcd_connect
+ 560 000a 0120     		movs	r0, #1
+ 561 000c 08BD     		pop	{r3, pc}
+ 562              	.L79:
+ 563 000e 00BF     		.align	2
+ 564              	.L78:
+ 565 0010 00000000 		.word	_usbd_rhport
+ 567              		.section	.text.tud_sof_cb_enable,"ax",%progbits
+ 568              		.align	1
+ 569              		.p2align 2,,3
+ARM GAS  /tmp/cct4789Y.s 			page 10
+
+
+ 570              		.global	tud_sof_cb_enable
+ 571              		.syntax unified
+ 572              		.thumb
+ 573              		.thumb_func
+ 575              	tud_sof_cb_enable:
+ 576              		@ args = 0, pretend = 0, frame = 0
+ 577              		@ frame_needed = 0, uses_anonymous_args = 0
+ 578              		@ link register save eliminated.
+ 579 0000 0F4B     		ldr	r3, .L85
+ 580 0002 1049     		ldr	r1, .L85+4
+ 581 0004 93F800C0 		ldrb	ip, [r3]	@ zero_extendqisi2
+ 582 0008 8B7E     		ldrb	r3, [r1, #26]	@ zero_extendqisi2
+ 583 000a 8A7E     		ldrb	r2, [r1, #26]	@ zero_extendqisi2
+ 584 000c 60B1     		cbz	r0, .L81
+ 585 000e 42F00102 		orr	r2, r2, #1
+ 586 0012 8A76     		strb	r2, [r1, #26]
+ 587              	.L82:
+ 588 0014 8A7E     		ldrb	r2, [r1, #26]	@ zero_extendqisi2
+ 589 0016 B3FA83F3 		clz	r3, r3
+ 590 001a B2FA82F2 		clz	r2, r2
+ 591 001e 5209     		lsrs	r2, r2, #5
+ 592 0020 5B09     		lsrs	r3, r3, #5
+ 593 0022 9A42     		cmp	r2, r3
+ 594 0024 04D1     		bne	.L84
+ 595 0026 7047     		bx	lr
+ 596              	.L81:
+ 597 0028 02F0FE02 		and	r2, r2, #254
+ 598 002c 8A76     		strb	r2, [r1, #26]
+ 599 002e F1E7     		b	.L82
+ 600              	.L84:
+ 601 0030 897E     		ldrb	r1, [r1, #26]	@ zero_extendqisi2
+ 602 0032 0039     		subs	r1, r1, #0
+ 603 0034 6046     		mov	r0, ip
+ 604 0036 18BF     		it	ne
+ 605 0038 0121     		movne	r1, #1
+ 606 003a FFF7FEBF 		b	dcd_sof_enable
+ 607              	.L86:
+ 608 003e 00BF     		.align	2
+ 609              	.L85:
+ 610 0040 00000000 		.word	_usbd_rhport
+ 611 0044 00000000 		.word	_usbd_dev
+ 613              		.section	.text.tud_inited,"ax",%progbits
+ 614              		.align	1
+ 615              		.p2align 2,,3
+ 616              		.global	tud_inited
+ 617              		.syntax unified
+ 618              		.thumb
+ 619              		.thumb_func
+ 621              	tud_inited:
+ 622              		@ args = 0, pretend = 0, frame = 0
+ 623              		@ frame_needed = 0, uses_anonymous_args = 0
+ 624              		@ link register save eliminated.
+ 625 0000 024B     		ldr	r3, .L88
+ 626 0002 1878     		ldrb	r0, [r3]	@ zero_extendqisi2
+ 627 0004 FF38     		subs	r0, r0, #255
+ 628 0006 18BF     		it	ne
+ 629 0008 0120     		movne	r0, #1
+ARM GAS  /tmp/cct4789Y.s 			page 11
+
+
+ 630 000a 7047     		bx	lr
+ 631              	.L89:
+ 632              		.align	2
+ 633              	.L88:
+ 634 000c 00000000 		.word	_usbd_rhport
+ 636              		.section	.text.tud_configure,"ax",%progbits
+ 637              		.align	1
+ 638              		.p2align 2,,3
+ 639              		.global	tud_configure
+ 640              		.syntax unified
+ 641              		.thumb
+ 642              		.thumb_func
+ 644              	tud_configure:
+ 645              		@ args = 0, pretend = 0, frame = 0
+ 646              		@ frame_needed = 0, uses_anonymous_args = 0
+ 647 0000 08B5     		push	{r3, lr}
+ 648 0002 FFF7FEFF 		bl	dcd_configure
+ 649 0006 08BD     		pop	{r3, pc}
+ 651              		.section	.text.tud_rhport_init,"ax",%progbits
+ 652              		.align	1
+ 653              		.p2align 2,,3
+ 654              		.global	tud_rhport_init
+ 655              		.syntax unified
+ 656              		.thumb
+ 657              		.thumb_func
+ 659              	tud_rhport_init:
+ 660              		@ args = 0, pretend = 0, frame = 0
+ 661              		@ frame_needed = 0, uses_anonymous_args = 0
+ 662 0000 2DE9F047 		push	{r4, r5, r6, r7, r8, r9, r10, lr}
+ 663 0004 2C4E     		ldr	r6, .L129
+ 664 0006 3378     		ldrb	r3, [r6]	@ zero_extendqisi2
+ 665 0008 FF2B     		cmp	r3, #255
+ 666 000a 3FD1     		bne	.L102
+ 667 000c 0029     		cmp	r1, #0
+ 668 000e 41D0     		beq	.L127
+ 669 0010 4422     		movs	r2, #68
+ 670 0012 8A46     		mov	r10, r1
+ 671 0014 8146     		mov	r9, r0
+ 672 0016 0021     		movs	r1, #0
+ 673 0018 2848     		ldr	r0, .L129+4
+ 674 001a 294D     		ldr	r5, .L129+8
+ 675 001c 294F     		ldr	r7, .L129+12
+ 676 001e FFF7FEFF 		bl	memset
+ 677 0022 294B     		ldr	r3, .L129+16
+ 678 0024 2948     		ldr	r0, .L129+20
+ 679 0026 0024     		movs	r4, #0
+ 680 0028 1C70     		strb	r4, [r3]
+ 681 002a FFF7FEFF 		bl	tu_fifo_clear
+ 682 002e 284B     		ldr	r3, .L129+24
+ 683 0030 284A     		ldr	r2, .L129+28
+ 684 0032 1A60     		str	r2, [r3]
+ 685 0034 2846     		mov	r0, r5
+ 686 0036 FFF7FEFF 		bl	usbd_app_driver_get_cb
+ 687 003a 2A78     		ldrb	r2, [r5]	@ zero_extendqisi2
+ 688 003c 3860     		str	r0, [r7]
+ 689 003e FF2A     		cmp	r2, #255
+ 690 0040 28D0     		beq	.L127
+ARM GAS  /tmp/cct4789Y.s 			page 12
+
+
+ 691 0042 A046     		mov	r8, r4
+ 692 0044 2146     		mov	r1, r4
+ 693              	.L96:
+ 694 0046 8A42     		cmp	r2, r1
+ 695 0048 2FD9     		bls	.L97
+ 696 004a 3B68     		ldr	r3, [r7]
+ 697 004c 1B19     		adds	r3, r3, r4
+ 698 004e 21D0     		beq	.L127
+ 699 0050 5B68     		ldr	r3, [r3, #4]
+ 700 0052 FBB1     		cbz	r3, .L127
+ 701              	.L99:
+ 702 0054 9847     		blx	r3
+ 703 0056 2A78     		ldrb	r2, [r5]	@ zero_extendqisi2
+ 704 0058 08F10108 		add	r8, r8, #1
+ 705 005c 531C     		adds	r3, r2, #1
+ 706 005e DBB2     		uxtb	r3, r3
+ 707 0060 5FFA88F1 		uxtb	r1, r8
+ 708 0064 8B42     		cmp	r3, r1
+ 709 0066 04F12404 		add	r4, r4, #36
+ 710 006a ECD8     		bhi	.L96
+ 711 006c 5146     		mov	r1, r10
+ 712 006e 4846     		mov	r0, r9
+ 713 0070 86F80090 		strb	r9, [r6]
+ 714 0074 FFF7FEFF 		bl	dcd_init
+ 715 0078 0446     		mov	r4, r0
+ 716 007a C8B9     		cbnz	r0, .L100
+ 717 007c 4FF0E023 		mov	r3, #-536813568
+ 718 0080 D3F8F03D 		ldr	r3, [r3, #3568]
+ 719 0084 DB07     		lsls	r3, r3, #31
+ 720 0086 02D5     		bpl	.L93
+ 721              		.syntax unified
+ 722              	@ 579 "libs/tinyusb/device/usbd.c" 1
+ 723 0088 00BE     		BKPT #0
+ 724              	
+ 725              	@ 0 "" 2
+ 726              		.thumb
+ 727              		.syntax unified
+ 728 008a 00E0     		b	.L93
+ 729              	.L102:
+ 730 008c 0124     		movs	r4, #1
+ 731              	.L93:
+ 732 008e 2046     		mov	r0, r4
+ 733 0090 BDE8F087 		pop	{r4, r5, r6, r7, r8, r9, r10, pc}
+ 734              	.L127:
+ 735 0094 4FF0E023 		mov	r3, #-536813568
+ 736 0098 D3F8F03D 		ldr	r3, [r3, #3568]
+ 737 009c DA07     		lsls	r2, r3, #31
+ 738 009e 00D5     		bpl	.L95
+ 739              		.syntax unified
+ 740              	@ 566 "libs/tinyusb/device/usbd.c" 1
+ 741 00a0 00BE     		BKPT #0
+ 742              	
+ 743              	@ 0 "" 2
+ 744              		.thumb
+ 745              		.syntax unified
+ 746              	.L95:
+ 747 00a2 0024     		movs	r4, #0
+ARM GAS  /tmp/cct4789Y.s 			page 13
+
+
+ 748 00a4 2046     		mov	r0, r4
+ 749 00a6 BDE8F087 		pop	{r4, r5, r6, r7, r8, r9, r10, pc}
+ 750              	.L97:
+ 751 00aa F3D1     		bne	.L127
+ 752 00ac 0A4B     		ldr	r3, .L129+32
+ 753 00ae D1E7     		b	.L99
+ 754              	.L100:
+ 755 00b0 4846     		mov	r0, r9
+ 756 00b2 FFF7FEFF 		bl	dcd_int_enable
+ 757 00b6 EAE7     		b	.L93
+ 758              	.L130:
+ 759              		.align	2
+ 760              	.L129:
+ 761 00b8 00000000 		.word	_usbd_rhport
+ 762 00bc 00000000 		.word	_usbd_dev
+ 763 00c0 00000000 		.word	_app_driver_count
+ 764 00c4 00000000 		.word	_app_driver
+ 765 00c8 00000000 		.word	_usbd_queued_setup
+ 766 00cc 08000000 		.word	_usbd_qdef+8
+ 767 00d0 00000000 		.word	_usbd_q
+ 768 00d4 00000000 		.word	_usbd_qdef
+ 769 00d8 00000000 		.word	cdcd_init
+ 771              		.section	.text.tud_deinit,"ax",%progbits
+ 772              		.align	1
+ 773              		.p2align 2,,3
+ 774              		.global	tud_deinit
+ 775              		.syntax unified
+ 776              		.thumb
+ 777              		.thumb_func
+ 779              	tud_deinit:
+ 780              		@ args = 0, pretend = 0, frame = 0
+ 781              		@ frame_needed = 0, uses_anonymous_args = 0
+ 782 0000 2DE9F047 		push	{r4, r5, r6, r7, r8, r9, r10, lr}
+ 783 0004 294E     		ldr	r6, .L154
+ 784 0006 3378     		ldrb	r3, [r6]	@ zero_extendqisi2
+ 785 0008 FF2B     		cmp	r3, #255
+ 786 000a 4BD0     		beq	.L140
+ 787 000c 284B     		ldr	r3, .L154+4
+ 788 000e 0446     		mov	r4, r0
+ 789 0010 93F818A0 		ldrb	r10, [r3, #24]	@ zero_extendqisi2
+ 790 0014 FFF7FEFF 		bl	dcd_int_disable
+ 791 0018 2046     		mov	r0, r4
+ 792 001a FFF7FEFF 		bl	dcd_disconnect
+ 793 001e 2046     		mov	r0, r4
+ 794 0020 FFF7FEFF 		bl	dcd_deinit
+ 795 0024 0546     		mov	r5, r0
+ 796 0026 08B3     		cbz	r0, .L133
+ 797 0028 DFF89080 		ldr	r8, .L154+16
+ 798 002c 98F80020 		ldrb	r2, [r8]	@ zero_extendqisi2
+ 799 0030 FF2A     		cmp	r2, #255
+ 800 0032 25D0     		beq	.L135
+ 801 0034 0024     		movs	r4, #0
+ 802 0036 DFF88890 		ldr	r9, .L154+20
+ 803 003a 2746     		mov	r7, r4
+ 804 003c 2146     		mov	r1, r4
+ 805 003e 0FE0     		b	.L134
+ 806              	.L153:
+ARM GAS  /tmp/cct4789Y.s 			page 14
+
+
+ 807 0040 D9F80030 		ldr	r3, [r9]
+ 808 0044 1B19     		adds	r3, r3, r4
+ 809 0046 01D0     		beq	.L138
+ 810 0048 9B68     		ldr	r3, [r3, #8]
+ 811 004a 6BB9     		cbnz	r3, .L139
+ 812              	.L138:
+ 813 004c 98F80020 		ldrb	r2, [r8]	@ zero_extendqisi2
+ 814 0050 0137     		adds	r7, r7, #1
+ 815 0052 531C     		adds	r3, r2, #1
+ 816 0054 F9B2     		uxtb	r1, r7
+ 817 0056 DBB2     		uxtb	r3, r3
+ 818 0058 9942     		cmp	r1, r3
+ 819 005a 04F12404 		add	r4, r4, #36
+ 820 005e 0FD2     		bcs	.L135
+ 821              	.L134:
+ 822 0060 9142     		cmp	r1, r2
+ 823 0062 EDD3     		bcc	.L153
+ 824 0064 F2D1     		bne	.L138
+ 825 0066 134B     		ldr	r3, .L154+8
+ 826              	.L139:
+ 827 0068 9847     		blx	r3
+ 828 006a EFE7     		b	.L138
+ 829              	.L133:
+ 830 006c 4FF0E023 		mov	r3, #-536813568
+ 831 0070 D3F8F03D 		ldr	r3, [r3, #3568]
+ 832 0074 DB07     		lsls	r3, r3, #31
+ 833 0076 00D5     		bpl	.L132
+ 834              		.syntax unified
+ 835              	@ 597 "libs/tinyusb/device/usbd.c" 1
+ 836 0078 00BE     		BKPT #0
+ 837              	
+ 838              	@ 0 "" 2
+ 839              		.thumb
+ 840              		.syntax unified
+ 841              	.L132:
+ 842 007a 2846     		mov	r0, r5
+ 843 007c BDE8F087 		pop	{r4, r5, r6, r7, r8, r9, r10, pc}
+ 844              	.L135:
+ 845 0080 4422     		movs	r2, #68
+ 846 0082 0B48     		ldr	r0, .L154+4
+ 847 0084 0021     		movs	r1, #0
+ 848 0086 FFF7FEFF 		bl	memset
+ 849 008a 0B4B     		ldr	r3, .L154+12
+ 850 008c 0022     		movs	r2, #0
+ 851 008e 1A60     		str	r2, [r3]
+ 852 0090 FF23     		movs	r3, #255
+ 853 0092 3370     		strb	r3, [r6]
+ 854 0094 BAF1000F 		cmp	r10, #0
+ 855 0098 EFD0     		beq	.L132
+ 856 009a FFF7FEFF 		bl	tud_umount_cb
+ 857 009e 2846     		mov	r0, r5
+ 858 00a0 BDE8F087 		pop	{r4, r5, r6, r7, r8, r9, r10, pc}
+ 859              	.L140:
+ 860 00a4 0125     		movs	r5, #1
+ 861 00a6 2846     		mov	r0, r5
+ 862 00a8 BDE8F087 		pop	{r4, r5, r6, r7, r8, r9, r10, pc}
+ 863              	.L155:
+ARM GAS  /tmp/cct4789Y.s 			page 15
+
+
+ 864              		.align	2
+ 865              	.L154:
+ 866 00ac 00000000 		.word	_usbd_rhport
+ 867 00b0 00000000 		.word	_usbd_dev
+ 868 00b4 00000000 		.word	cdcd_deinit
+ 869 00b8 00000000 		.word	_usbd_q
+ 870 00bc 00000000 		.word	_app_driver_count
+ 871 00c0 00000000 		.word	_app_driver
+ 873              		.section	.text.tud_task_event_ready,"ax",%progbits
+ 874              		.align	1
+ 875              		.p2align 2,,3
+ 876              		.global	tud_task_event_ready
+ 877              		.syntax unified
+ 878              		.thumb
+ 879              		.thumb_func
+ 881              	tud_task_event_ready:
+ 882              		@ args = 0, pretend = 0, frame = 0
+ 883              		@ frame_needed = 0, uses_anonymous_args = 0
+ 884              		@ link register save eliminated.
+ 885 0000 064B     		ldr	r3, .L159
+ 886 0002 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 887 0004 FF2B     		cmp	r3, #255
+ 888 0006 07D0     		beq	.L158
+ 889 0008 054B     		ldr	r3, .L159+4
+ 890 000a 1B68     		ldr	r3, [r3]
+ 891 000c 188A     		ldrh	r0, [r3, #16]
+ 892 000e 5B8A     		ldrh	r3, [r3, #18]
+ 893 0010 C01A     		subs	r0, r0, r3
+ 894 0012 18BF     		it	ne
+ 895 0014 0120     		movne	r0, #1
+ 896 0016 7047     		bx	lr
+ 897              	.L158:
+ 898 0018 0020     		movs	r0, #0
+ 899 001a 7047     		bx	lr
+ 900              	.L160:
+ 901              		.align	2
+ 902              	.L159:
+ 903 001c 00000000 		.word	_usbd_rhport
+ 904 0020 00000000 		.word	_usbd_q
+ 906              		.section	.text.dcd_edpt0_status_complete,"ax",%progbits
+ 907              		.align	1
+ 908              		.p2align 2,,3
+ 909              		.weak	dcd_edpt0_status_complete
+ 910              		.syntax unified
+ 911              		.thumb
+ 912              		.thumb_func
+ 914              	dcd_edpt0_status_complete:
+ 915              		@ args = 0, pretend = 0, frame = 0
+ 916              		@ frame_needed = 0, uses_anonymous_args = 0
+ 917              		@ link register save eliminated.
+ 918 0000 7047     		bx	lr
+ 920 0002 00BF     		.section	.text.usbd_get_ctrl_buf,"ax",%progbits
+ 921              		.align	1
+ 922              		.p2align 2,,3
+ 923              		.global	usbd_get_ctrl_buf
+ 924              		.syntax unified
+ 925              		.thumb
+ARM GAS  /tmp/cct4789Y.s 			page 16
+
+
+ 926              		.thumb_func
+ 928              	usbd_get_ctrl_buf:
+ 929              		@ args = 0, pretend = 0, frame = 0
+ 930              		@ frame_needed = 0, uses_anonymous_args = 0
+ 931              		@ link register save eliminated.
+ 932 0000 0048     		ldr	r0, .L163
+ 933 0002 7047     		bx	lr
+ 934              	.L164:
+ 935              		.align	2
+ 936              	.L163:
+ 937 0004 00000000 		.word	_ctrl_epbuf
+ 939              		.section	.text.dcd_event_handler,"ax",%progbits
+ 940              		.align	1
+ 941              		.p2align 2,,3
+ 942              		.global	dcd_event_handler
+ 943              		.syntax unified
+ 944              		.thumb
+ 945              		.thumb_func
+ 947              	dcd_event_handler:
+ 948              		@ args = 0, pretend = 0, frame = 24
+ 949              		@ frame_needed = 0, uses_anonymous_args = 0
+ 950 0000 2DE9F043 		push	{r4, r5, r6, r7, r8, r9, lr}
+ 951 0004 4378     		ldrb	r3, [r0, #1]	@ zero_extendqisi2
+ 952 0006 023B     		subs	r3, r3, #2
+ 953 0008 87B0     		sub	sp, sp, #28
+ 954 000a 0446     		mov	r4, r0
+ 955 000c 0D46     		mov	r5, r1
+ 956 000e 052B     		cmp	r3, #5
+ 957 0010 0BD8     		bhi	.L166
+ 958 0012 DFE813F0 		tbh	[pc, r3, lsl #1]
+ 959              	.L168:
+ 960 0016 5600     		.2byte	(.L173-.L168)/2
+ 961 0018 6300     		.2byte	(.L172-.L168)/2
+ 962 001a F300     		.2byte	(.L171-.L168)/2
+ 963 001c FB00     		.2byte	(.L170-.L168)/2
+ 964 001e 0600     		.2byte	(.L169-.L168)/2
+ 965 0020 0301     		.2byte	(.L167-.L168)/2
+ 966              		.p2align 1
+ 967              	.L169:
+ 968 0022 A24A     		ldr	r2, .L253
+ 969 0024 1378     		ldrb	r3, [r2]	@ zero_extendqisi2
+ 970 0026 0133     		adds	r3, r3, #1
+ 971 0028 1370     		strb	r3, [r2]
+ 972              	.L166:
+ 973 002a A14B     		ldr	r3, .L253+4
+ 974 002c 1E68     		ldr	r6, [r3]
+ 975 002e 06F10801 		add	r1, r6, #8
+ 976 0032 55BB     		cbnz	r5, .L195
+ 977              	.L251:
+ 978 0034 9F4A     		ldr	r2, .L253+8
+ 979 0036 3368     		ldr	r3, [r6]
+ 980 0038 0191     		str	r1, [sp, #4]
+ 981 003a 9342     		cmp	r3, r2
+ 982 003c 9046     		mov	r8, r2
+ 983 003e 40F03181 		bne	.L196
+ 984 0042 9D4B     		ldr	r3, .L253+12
+ 985 0044 1878     		ldrb	r0, [r3]	@ zero_extendqisi2
+ARM GAS  /tmp/cct4789Y.s 			page 17
+
+
+ 986 0046 FFF7FEFF 		bl	dcd_int_disable
+ 987              	.L246:
+ 988 004a B288     		ldrh	r2, [r6, #4]
+ 989 004c 0198     		ldr	r0, [sp, #4]
+ 990 004e 2B46     		mov	r3, r5
+ 991 0050 2146     		mov	r1, r4
+ 992 0052 FFF7FEFF 		bl	tu_fifo_write_n_access_mode
+ 993 0056 3268     		ldr	r2, [r6]
+ 994 0058 0190     		str	r0, [sp, #4]
+ 995 005a 4245     		cmp	r2, r8
+ 996 005c 40F01E81 		bne	.L199
+ 997 0060 954A     		ldr	r2, .L253+12
+ 998 0062 1078     		ldrb	r0, [r2]	@ zero_extendqisi2
+ 999 0064 FFF7FEFF 		bl	dcd_int_enable
+ 1000 0068 019B     		ldr	r3, [sp, #4]
+ 1001              	.L198:
+ 1002 006a BBB9     		cbnz	r3, .L201
+ 1003              	.L250:
+ 1004 006c 4FF0E023 		mov	r3, #-536813568
+ 1005 0070 D3F8F03D 		ldr	r3, [r3, #3568]
+ 1006 0074 DB07     		lsls	r3, r3, #31
+ 1007 0076 19D4     		bmi	.L247
+ 1008 0078 6378     		ldrb	r3, [r4, #1]	@ zero_extendqisi2
+ 1009 007a 062B     		cmp	r3, #6
+ 1010 007c 1AD0     		beq	.L248
+ 1011              	.L203:
+ 1012 007e 072B     		cmp	r3, #7
+ 1013 0080 00F0FD80 		beq	.L249
+ 1014              	.L165:
+ 1015 0084 07B0     		add	sp, sp, #28
+ 1016              		@ sp needed
+ 1017 0086 BDE8F083 		pop	{r4, r5, r6, r7, r8, r9, pc}
+ 1018              	.L195:
+ 1019 008a 0023     		movs	r3, #0
+ 1020 008c 0846     		mov	r0, r1
+ 1021 008e B288     		ldrh	r2, [r6, #4]
+ 1022 0090 2146     		mov	r1, r4
+ 1023 0092 FFF7FEFF 		bl	tu_fifo_write_n_access_mode
+ 1024 0096 0346     		mov	r3, r0
+ 1025 0098 002B     		cmp	r3, #0
+ 1026 009a E7D0     		beq	.L250
+ 1027              	.L201:
+ 1028 009c 6178     		ldrb	r1, [r4, #1]	@ zero_extendqisi2
+ 1029 009e 2078     		ldrb	r0, [r4]	@ zero_extendqisi2
+ 1030 00a0 2A46     		mov	r2, r5
+ 1031 00a2 FFF7FEFF 		bl	tud_event_hook_cb
+ 1032 00a6 07B0     		add	sp, sp, #28
+ 1033              		@ sp needed
+ 1034 00a8 BDE8F083 		pop	{r4, r5, r6, r7, r8, r9, pc}
+ 1035              	.L247:
+ 1036              		.syntax unified
+ 1037              	@ 411 "libs/tinyusb/device/usbd.c" 1
+ 1038 00ac 00BE     		BKPT #0
+ 1039              	
+ 1040              	@ 0 "" 2
+ 1041              		.thumb
+ 1042              		.syntax unified
+ARM GAS  /tmp/cct4789Y.s 			page 18
+
+
+ 1043 00ae 6378     		ldrb	r3, [r4, #1]	@ zero_extendqisi2
+ 1044 00b0 062B     		cmp	r3, #6
+ 1045 00b2 E4D1     		bne	.L203
+ 1046              	.L248:
+ 1047 00b4 7D4A     		ldr	r2, .L253
+ 1048 00b6 1378     		ldrb	r3, [r2]	@ zero_extendqisi2
+ 1049 00b8 013B     		subs	r3, r3, #1
+ 1050 00ba 1370     		strb	r3, [r2]
+ 1051 00bc 07B0     		add	sp, sp, #28
+ 1052              		@ sp needed
+ 1053 00be BDE8F083 		pop	{r4, r5, r6, r7, r8, r9, pc}
+ 1054              	.L173:
+ 1055 00c2 7E4B     		ldr	r3, .L253+16
+ 1056 00c4 0022     		movs	r2, #0
+ 1057 00c6 1A75     		strb	r2, [r3, #20]
+ 1058 00c8 1A76     		strb	r2, [r3, #24]
+ 1059 00ca 5A75     		strb	r2, [r3, #21]
+ 1060 00cc 9A75     		strb	r2, [r3, #22]
+ 1061 00ce 784B     		ldr	r3, .L253+4
+ 1062 00d0 1E68     		ldr	r6, [r3]
+ 1063 00d2 06F10801 		add	r1, r6, #8
+ 1064 00d6 002D     		cmp	r5, #0
+ 1065 00d8 D7D1     		bne	.L195
+ 1066 00da ABE7     		b	.L251
+ 1067              	.L172:
+ 1068 00dc 784E     		ldr	r6, .L253+20
+ 1069 00de 3178     		ldrb	r1, [r6]	@ zero_extendqisi2
+ 1070 00e0 FF29     		cmp	r1, #255
+ 1071 00e2 18D0     		beq	.L175
+ 1072 00e4 0023     		movs	r3, #0
+ 1073 00e6 1846     		mov	r0, r3
+ 1074              	.L174:
+ 1075 00e8 8842     		cmp	r0, r1
+ 1076 00ea 03EBC30C 		add	ip, r3, r3, lsl #3
+ 1077 00ee 0BD2     		bcs	.L177
+ 1078 00f0 744A     		ldr	r2, .L253+24
+ 1079 00f2 1268     		ldr	r2, [r2]
+ 1080 00f4 12EB8C02 		adds	r2, r2, ip, lsl #2
+ 1081 00f8 06D0     		beq	.L177
+ 1082 00fa 126A     		ldr	r2, [r2, #32]
+ 1083 00fc 22B1     		cbz	r2, .L177
+ 1084 00fe 6168     		ldr	r1, [r4, #4]
+ 1085 0100 2078     		ldrb	r0, [r4]	@ zero_extendqisi2
+ 1086 0102 0193     		str	r3, [sp, #4]
+ 1087 0104 9047     		blx	r2
+ 1088 0106 019B     		ldr	r3, [sp, #4]
+ 1089              	.L177:
+ 1090 0108 3178     		ldrb	r1, [r6]	@ zero_extendqisi2
+ 1091 010a 0133     		adds	r3, r3, #1
+ 1092 010c 4A1C     		adds	r2, r1, #1
+ 1093 010e D2B2     		uxtb	r2, r2
+ 1094 0110 D8B2     		uxtb	r0, r3
+ 1095 0112 8242     		cmp	r2, r0
+ 1096 0114 E8D8     		bhi	.L174
+ 1097              	.L175:
+ 1098 0116 694E     		ldr	r6, .L253+16
+ 1099 0118 B37D     		ldrb	r3, [r6, #22]	@ zero_extendqisi2
+ARM GAS  /tmp/cct4789Y.s 			page 19
+
+
+ 1100 011a 002B     		cmp	r3, #0
+ 1101 011c 37D0     		beq	.L178
+ 1102 011e 0023     		movs	r3, #0
+ 1103 0120 CDE90333 		strd	r3, r3, [sp, #12]
+ 1104 0124 624A     		ldr	r2, .L253+4
+ 1105 0126 B375     		strb	r3, [r6, #22]
+ 1106 0128 1168     		ldr	r1, [r2]
+ 1107 012a 0593     		str	r3, [sp, #20]
+ 1108 012c 2278     		ldrb	r2, [r4]	@ zero_extendqisi2
+ 1109 012e 8DF80C20 		strb	r2, [sp, #12]
+ 1110 0132 01F10800 		add	r0, r1, #8
+ 1111 0136 0522     		movs	r2, #5
+ 1112 0138 0F46     		mov	r7, r1
+ 1113 013a 8DF80D20 		strb	r2, [sp, #13]
+ 1114 013e 8146     		mov	r9, r0
+ 1115 0140 002D     		cmp	r5, #0
+ 1116 0142 40F0C980 		bne	.L252
+ 1117 0146 5B4A     		ldr	r2, .L253+8
+ 1118 0148 0B68     		ldr	r3, [r1]
+ 1119 014a 9342     		cmp	r3, r2
+ 1120 014c 9046     		mov	r8, r2
+ 1121 014e 40F0DD80 		bne	.L181
+ 1122 0152 594B     		ldr	r3, .L253+12
+ 1123 0154 1878     		ldrb	r0, [r3]	@ zero_extendqisi2
+ 1124 0156 FFF7FEFF 		bl	dcd_int_disable
+ 1125              	.L244:
+ 1126 015a BA88     		ldrh	r2, [r7, #4]
+ 1127 015c 2B46     		mov	r3, r5
+ 1128 015e 03A9     		add	r1, sp, #12
+ 1129 0160 4846     		mov	r0, r9
+ 1130 0162 FFF7FEFF 		bl	tu_fifo_write_n_access_mode
+ 1131 0166 3A68     		ldr	r2, [r7]
+ 1132 0168 0190     		str	r0, [sp, #4]
+ 1133 016a 4245     		cmp	r2, r8
+ 1134 016c 40F0CA80 		bne	.L183
+ 1135 0170 514A     		ldr	r2, .L253+12
+ 1136 0172 1078     		ldrb	r0, [r2]	@ zero_extendqisi2
+ 1137 0174 FFF7FEFF 		bl	dcd_int_enable
+ 1138 0178 019B     		ldr	r3, [sp, #4]
+ 1139              	.L180:
+ 1140 017a 002B     		cmp	r3, #0
+ 1141 017c 40F0BA80 		bne	.L185
+ 1142 0180 4FF0E023 		mov	r3, #-536813568
+ 1143 0184 D3F8F03D 		ldr	r3, [r3, #3568]
+ 1144 0188 D807     		lsls	r0, r3, #31
+ 1145 018a 00D5     		bpl	.L178
+ 1146              		.syntax unified
+ 1147              	@ 411 "libs/tinyusb/device/usbd.c" 1
+ 1148 018c 00BE     		BKPT #0
+ 1149              	
+ 1150              	@ 0 "" 2
+ 1151              		.thumb
+ 1152              		.syntax unified
+ 1153              	.L178:
+ 1154 018e B37E     		ldrb	r3, [r6, #26]	@ zero_extendqisi2
+ 1155 0190 D907     		lsls	r1, r3, #31
+ 1156 0192 7FF577AF 		bpl	.L165
+ARM GAS  /tmp/cct4789Y.s 			page 20
+
+
+ 1157 0196 464B     		ldr	r3, .L253+4
+ 1158 0198 2178     		ldrb	r1, [r4]	@ zero_extendqisi2
+ 1159 019a 1E68     		ldr	r6, [r3]
+ 1160 019c 6368     		ldr	r3, [r4, #4]
+ 1161 019e 0493     		str	r3, [sp, #16]
+ 1162 01a0 0322     		movs	r2, #3
+ 1163 01a2 8DF80C10 		strb	r1, [sp, #12]
+ 1164 01a6 8DF80D20 		strb	r2, [sp, #13]
+ 1165 01aa 06F10804 		add	r4, r6, #8
+ 1166 01ae 002D     		cmp	r5, #0
+ 1167 01b0 40F08A80 		bne	.L187
+ 1168 01b4 3F4A     		ldr	r2, .L253+8
+ 1169 01b6 3368     		ldr	r3, [r6]
+ 1170 01b8 9342     		cmp	r3, r2
+ 1171 01ba 9046     		mov	r8, r2
+ 1172 01bc 40F0AC80 		bne	.L188
+ 1173 01c0 3D4B     		ldr	r3, .L253+12
+ 1174 01c2 1878     		ldrb	r0, [r3]	@ zero_extendqisi2
+ 1175 01c4 FFF7FEFF 		bl	dcd_int_disable
+ 1176              	.L245:
+ 1177 01c8 2B46     		mov	r3, r5
+ 1178 01ca 2046     		mov	r0, r4
+ 1179 01cc B288     		ldrh	r2, [r6, #4]
+ 1180 01ce 03A9     		add	r1, sp, #12
+ 1181 01d0 FFF7FEFF 		bl	tu_fifo_write_n_access_mode
+ 1182 01d4 3368     		ldr	r3, [r6]
+ 1183 01d6 4345     		cmp	r3, r8
+ 1184 01d8 0446     		mov	r4, r0
+ 1185 01da 40F09A80 		bne	.L191
+ 1186 01de 364B     		ldr	r3, .L253+12
+ 1187 01e0 1878     		ldrb	r0, [r3]	@ zero_extendqisi2
+ 1188 01e2 FFF7FEFF 		bl	dcd_int_enable
+ 1189              	.L190:
+ 1190 01e6 002C     		cmp	r4, #0
+ 1191 01e8 7CD1     		bne	.L193
+ 1192 01ea 4FF0E023 		mov	r3, #-536813568
+ 1193 01ee D3F8F03D 		ldr	r3, [r3, #3568]
+ 1194 01f2 DA07     		lsls	r2, r3, #31
+ 1195 01f4 7FF546AF 		bpl	.L165
+ 1196              		.syntax unified
+ 1197              	@ 411 "libs/tinyusb/device/usbd.c" 1
+ 1198 01f8 00BE     		BKPT #0
+ 1199              	
+ 1200              	@ 0 "" 2
+ 1201              		.thumb
+ 1202              		.syntax unified
+ 1203 01fa 43E7     		b	.L165
+ 1204              	.L171:
+ 1205 01fc 2F4B     		ldr	r3, .L253+16
+ 1206 01fe 1A7D     		ldrb	r2, [r3, #20]	@ zero_extendqisi2
+ 1207 0200 002A     		cmp	r2, #0
+ 1208 0202 3FF43FAF 		beq	.L165
+ 1209 0206 0122     		movs	r2, #1
+ 1210 0208 9A75     		strb	r2, [r3, #22]
+ 1211 020a 0EE7     		b	.L166
+ 1212              	.L170:
+ 1213 020c 2B4B     		ldr	r3, .L253+16
+ARM GAS  /tmp/cct4789Y.s 			page 21
+
+
+ 1214 020e 1A7D     		ldrb	r2, [r3, #20]	@ zero_extendqisi2
+ 1215 0210 002A     		cmp	r2, #0
+ 1216 0212 3FF437AF 		beq	.L165
+ 1217 0216 0022     		movs	r2, #0
+ 1218 0218 9A75     		strb	r2, [r3, #22]
+ 1219 021a 06E7     		b	.L166
+ 1220              	.L167:
+ 1221 021c 0179     		ldrb	r1, [r0, #4]	@ zero_extendqisi2
+ 1222 021e 11F00F03 		ands	r3, r1, #15
+ 1223 0222 3FF402AF 		beq	.L166
+ 1224 0226 254E     		ldr	r6, .L253+16
+ 1225 0228 254A     		ldr	r2, .L253+20
+ 1226 022a 06EB4306 		add	r6, r6, r3, lsl #1
+ 1227 022e 06EBD116 		add	r6, r6, r1, lsr #7
+ 1228 0232 1278     		ldrb	r2, [r2]	@ zero_extendqisi2
+ 1229 0234 96F82B30 		ldrb	r3, [r6, #43]	@ zero_extendqisi2
+ 1230 0238 9A42     		cmp	r2, r3
+ 1231 023a 7FF6F6AE 		bls	.L166
+ 1232 023e 214A     		ldr	r2, .L253+24
+ 1233 0240 1268     		ldr	r2, [r2]
+ 1234 0242 03EBC303 		add	r3, r3, r3, lsl #3
+ 1235 0246 12EB8302 		adds	r2, r2, r3, lsl #2
+ 1236 024a 3FF4EEAE 		beq	.L166
+ 1237 024e D769     		ldr	r7, [r2, #28]
+ 1238 0250 002F     		cmp	r7, #0
+ 1239 0252 3FF4EAAE 		beq	.L166
+ 1240 0256 96F83730 		ldrb	r3, [r6, #55]	@ zero_extendqisi2
+ 1241 025a 03F0FA03 		and	r3, r3, #250
+ 1242 025e 86F83730 		strb	r3, [r6, #55]
+ 1243 0262 8368     		ldr	r3, [r0, #8]
+ 1244 0264 4279     		ldrb	r2, [r0, #5]	@ zero_extendqisi2
+ 1245 0266 0078     		ldrb	r0, [r0]	@ zero_extendqisi2
+ 1246 0268 B847     		blx	r7
+ 1247 026a 0028     		cmp	r0, #0
+ 1248 026c 7FF40AAF 		bne	.L165
+ 1249 0270 96F83730 		ldrb	r3, [r6, #55]	@ zero_extendqisi2
+ 1250 0274 43F00503 		orr	r3, r3, #5
+ 1251 0278 86F83730 		strb	r3, [r6, #55]
+ 1252 027c D5E6     		b	.L166
+ 1253              	.L249:
+ 1254 027e 2279     		ldrb	r2, [r4, #4]	@ zero_extendqisi2
+ 1255 0280 0E4B     		ldr	r3, .L253+16
+ 1256 0282 02F00F01 		and	r1, r2, #15
+ 1257 0286 03EB4103 		add	r3, r3, r1, lsl #1
+ 1258 028a 03EBD213 		add	r3, r3, r2, lsr #7
+ 1259 028e 93F83720 		ldrb	r2, [r3, #55]	@ zero_extendqisi2
+ 1260 0292 02F0FA02 		and	r2, r2, #250
+ 1261 0296 83F83720 		strb	r2, [r3, #55]
+ 1262 029a F3E6     		b	.L165
+ 1263              	.L199:
+ 1264 029c 0120     		movs	r0, #1
+ 1265 029e 9047     		blx	r2
+ 1266 02a0 019B     		ldr	r3, [sp, #4]
+ 1267 02a2 E2E6     		b	.L198
+ 1268              	.L196:
+ 1269 02a4 2846     		mov	r0, r5
+ 1270 02a6 9847     		blx	r3
+ARM GAS  /tmp/cct4789Y.s 			page 22
+
+
+ 1271 02a8 CFE6     		b	.L246
+ 1272              	.L254:
+ 1273 02aa 00BF     		.align	2
+ 1274              	.L253:
+ 1275 02ac 00000000 		.word	_usbd_queued_setup
+ 1276 02b0 00000000 		.word	_usbd_q
+ 1277 02b4 00000000 		.word	usbd_int_set
+ 1278 02b8 00000000 		.word	_usbd_rhport
+ 1279 02bc 00000000 		.word	_usbd_dev
+ 1280 02c0 00000000 		.word	_app_driver_count
+ 1281 02c4 00000000 		.word	_app_driver
+ 1282              	.L187:
+ 1283 02c8 2046     		mov	r0, r4
+ 1284 02ca B288     		ldrh	r2, [r6, #4]
+ 1285 02cc 0023     		movs	r3, #0
+ 1286 02ce 03A9     		add	r1, sp, #12
+ 1287 02d0 FFF7FEFF 		bl	tu_fifo_write_n_access_mode
+ 1288 02d4 0446     		mov	r4, r0
+ 1289 02d6 86E7     		b	.L190
+ 1290              	.L252:
+ 1291 02d8 8A88     		ldrh	r2, [r1, #4]
+ 1292 02da 03A9     		add	r1, sp, #12
+ 1293 02dc FFF7FEFF 		bl	tu_fifo_write_n_access_mode
+ 1294 02e0 0346     		mov	r3, r0
+ 1295 02e2 4AE7     		b	.L180
+ 1296              	.L193:
+ 1297 02e4 9DF80D10 		ldrb	r1, [sp, #13]	@ zero_extendqisi2
+ 1298 02e8 9DF80C00 		ldrb	r0, [sp, #12]	@ zero_extendqisi2
+ 1299 02ec 2A46     		mov	r2, r5
+ 1300 02ee FFF7FEFF 		bl	tud_event_hook_cb
+ 1301 02f2 C7E6     		b	.L165
+ 1302              	.L185:
+ 1303 02f4 9DF80D10 		ldrb	r1, [sp, #13]	@ zero_extendqisi2
+ 1304 02f8 9DF80C00 		ldrb	r0, [sp, #12]	@ zero_extendqisi2
+ 1305 02fc 2A46     		mov	r2, r5
+ 1306 02fe FFF7FEFF 		bl	tud_event_hook_cb
+ 1307 0302 44E7     		b	.L178
+ 1308              	.L183:
+ 1309 0304 0120     		movs	r0, #1
+ 1310 0306 9047     		blx	r2
+ 1311 0308 019B     		ldr	r3, [sp, #4]
+ 1312 030a 36E7     		b	.L180
+ 1313              	.L181:
+ 1314 030c 2846     		mov	r0, r5
+ 1315 030e 9847     		blx	r3
+ 1316 0310 23E7     		b	.L244
+ 1317              	.L191:
+ 1318 0312 0120     		movs	r0, #1
+ 1319 0314 9847     		blx	r3
+ 1320 0316 66E7     		b	.L190
+ 1321              	.L188:
+ 1322 0318 2846     		mov	r0, r5
+ 1323 031a 9847     		blx	r3
+ 1324 031c 54E7     		b	.L245
+ 1326 031e 00BF     		.section	.text.usbd_spin_lock,"ax",%progbits
+ 1327              		.align	1
+ 1328              		.p2align 2,,3
+ARM GAS  /tmp/cct4789Y.s 			page 23
+
+
+ 1329              		.global	usbd_spin_lock
+ 1330              		.syntax unified
+ 1331              		.thumb
+ 1332              		.thumb_func
+ 1334              	usbd_spin_lock:
+ 1335              		@ args = 0, pretend = 0, frame = 0
+ 1336              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1337 0000 0A4A     		ldr	r2, .L261
+ 1338 0002 08B5     		push	{r3, lr}
+ 1339 0004 5368     		ldr	r3, [r2, #4]
+ 1340 0006 50B9     		cbnz	r0, .L258
+ 1341 0008 4BB9     		cbnz	r3, .L258
+ 1342 000a 1368     		ldr	r3, [r2]
+ 1343 000c 0849     		ldr	r1, .L261+4
+ 1344 000e 8B42     		cmp	r3, r1
+ 1345 0010 08D1     		bne	.L259
+ 1346 0012 084B     		ldr	r3, .L261+8
+ 1347 0014 1878     		ldrb	r0, [r3]	@ zero_extendqisi2
+ 1348 0016 FFF7FEFF 		bl	dcd_int_disable
+ 1349 001a 044A     		ldr	r2, .L261
+ 1350 001c 5368     		ldr	r3, [r2, #4]
+ 1351              	.L258:
+ 1352 001e 0133     		adds	r3, r3, #1
+ 1353 0020 5360     		str	r3, [r2, #4]
+ 1354 0022 08BD     		pop	{r3, pc}
+ 1355              	.L259:
+ 1356 0024 9847     		blx	r3
+ 1357 0026 014A     		ldr	r2, .L261
+ 1358 0028 5368     		ldr	r3, [r2, #4]
+ 1359 002a F8E7     		b	.L258
+ 1360              	.L262:
+ 1361              		.align	2
+ 1362              	.L261:
+ 1363 002c 00000000 		.word	_usbd_spin
+ 1364 0030 00000000 		.word	usbd_int_set
+ 1365 0034 00000000 		.word	_usbd_rhport
+ 1367              		.section	.text.usbd_spin_unlock,"ax",%progbits
+ 1368              		.align	1
+ 1369              		.p2align 2,,3
+ 1370              		.global	usbd_spin_unlock
+ 1371              		.syntax unified
+ 1372              		.thumb
+ 1373              		.thumb_func
+ 1375              	usbd_spin_unlock:
+ 1376              		@ args = 0, pretend = 0, frame = 0
+ 1377              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1378              		@ link register save eliminated.
+ 1379 0000 084A     		ldr	r2, .L269
+ 1380 0002 5368     		ldr	r3, [r2, #4]
+ 1381 0004 5BB1     		cbz	r3, .L263
+ 1382 0006 013B     		subs	r3, r3, #1
+ 1383 0008 5360     		str	r3, [r2, #4]
+ 1384 000a 40B9     		cbnz	r0, .L263
+ 1385 000c 3BB9     		cbnz	r3, .L263
+ 1386 000e 1368     		ldr	r3, [r2]
+ 1387 0010 054A     		ldr	r2, .L269+4
+ 1388 0012 9342     		cmp	r3, r2
+ARM GAS  /tmp/cct4789Y.s 			page 24
+
+
+ 1389 0014 04D1     		bne	.L265
+ 1390 0016 054B     		ldr	r3, .L269+8
+ 1391 0018 1878     		ldrb	r0, [r3]	@ zero_extendqisi2
+ 1392 001a FFF7FEBF 		b	dcd_int_enable
+ 1393              	.L263:
+ 1394 001e 7047     		bx	lr
+ 1395              	.L265:
+ 1396 0020 0120     		movs	r0, #1
+ 1397 0022 1847     		bx	r3	@ indirect register sibling call
+ 1398              	.L270:
+ 1399              		.align	2
+ 1400              	.L269:
+ 1401 0024 00000000 		.word	_usbd_spin
+ 1402 0028 00000000 		.word	usbd_int_set
+ 1403 002c 00000000 		.word	_usbd_rhport
+ 1405              		.section	.text.usbd_open_edpt_pair,"ax",%progbits
+ 1406              		.align	1
+ 1407              		.p2align 2,,3
+ 1408              		.global	usbd_open_edpt_pair
+ 1409              		.syntax unified
+ 1410              		.thumb
+ 1411              		.thumb_func
+ 1413              	usbd_open_edpt_pair:
+ 1414              		@ args = 8, pretend = 0, frame = 0
+ 1415              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1416 0000 2DE9F843 		push	{r3, r4, r5, r6, r7, r8, r9, lr}
+ 1417 0004 089E     		ldr	r6, [sp, #32]
+ 1418 0006 002A     		cmp	r2, #0
+ 1419 0008 38D0     		beq	.L285
+ 1420 000a 1D4F     		ldr	r7, .L303
+ 1421 000c 0C46     		mov	r4, r1
+ 1422 000e 9946     		mov	r9, r3
+ 1423 0010 9046     		mov	r8, r2
+ 1424 0012 0025     		movs	r5, #0
+ 1425 0014 13E0     		b	.L284
+ 1426              	.L278:
+ 1427 0016 A388     		ldrh	r3, [r4, #4]	@ unaligned
+ 1428 0018 C3F30A03 		ubfx	r3, r3, #0, #11
+ 1429 001c 2146     		mov	r1, r4
+ 1430 001e DBB1     		cbz	r3, .L301
+ 1431 0020 3878     		ldrb	r0, [r7]	@ zero_extendqisi2
+ 1432 0022 FFF7FEFF 		bl	dcd_edpt_open
+ 1433 0026 F0B1     		cbz	r0, .L279
+ 1434 0028 A378     		ldrb	r3, [r4, #2]	@ zero_extendqisi2
+ 1435 002a DA09     		lsrs	r2, r3, #7
+ 1436 002c 16BF     		itet	ne
+ 1437 002e 099A     		ldrne	r2, [sp, #36]
+ 1438 0030 3370     		strbeq	r3, [r6]
+ 1439 0032 1370     		strbne	r3, [r2]
+ 1440 0034 2378     		ldrb	r3, [r4]	@ zero_extendqisi2
+ 1441 0036 0135     		adds	r5, r5, #1
+ 1442 0038 4545     		cmp	r5, r8
+ 1443 003a 1C44     		add	r4, r4, r3
+ 1444 003c 1AD0     		beq	.L272
+ 1445              	.L284:
+ 1446 003e 6378     		ldrb	r3, [r4, #1]	@ zero_extendqisi2
+ 1447 0040 052B     		cmp	r3, #5
+ARM GAS  /tmp/cct4789Y.s 			page 25
+
+
+ 1448 0042 10D1     		bne	.L279
+ 1449 0044 E178     		ldrb	r1, [r4, #3]	@ zero_extendqisi2
+ 1450 0046 01F00301 		and	r1, r1, #3
+ 1451 004a 4945     		cmp	r1, r9
+ 1452 004c 0BD1     		bne	.L279
+ 1453 004e A178     		ldrb	r1, [r4, #2]	@ zero_extendqisi2
+ 1454 0050 01F00F01 		and	r1, r1, #15
+ 1455 0054 0529     		cmp	r1, #5
+ 1456 0056 DED9     		bls	.L278
+ 1457              	.L301:
+ 1458 0058 4FF0E023 		mov	r3, #-536813568
+ 1459 005c D3F8F03D 		ldr	r3, [r3, #3568]
+ 1460 0060 DA07     		lsls	r2, r3, #31
+ 1461 0062 00D5     		bpl	.L279
+ 1462              		.syntax unified
+ 1463              	@ 1553 "libs/tinyusb/device/usbd.c" 1
+ 1464 0064 00BE     		BKPT #0
+ 1465              	
+ 1466              	@ 0 "" 2
+ 1467              		.thumb
+ 1468              		.syntax unified
+ 1469              	.L279:
+ 1470 0066 4FF0E023 		mov	r3, #-536813568
+ 1471 006a D3F8F03D 		ldr	r3, [r3, #3568]
+ 1472 006e DB07     		lsls	r3, r3, #31
+ 1473 0070 02D4     		bmi	.L302
+ 1474              	.L275:
+ 1475 0072 0020     		movs	r0, #0
+ 1476              	.L272:
+ 1477 0074 BDE8F883 		pop	{r3, r4, r5, r6, r7, r8, r9, pc}
+ 1478              	.L302:
+ 1479              		.syntax unified
+ 1480              	@ 1519 "libs/tinyusb/device/usbd.c" 1
+ 1481 0078 00BE     		BKPT #0
+ 1482              	
+ 1483              	@ 0 "" 2
+ 1484              		.thumb
+ 1485              		.syntax unified
+ 1486 007a FAE7     		b	.L275
+ 1487              	.L285:
+ 1488 007c 0120     		movs	r0, #1
+ 1489 007e F9E7     		b	.L272
+ 1490              	.L304:
+ 1491              		.align	2
+ 1492              	.L303:
+ 1493 0080 00000000 		.word	_usbd_rhport
+ 1495              		.section	.text.usbd_defer_func,"ax",%progbits
+ 1496              		.align	1
+ 1497              		.p2align 2,,3
+ 1498              		.global	usbd_defer_func
+ 1499              		.syntax unified
+ 1500              		.thumb
+ 1501              		.thumb_func
+ 1503              	usbd_defer_func:
+ 1504              		@ args = 0, pretend = 0, frame = 24
+ 1505              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1506 0000 70B5     		push	{r4, r5, r6, lr}
+ARM GAS  /tmp/cct4789Y.s 			page 26
+
+
+ 1507 0002 234B     		ldr	r3, .L320
+ 1508 0004 86B0     		sub	sp, sp, #24
+ 1509 0006 1C68     		ldr	r4, [r3]
+ 1510 0008 0591     		str	r1, [sp, #20]
+ 1511 000a 4FF40063 		mov	r3, #2048
+ 1512 000e CDE90330 		strd	r3, r0, [sp, #12]
+ 1513 0012 1546     		mov	r5, r2
+ 1514 0014 04F10800 		add	r0, r4, #8
+ 1515 0018 7AB1     		cbz	r2, .L306
+ 1516 001a 0023     		movs	r3, #0
+ 1517 001c A288     		ldrh	r2, [r4, #4]
+ 1518 001e 03A9     		add	r1, sp, #12
+ 1519 0020 FFF7FEFF 		bl	tu_fifo_write_n_access_mode
+ 1520 0024 0346     		mov	r3, r0
+ 1521              	.L307:
+ 1522 0026 1BBB     		cbnz	r3, .L312
+ 1523              	.L319:
+ 1524 0028 4FF0E023 		mov	r3, #-536813568
+ 1525 002c D3F8F03D 		ldr	r3, [r3, #3568]
+ 1526 0030 DB07     		lsls	r3, r3, #31
+ 1527 0032 00D5     		bpl	.L305
+ 1528              		.syntax unified
+ 1529              	@ 411 "libs/tinyusb/device/usbd.c" 1
+ 1530 0034 00BE     		BKPT #0
+ 1531              	
+ 1532              	@ 0 "" 2
+ 1533              		.thumb
+ 1534              		.syntax unified
+ 1535              	.L305:
+ 1536 0036 06B0     		add	sp, sp, #24
+ 1537              		@ sp needed
+ 1538 0038 70BD     		pop	{r4, r5, r6, pc}
+ 1539              	.L306:
+ 1540 003a 2368     		ldr	r3, [r4]
+ 1541 003c 154A     		ldr	r2, .L320+4
+ 1542 003e 9342     		cmp	r3, r2
+ 1543 0040 0646     		mov	r6, r0
+ 1544 0042 1ED1     		bne	.L308
+ 1545 0044 144B     		ldr	r3, .L320+8
+ 1546 0046 1878     		ldrb	r0, [r3]	@ zero_extendqisi2
+ 1547 0048 FFF7FEFF 		bl	dcd_int_disable
+ 1548              	.L318:
+ 1549 004c A288     		ldrh	r2, [r4, #4]
+ 1550 004e 03A9     		add	r1, sp, #12
+ 1551 0050 2B46     		mov	r3, r5
+ 1552 0052 3046     		mov	r0, r6
+ 1553 0054 FFF7FEFF 		bl	tu_fifo_write_n_access_mode
+ 1554 0058 2268     		ldr	r2, [r4]
+ 1555 005a 0E49     		ldr	r1, .L320+4
+ 1556 005c 0190     		str	r0, [sp, #4]
+ 1557 005e 8A42     		cmp	r2, r1
+ 1558 0060 12D1     		bne	.L310
+ 1559 0062 0D4A     		ldr	r2, .L320+8
+ 1560 0064 1078     		ldrb	r0, [r2]	@ zero_extendqisi2
+ 1561 0066 FFF7FEFF 		bl	dcd_int_enable
+ 1562 006a 019B     		ldr	r3, [sp, #4]
+ 1563 006c 002B     		cmp	r3, #0
+ARM GAS  /tmp/cct4789Y.s 			page 27
+
+
+ 1564 006e DBD0     		beq	.L319
+ 1565              	.L312:
+ 1566 0070 9DF80D10 		ldrb	r1, [sp, #13]	@ zero_extendqisi2
+ 1567 0074 9DF80C00 		ldrb	r0, [sp, #12]	@ zero_extendqisi2
+ 1568 0078 2A46     		mov	r2, r5
+ 1569 007a FFF7FEFF 		bl	tud_event_hook_cb
+ 1570 007e 06B0     		add	sp, sp, #24
+ 1571              		@ sp needed
+ 1572 0080 70BD     		pop	{r4, r5, r6, pc}
+ 1573              	.L308:
+ 1574 0082 2846     		mov	r0, r5
+ 1575 0084 9847     		blx	r3
+ 1576 0086 E1E7     		b	.L318
+ 1577              	.L310:
+ 1578 0088 0120     		movs	r0, #1
+ 1579 008a 9047     		blx	r2
+ 1580 008c 019B     		ldr	r3, [sp, #4]
+ 1581 008e CAE7     		b	.L307
+ 1582              	.L321:
+ 1583              		.align	2
+ 1584              	.L320:
+ 1585 0090 00000000 		.word	_usbd_q
+ 1586 0094 00000000 		.word	usbd_int_set
+ 1587 0098 00000000 		.word	_usbd_rhport
+ 1589              		.section	.text.usbd_edpt_open,"ax",%progbits
+ 1590              		.align	1
+ 1591              		.p2align 2,,3
+ 1592              		.global	usbd_edpt_open
+ 1593              		.syntax unified
+ 1594              		.thumb
+ 1595              		.thumb_func
+ 1597              	usbd_edpt_open:
+ 1598              		@ args = 0, pretend = 0, frame = 0
+ 1599              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1600              		@ link register save eliminated.
+ 1601 0000 8B78     		ldrb	r3, [r1, #2]	@ zero_extendqisi2
+ 1602 0002 03F00F03 		and	r3, r3, #15
+ 1603 0006 052B     		cmp	r3, #5
+ 1604 0008 03D8     		bhi	.L335
+ 1605 000a 8B88     		ldrh	r3, [r1, #4]	@ unaligned
+ 1606 000c C3F30A03 		ubfx	r3, r3, #0, #11
+ 1607 0010 43B9     		cbnz	r3, .L326
+ 1608              	.L335:
+ 1609 0012 4FF0E023 		mov	r3, #-536813568
+ 1610 0016 D3F8F03D 		ldr	r3, [r3, #3568]
+ 1611 001a DB07     		lsls	r3, r3, #31
+ 1612 001c 00D5     		bpl	.L325
+ 1613              		.syntax unified
+ 1614              	@ 1553 "libs/tinyusb/device/usbd.c" 1
+ 1615 001e 00BE     		BKPT #0
+ 1616              	
+ 1617              	@ 0 "" 2
+ 1618              		.thumb
+ 1619              		.syntax unified
+ 1620              	.L325:
+ 1621 0020 0020     		movs	r0, #0
+ 1622 0022 7047     		bx	lr
+ARM GAS  /tmp/cct4789Y.s 			page 28
+
+
+ 1623              	.L326:
+ 1624 0024 014B     		ldr	r3, .L336
+ 1625 0026 1878     		ldrb	r0, [r3]	@ zero_extendqisi2
+ 1626 0028 FFF7FEBF 		b	dcd_edpt_open
+ 1627              	.L337:
+ 1628              		.align	2
+ 1629              	.L336:
+ 1630 002c 00000000 		.word	_usbd_rhport
+ 1632              		.section	.text.usbd_edpt_claim,"ax",%progbits
+ 1633              		.align	1
+ 1634              		.p2align 2,,3
+ 1635              		.global	usbd_edpt_claim
+ 1636              		.syntax unified
+ 1637              		.thumb
+ 1638              		.thumb_func
+ 1640              	usbd_edpt_claim:
+ 1641              		@ args = 0, pretend = 0, frame = 0
+ 1642              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1643              		@ link register save eliminated.
+ 1644 0000 CB09     		lsrs	r3, r1, #7
+ 1645 0002 0548     		ldr	r0, .L339
+ 1646 0004 01F00F01 		and	r1, r1, #15
+ 1647 0008 3733     		adds	r3, r3, #55
+ 1648 000a 03EB4103 		add	r3, r3, r1, lsl #1
+ 1649 000e 1844     		add	r0, r0, r3
+ 1650 0010 0021     		movs	r1, #0
+ 1651 0012 FFF7FEBF 		b	tu_edpt_claim
+ 1652              	.L340:
+ 1653 0016 00BF     		.align	2
+ 1654              	.L339:
+ 1655 0018 00000000 		.word	_usbd_dev
+ 1657              		.section	.text.usbd_edpt_release,"ax",%progbits
+ 1658              		.align	1
+ 1659              		.p2align 2,,3
+ 1660              		.global	usbd_edpt_release
+ 1661              		.syntax unified
+ 1662              		.thumb
+ 1663              		.thumb_func
+ 1665              	usbd_edpt_release:
+ 1666              		@ args = 0, pretend = 0, frame = 0
+ 1667              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1668              		@ link register save eliminated.
+ 1669 0000 CB09     		lsrs	r3, r1, #7
+ 1670 0002 0548     		ldr	r0, .L342
+ 1671 0004 01F00F01 		and	r1, r1, #15
+ 1672 0008 3733     		adds	r3, r3, #55
+ 1673 000a 03EB4103 		add	r3, r3, r1, lsl #1
+ 1674 000e 1844     		add	r0, r0, r3
+ 1675 0010 0021     		movs	r1, #0
+ 1676 0012 FFF7FEBF 		b	tu_edpt_release
+ 1677              	.L343:
+ 1678 0016 00BF     		.align	2
+ 1679              	.L342:
+ 1680 0018 00000000 		.word	_usbd_dev
+ 1682              		.section	.text.usbd_edpt_xfer,"ax",%progbits
+ 1683              		.align	1
+ 1684              		.p2align 2,,3
+ARM GAS  /tmp/cct4789Y.s 			page 29
+
+
+ 1685              		.global	usbd_edpt_xfer
+ 1686              		.syntax unified
+ 1687              		.thumb
+ 1688              		.thumb_func
+ 1690              	usbd_edpt_xfer:
+ 1691              		@ args = 4, pretend = 0, frame = 0
+ 1692              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1693 0000 10B5     		push	{r4, lr}
+ 1694 0002 1B4C     		ldr	r4, .L358
+ 1695 0004 01F00F00 		and	r0, r1, #15
+ 1696 0008 04EB4004 		add	r4, r4, r0, lsl #1
+ 1697 000c 04EBD114 		add	r4, r4, r1, lsr #7
+ 1698 0010 82B0     		sub	sp, sp, #8
+ 1699 0012 94F83700 		ldrb	r0, [r4, #55]	@ zero_extendqisi2
+ 1700 0016 9DF810C0 		ldrb	ip, [sp, #16]	@ zero_extendqisi2
+ 1701 001a C007     		lsls	r0, r0, #31
+ 1702 001c 0AD5     		bpl	.L345
+ 1703 001e 4FF0E023 		mov	r3, #-536813568
+ 1704 0022 D3F8F03D 		ldr	r3, [r3, #3568]
+ 1705 0026 DA07     		lsls	r2, r3, #31
+ 1706 0028 02D4     		bmi	.L357
+ 1707              	.L346:
+ 1708 002a 0020     		movs	r0, #0
+ 1709              	.L347:
+ 1710 002c 02B0     		add	sp, sp, #8
+ 1711              		@ sp needed
+ 1712 002e 10BD     		pop	{r4, pc}
+ 1713              	.L357:
+ 1714              		.syntax unified
+ 1715              	@ 1594 "libs/tinyusb/device/usbd.c" 1
+ 1716 0030 00BE     		BKPT #0
+ 1717              	
+ 1718              	@ 0 "" 2
+ 1719              		.thumb
+ 1720              		.syntax unified
+ 1721 0032 FAE7     		b	.L346
+ 1722              	.L345:
+ 1723 0034 94F83700 		ldrb	r0, [r4, #55]	@ zero_extendqisi2
+ 1724 0038 40F00100 		orr	r0, r0, #1
+ 1725 003c 84F83700 		strb	r0, [r4, #55]
+ 1726 0040 0C48     		ldr	r0, .L358+4
+ 1727 0042 CDF800C0 		str	ip, [sp]
+ 1728 0046 0078     		ldrb	r0, [r0]	@ zero_extendqisi2
+ 1729 0048 FFF7FEFF 		bl	dcd_edpt_xfer
+ 1730 004c 0028     		cmp	r0, #0
+ 1731 004e EDD1     		bne	.L347
+ 1732 0050 94F83730 		ldrb	r3, [r4, #55]	@ zero_extendqisi2
+ 1733 0054 4FF0E022 		mov	r2, #-536813568
+ 1734 0058 03F0FA03 		and	r3, r3, #250
+ 1735 005c 84F83730 		strb	r3, [r4, #55]
+ 1736 0060 D2F8F03D 		ldr	r3, [r2, #3568]
+ 1737 0064 DB07     		lsls	r3, r3, #31
+ 1738 0066 E1D5     		bpl	.L347
+ 1739              		.syntax unified
+ 1740              	@ 1606 "libs/tinyusb/device/usbd.c" 1
+ 1741 0068 00BE     		BKPT #0
+ 1742              	
+ARM GAS  /tmp/cct4789Y.s 			page 30
+
+
+ 1743              	@ 0 "" 2
+ 1744              		.thumb
+ 1745              		.syntax unified
+ 1746 006a 02B0     		add	sp, sp, #8
+ 1747              		@ sp needed
+ 1748 006c 10BD     		pop	{r4, pc}
+ 1749              	.L359:
+ 1750 006e 00BF     		.align	2
+ 1751              	.L358:
+ 1752 0070 00000000 		.word	_usbd_dev
+ 1753 0074 00000000 		.word	_usbd_rhport
+ 1755              		.section	.text.tud_control_status,"ax",%progbits
+ 1756              		.align	1
+ 1757              		.p2align 2,,3
+ 1758              		.global	tud_control_status
+ 1759              		.syntax unified
+ 1760              		.thumb
+ 1761              		.thumb_func
+ 1763              	tud_control_status:
+ 1764              		@ args = 0, pretend = 0, frame = 0
+ 1765              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1766 0000 00B5     		push	{lr}
+ 1767 0002 094B     		ldr	r3, .L364
+ 1768 0004 DA88     		ldrh	r2, [r3, #6]
+ 1769 0006 83B0     		sub	sp, sp, #12
+ 1770 0008 5AB1     		cbz	r2, .L362
+ 1771 000a 1978     		ldrb	r1, [r3]	@ zero_extendqisi2
+ 1772 000c 81F0FF01 		eor	r1, r1, #255
+ 1773 0010 01F08001 		and	r1, r1, #128
+ 1774              	.L361:
+ 1775 0014 0023     		movs	r3, #0
+ 1776 0016 0093     		str	r3, [sp]
+ 1777 0018 1A46     		mov	r2, r3
+ 1778 001a FFF7FEFF 		bl	usbd_edpt_xfer
+ 1779 001e 03B0     		add	sp, sp, #12
+ 1780              		@ sp needed
+ 1781 0020 00BD     		pop	{pc}
+ 1782              	.L362:
+ 1783 0022 8021     		movs	r1, #128
+ 1784 0024 F6E7     		b	.L361
+ 1785              	.L365:
+ 1786 0026 00BF     		.align	2
+ 1787              	.L364:
+ 1788 0028 00000000 		.word	_usbd_dev
+ 1790              		.section	.text.data_stage_xact,"ax",%progbits
+ 1791              		.align	1
+ 1792              		.p2align 2,,3
+ 1793              		.syntax unified
+ 1794              		.thumb
+ 1795              		.thumb_func
+ 1797              	data_stage_xact:
+ 1798              		@ args = 0, pretend = 0, frame = 8
+ 1799              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1800 0000 1A4A     		ldr	r2, .L376
+ 1801 0002 10B5     		push	{r4, lr}
+ 1802 0004 D189     		ldrh	r1, [r2, #14]
+ 1803 0006 92F900C0 		ldrsb	ip, [r2]
+ARM GAS  /tmp/cct4789Y.s 			page 31
+
+
+ 1804 000a 0446     		mov	r4, r0
+ 1805 000c 9089     		ldrh	r0, [r2, #12]
+ 1806 000e 431A     		subs	r3, r0, r1
+ 1807 0010 9BB2     		uxth	r3, r3
+ 1808 0012 402B     		cmp	r3, #64
+ 1809 0014 28BF     		it	cs
+ 1810 0016 4023     		movcs	r3, #64
+ 1811 0018 BCF1000F 		cmp	ip, #0
+ 1812 001c 84B0     		sub	sp, sp, #16
+ 1813 001e 0EDB     		blt	.L375
+ 1814 0020 8842     		cmp	r0, r1
+ 1815 0022 09D0     		beq	.L373
+ 1816 0024 1248     		ldr	r0, .L376+4
+ 1817 0026 0021     		movs	r1, #0
+ 1818              	.L368:
+ 1819 0028 0022     		movs	r2, #0
+ 1820 002a 0092     		str	r2, [sp]
+ 1821 002c 0246     		mov	r2, r0
+ 1822 002e 2046     		mov	r0, r4
+ 1823 0030 FFF7FEFF 		bl	usbd_edpt_xfer
+ 1824              	.L369:
+ 1825 0034 04B0     		add	sp, sp, #16
+ 1826              		@ sp needed
+ 1827 0036 10BD     		pop	{r4, pc}
+ 1828              	.L373:
+ 1829 0038 0021     		movs	r1, #0
+ 1830 003a 0846     		mov	r0, r1
+ 1831 003c F4E7     		b	.L368
+ 1832              	.L375:
+ 1833 003e 8842     		cmp	r0, r1
+ 1834 0040 11D0     		beq	.L370
+ 1835 0042 9068     		ldr	r0, [r2, #8]
+ 1836 0044 0A4A     		ldr	r2, .L376+4
+ 1837 0046 9042     		cmp	r0, r2
+ 1838 0048 0BD0     		beq	.L371
+ 1839 004a 0028     		cmp	r0, #0
+ 1840 004c F2D0     		beq	.L369
+ 1841 004e 0146     		mov	r1, r0
+ 1842 0050 1A46     		mov	r2, r3
+ 1843 0052 0748     		ldr	r0, .L376+4
+ 1844 0054 0393     		str	r3, [sp, #12]
+ 1845 0056 FFF7FEFF 		bl	memcpy
+ 1846 005a 0548     		ldr	r0, .L376+4
+ 1847 005c 039B     		ldr	r3, [sp, #12]
+ 1848 005e 8021     		movs	r1, #128
+ 1849 0060 E2E7     		b	.L368
+ 1850              	.L371:
+ 1851 0062 8021     		movs	r1, #128
+ 1852 0064 E0E7     		b	.L368
+ 1853              	.L370:
+ 1854 0066 8021     		movs	r1, #128
+ 1855 0068 0020     		movs	r0, #0
+ 1856 006a DDE7     		b	.L368
+ 1857              	.L377:
+ 1858              		.align	2
+ 1859              	.L376:
+ 1860 006c 00000000 		.word	_usbd_dev
+ARM GAS  /tmp/cct4789Y.s 			page 32
+
+
+ 1861 0070 00000000 		.word	_ctrl_epbuf
+ 1863              		.section	.text.tud_control_xfer,"ax",%progbits
+ 1864              		.align	1
+ 1865              		.p2align 2,,3
+ 1866              		.global	tud_control_xfer
+ 1867              		.syntax unified
+ 1868              		.thumb
+ 1869              		.thumb_func
+ 1871              	tud_control_xfer:
+ 1872              		@ args = 0, pretend = 0, frame = 0
+ 1873              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1874 0000 1749     		ldr	r1, .L400
+ 1875 0002 00B5     		push	{lr}
+ 1876 0004 B1F806E0 		ldrh	lr, [r1, #6]
+ 1877 0008 7345     		cmp	r3, lr
+ 1878 000a 28BF     		it	cs
+ 1879 000c 7346     		movcs	r3, lr
+ 1880 000e 83B0     		sub	sp, sp, #12
+ 1881 0010 8A60     		str	r2, [r1, #8]
+ 1882 0012 8B81     		strh	r3, [r1, #12]	@ movhi
+ 1883 0014 BEF1000F 		cmp	lr, #0
+ 1884 0018 06D0     		beq	.L379
+ 1885 001a 03B1     		cbz	r3, .L380
+ 1886 001c B2B1     		cbz	r2, .L399
+ 1887              	.L380:
+ 1888 001e FFF7FEFF 		bl	data_stage_xact
+ 1889 0022 50B1     		cbz	r0, .L398
+ 1890              	.L382:
+ 1891 0024 03B0     		add	sp, sp, #12
+ 1892              		@ sp needed
+ 1893 0026 00BD     		pop	{pc}
+ 1894              	.L379:
+ 1895 0028 CDF800E0 		str	lr, [sp]
+ 1896 002c 7346     		mov	r3, lr
+ 1897 002e 7246     		mov	r2, lr
+ 1898 0030 8021     		movs	r1, #128
+ 1899 0032 FFF7FEFF 		bl	usbd_edpt_xfer
+ 1900 0036 0028     		cmp	r0, #0
+ 1901 0038 F4D1     		bne	.L382
+ 1902              	.L398:
+ 1903 003a 4FF0E023 		mov	r3, #-536813568
+ 1904 003e D3F8F03D 		ldr	r3, [r3, #3568]
+ 1905 0042 DB07     		lsls	r3, r3, #31
+ 1906 0044 EED5     		bpl	.L382
+ 1907              		.syntax unified
+ 1908              	@ 873 "libs/tinyusb/device/usbd.c" 1
+ 1909 0046 00BE     		BKPT #0
+ 1910              	
+ 1911              	@ 0 "" 2
+ 1912              		.thumb
+ 1913              		.syntax unified
+ 1914 0048 03B0     		add	sp, sp, #12
+ 1915              		@ sp needed
+ 1916 004a 00BD     		pop	{pc}
+ 1917              	.L399:
+ 1918 004c 4FF0E023 		mov	r3, #-536813568
+ 1919 0050 D3F8F03D 		ldr	r3, [r3, #3568]
+ARM GAS  /tmp/cct4789Y.s 			page 33
+
+
+ 1920 0054 DA07     		lsls	r2, r3, #31
+ 1921 0056 00D5     		bpl	.L381
+ 1922              		.syntax unified
+ 1923              	@ 868 "libs/tinyusb/device/usbd.c" 1
+ 1924 0058 00BE     		BKPT #0
+ 1925              	
+ 1926              	@ 0 "" 2
+ 1927              		.thumb
+ 1928              		.syntax unified
+ 1929              	.L381:
+ 1930 005a 0020     		movs	r0, #0
+ 1931 005c E2E7     		b	.L382
+ 1932              	.L401:
+ 1933 005e 00BF     		.align	2
+ 1934              	.L400:
+ 1935 0060 00000000 		.word	_usbd_dev
+ 1937              		.section	.text.usbd_edpt_xfer_fifo,"ax",%progbits
+ 1938              		.align	1
+ 1939              		.p2align 2,,3
+ 1940              		.global	usbd_edpt_xfer_fifo
+ 1941              		.syntax unified
+ 1942              		.thumb
+ 1943              		.thumb_func
+ 1945              	usbd_edpt_xfer_fifo:
+ 1946              		@ args = 4, pretend = 0, frame = 0
+ 1947              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1948 0000 10B5     		push	{r4, lr}
+ 1949 0002 1B4C     		ldr	r4, .L416
+ 1950 0004 01F00F00 		and	r0, r1, #15
+ 1951 0008 04EB4004 		add	r4, r4, r0, lsl #1
+ 1952 000c 04EBD114 		add	r4, r4, r1, lsr #7
+ 1953 0010 82B0     		sub	sp, sp, #8
+ 1954 0012 94F83700 		ldrb	r0, [r4, #55]	@ zero_extendqisi2
+ 1955 0016 9DF810C0 		ldrb	ip, [sp, #16]	@ zero_extendqisi2
+ 1956 001a C007     		lsls	r0, r0, #31
+ 1957 001c 0AD5     		bpl	.L403
+ 1958 001e 4FF0E023 		mov	r3, #-536813568
+ 1959 0022 D3F8F03D 		ldr	r3, [r3, #3568]
+ 1960 0026 DA07     		lsls	r2, r3, #31
+ 1961 0028 02D4     		bmi	.L415
+ 1962              	.L404:
+ 1963 002a 0020     		movs	r0, #0
+ 1964              	.L405:
+ 1965 002c 02B0     		add	sp, sp, #8
+ 1966              		@ sp needed
+ 1967 002e 10BD     		pop	{r4, pc}
+ 1968              	.L415:
+ 1969              		.syntax unified
+ 1970              	@ 1625 "libs/tinyusb/device/usbd.c" 1
+ 1971 0030 00BE     		BKPT #0
+ 1972              	
+ 1973              	@ 0 "" 2
+ 1974              		.thumb
+ 1975              		.syntax unified
+ 1976 0032 FAE7     		b	.L404
+ 1977              	.L403:
+ 1978 0034 94F83700 		ldrb	r0, [r4, #55]	@ zero_extendqisi2
+ARM GAS  /tmp/cct4789Y.s 			page 34
+
+
+ 1979 0038 40F00100 		orr	r0, r0, #1
+ 1980 003c 84F83700 		strb	r0, [r4, #55]
+ 1981 0040 0C48     		ldr	r0, .L416+4
+ 1982 0042 CDF800C0 		str	ip, [sp]
+ 1983 0046 0078     		ldrb	r0, [r0]	@ zero_extendqisi2
+ 1984 0048 FFF7FEFF 		bl	dcd_edpt_xfer_fifo
+ 1985 004c 0028     		cmp	r0, #0
+ 1986 004e EDD1     		bne	.L405
+ 1987 0050 94F83730 		ldrb	r3, [r4, #55]	@ zero_extendqisi2
+ 1988 0054 4FF0E022 		mov	r2, #-536813568
+ 1989 0058 03F0FA03 		and	r3, r3, #250
+ 1990 005c 84F83730 		strb	r3, [r4, #55]
+ 1991 0060 D2F8F03D 		ldr	r3, [r2, #3568]
+ 1992 0064 DB07     		lsls	r3, r3, #31
+ 1993 0066 E1D5     		bpl	.L405
+ 1994              		.syntax unified
+ 1995              	@ 1638 "libs/tinyusb/device/usbd.c" 1
+ 1996 0068 00BE     		BKPT #0
+ 1997              	
+ 1998              	@ 0 "" 2
+ 1999              		.thumb
+ 2000              		.syntax unified
+ 2001 006a 02B0     		add	sp, sp, #8
+ 2002              		@ sp needed
+ 2003 006c 10BD     		pop	{r4, pc}
+ 2004              	.L417:
+ 2005 006e 00BF     		.align	2
+ 2006              	.L416:
+ 2007 0070 00000000 		.word	_usbd_dev
+ 2008 0074 00000000 		.word	_usbd_rhport
+ 2010              		.section	.text.usbd_edpt_busy,"ax",%progbits
+ 2011              		.align	1
+ 2012              		.p2align 2,,3
+ 2013              		.global	usbd_edpt_busy
+ 2014              		.syntax unified
+ 2015              		.thumb
+ 2016              		.thumb_func
+ 2018              	usbd_edpt_busy:
+ 2019              		@ args = 0, pretend = 0, frame = 0
+ 2020              		@ frame_needed = 0, uses_anonymous_args = 0
+ 2021              		@ link register save eliminated.
+ 2022 0000 054B     		ldr	r3, .L419
+ 2023 0002 01F00F02 		and	r2, r1, #15
+ 2024 0006 03EB4203 		add	r3, r3, r2, lsl #1
+ 2025 000a 03EBD113 		add	r3, r3, r1, lsr #7
+ 2026 000e 93F83700 		ldrb	r0, [r3, #55]	@ zero_extendqisi2
+ 2027 0012 00F00100 		and	r0, r0, #1
+ 2028 0016 7047     		bx	lr
+ 2029              	.L420:
+ 2030              		.align	2
+ 2031              	.L419:
+ 2032 0018 00000000 		.word	_usbd_dev
+ 2034              		.section	.text.usbd_edpt_stall,"ax",%progbits
+ 2035              		.align	1
+ 2036              		.p2align 2,,3
+ 2037              		.global	usbd_edpt_stall
+ 2038              		.syntax unified
+ARM GAS  /tmp/cct4789Y.s 			page 35
+
+
+ 2039              		.thumb
+ 2040              		.thumb_func
+ 2042              	usbd_edpt_stall:
+ 2043              		@ args = 0, pretend = 0, frame = 8
+ 2044              		@ frame_needed = 0, uses_anonymous_args = 0
+ 2045 0000 00B5     		push	{lr}
+ 2046 0002 0B4B     		ldr	r3, .L423
+ 2047 0004 83B0     		sub	sp, sp, #12
+ 2048 0006 1878     		ldrb	r0, [r3]	@ zero_extendqisi2
+ 2049 0008 0191     		str	r1, [sp, #4]
+ 2050 000a FFF7FEFF 		bl	dcd_edpt_stall
+ 2051 000e 0199     		ldr	r1, [sp, #4]
+ 2052 0010 084B     		ldr	r3, .L423+4
+ 2053 0012 01F00F02 		and	r2, r1, #15
+ 2054 0016 03EB4203 		add	r3, r3, r2, lsl #1
+ 2055 001a 03EBD111 		add	r1, r3, r1, lsr #7
+ 2056 001e 91F83730 		ldrb	r3, [r1, #55]	@ zero_extendqisi2
+ 2057 0022 43F00303 		orr	r3, r3, #3
+ 2058 0026 81F83730 		strb	r3, [r1, #55]
+ 2059 002a 03B0     		add	sp, sp, #12
+ 2060              		@ sp needed
+ 2061 002c 00BD     		pop	{pc}
+ 2062              	.L424:
+ 2063 002e 00BF     		.align	2
+ 2064              	.L423:
+ 2065 0030 00000000 		.word	_usbd_rhport
+ 2066 0034 00000000 		.word	_usbd_dev
+ 2068              		.section	.text.usbd_edpt_clear_stall,"ax",%progbits
+ 2069              		.align	1
+ 2070              		.p2align 2,,3
+ 2071              		.global	usbd_edpt_clear_stall
+ 2072              		.syntax unified
+ 2073              		.thumb
+ 2074              		.thumb_func
+ 2076              	usbd_edpt_clear_stall:
+ 2077              		@ args = 0, pretend = 0, frame = 0
+ 2078              		@ frame_needed = 0, uses_anonymous_args = 0
+ 2079 0000 38B5     		push	{r3, r4, r5, lr}
+ 2080 0002 0C4C     		ldr	r4, .L429
+ 2081 0004 0C4B     		ldr	r3, .L429+4
+ 2082 0006 01F00F02 		and	r2, r1, #15
+ 2083 000a 04EB4204 		add	r4, r4, r2, lsl #1
+ 2084 000e 04EBD114 		add	r4, r4, r1, lsr #7
+ 2085 0012 1878     		ldrb	r0, [r3]	@ zero_extendqisi2
+ 2086 0014 94F83750 		ldrb	r5, [r4, #55]	@ zero_extendqisi2
+ 2087 0018 FFF7FEFF 		bl	dcd_edpt_clear_stall
+ 2088 001c 94F83730 		ldrb	r3, [r4, #55]	@ zero_extendqisi2
+ 2089 0020 15F0020F 		tst	r5, #2
+ 2090 0024 14BF     		ite	ne
+ 2091 0026 F822     		movne	r2, #248
+ 2092 0028 FC22     		moveq	r2, #252
+ 2093 002a 1340     		ands	r3, r3, r2
+ 2094 002c 84F83730 		strb	r3, [r4, #55]
+ 2095 0030 38BD     		pop	{r3, r4, r5, pc}
+ 2096              	.L430:
+ 2097 0032 00BF     		.align	2
+ 2098              	.L429:
+ARM GAS  /tmp/cct4789Y.s 			page 36
+
+
+ 2099 0034 00000000 		.word	_usbd_dev
+ 2100 0038 00000000 		.word	_usbd_rhport
+ 2102              		.section	.text.tud_task_ext,"ax",%progbits
+ 2103              		.align	1
+ 2104              		.p2align 2,,3
+ 2105              		.global	tud_task_ext
+ 2106              		.syntax unified
+ 2107              		.thumb
+ 2108              		.thumb_func
+ 2110              	tud_task_ext:
+ 2111              		@ args = 0, pretend = 0, frame = 40
+ 2112              		@ frame_needed = 0, uses_anonymous_args = 0
+ 2113 0000 2DE9F04F 		push	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 2114 0004 AE4E     		ldr	r6, .L704
+ 2115 0006 3378     		ldrb	r3, [r6]	@ zero_extendqisi2
+ 2116 0008 FF2B     		cmp	r3, #255
+ 2117 000a 8DB0     		sub	sp, sp, #52
+ 2118 000c 36D0     		beq	.L431
+ 2119 000e AD4F     		ldr	r7, .L704+4
+ 2120 0010 AD4D     		ldr	r5, .L704+8
+ 2121 0012 DFF8C082 		ldr	r8, .L704+20
+ 2122 0016 DFF8C892 		ldr	r9, .L704+32
+ 2123 001a 1024     		movs	r4, #16
+ 2124              	.L545:
+ 2125 001c D7F800A0 		ldr	r10, [r7]
+ 2126 0020 DAF80030 		ldr	r3, [r10]
+ 2127 0024 AB42     		cmp	r3, r5
+ 2128 0026 40F0E380 		bne	.L433
+ 2129 002a 3078     		ldrb	r0, [r6]	@ zero_extendqisi2
+ 2130 002c FFF7FEFF 		bl	dcd_int_disable
+ 2131              	.L434:
+ 2132 0030 0023     		movs	r3, #0
+ 2133 0032 BAF80420 		ldrh	r2, [r10, #4]
+ 2134 0036 09A9     		add	r1, sp, #36
+ 2135 0038 0AF10800 		add	r0, r10, #8
+ 2136 003c FFF7FEFF 		bl	tu_fifo_read_n_access_mode
+ 2137 0040 DAF80030 		ldr	r3, [r10]
+ 2138 0044 AB42     		cmp	r3, r5
+ 2139 0046 8346     		mov	fp, r0
+ 2140 0048 40F0D580 		bne	.L435
+ 2141 004c 3078     		ldrb	r0, [r6]	@ zero_extendqisi2
+ 2142 004e FFF7FEFF 		bl	dcd_int_enable
+ 2143              	.L436:
+ 2144 0052 BBF1000F 		cmp	fp, #0
+ 2145 0056 11D0     		beq	.L431
+ 2146 0058 9DF82530 		ldrb	r3, [sp, #37]	@ zero_extendqisi2
+ 2147 005c 013B     		subs	r3, r3, #1
+ 2148 005e 072B     		cmp	r3, #7
+ 2149 0060 00F22581 		bhi	.L438
+ 2150 0064 DFE803F0 		tbb	[pc, r3]
+ 2151              	.L440:
+ 2152 0068 B7       		.byte	(.L447-.L440)/2
+ 2153 0069 AC       		.byte	(.L446-.L440)/2
+ 2154 006a A3       		.byte	(.L445-.L440)/2
+ 2155 006b 97       		.byte	(.L444-.L440)/2
+ 2156 006c 8F       		.byte	(.L443-.L440)/2
+ 2157 006d 30       		.byte	(.L442-.L440)/2
+ARM GAS  /tmp/cct4789Y.s 			page 37
+
+
+ 2158 006e 0D       		.byte	(.L441-.L440)/2
+ 2159 006f 04       		.byte	(.L439-.L440)/2
+ 2160              		.p2align 1
+ 2161              	.L439:
+ 2162 0070 0A9B     		ldr	r3, [sp, #40]
+ 2163 0072 0BB1     		cbz	r3, .L448
+ 2164 0074 0B98     		ldr	r0, [sp, #44]
+ 2165 0076 9847     		blx	r3
+ 2166              	.L448:
+ 2167 0078 013C     		subs	r4, r4, #1
+ 2168 007a CFD1     		bne	.L545
+ 2169              	.L431:
+ 2170 007c 0DB0     		add	sp, sp, #52
+ 2171              		@ sp needed
+ 2172 007e BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 2173              	.L441:
+ 2174 0082 9DF82810 		ldrb	r1, [sp, #40]	@ zero_extendqisi2
+ 2175 0086 01F00F00 		and	r0, r1, #15
+ 2176 008a 08EB4003 		add	r3, r8, r0, lsl #1
+ 2177 008e 03EBD113 		add	r3, r3, r1, lsr #7
+ 2178 0092 93F83720 		ldrb	r2, [r3, #55]	@ zero_extendqisi2
+ 2179 0096 02F0FA02 		and	r2, r2, #250
+ 2180 009a 83F83720 		strb	r2, [r3, #55]
+ 2181 009e 0028     		cmp	r0, #0
+ 2182 00a0 00F0B680 		beq	.L693
+ 2183 00a4 894A     		ldr	r2, .L704+12
+ 2184 00a6 93F82B30 		ldrb	r3, [r3, #43]	@ zero_extendqisi2
+ 2185 00aa 1278     		ldrb	r2, [r2]	@ zero_extendqisi2
+ 2186 00ac 9342     		cmp	r3, r2
+ 2187 00ae C0F0A580 		bcc	.L694
+ 2188 00b2 40F02A81 		bne	.L542
+ 2189 00b6 DFF82CA2 		ldr	r10, .L704+36
+ 2190              	.L544:
+ 2191 00ba 0B9B     		ldr	r3, [sp, #44]
+ 2192 00bc 9DF82920 		ldrb	r2, [sp, #41]	@ zero_extendqisi2
+ 2193 00c0 9DF82400 		ldrb	r0, [sp, #36]	@ zero_extendqisi2
+ 2194 00c4 D047     		blx	r10
+ 2195 00c6 D7E7     		b	.L448
+ 2196              	.L442:
+ 2197 00c8 99F80030 		ldrb	r3, [r9]	@ zero_extendqisi2
+ 2198 00cc 002B     		cmp	r3, #0
+ 2199 00ce D3D0     		beq	.L448
+ 2200 00d0 99F80030 		ldrb	r3, [r9]	@ zero_extendqisi2
+ 2201 00d4 013B     		subs	r3, r3, #1
+ 2202 00d6 89F80030 		strb	r3, [r9]
+ 2203 00da 99F80030 		ldrb	r3, [r9]	@ zero_extendqisi2
+ 2204 00de 002B     		cmp	r3, #0
+ 2205 00e0 CAD1     		bne	.L448
+ 2206 00e2 DDE90A01 		ldrd	r0, r1, [sp, #40]
+ 2207 00e6 DFF8ECA1 		ldr	r10, .L704+20
+ 2208 00ea 9DF824B0 		ldrb	fp, [sp, #36]	@ zero_extendqisi2
+ 2209 00ee CAF81030 		str	r3, [r10, #16]
+ 2210 00f2 8AE80300 		stm	r10, {r0, r1}
+ 2211 00f6 0122     		movs	r2, #1
+ 2212 00f8 8AF81420 		strb	r2, [r10, #20]
+ 2213 00fc CAE90233 		strd	r3, r3, [r10, #8]
+ 2214 0100 8AF83730 		strb	r3, [r10, #55]
+ARM GAS  /tmp/cct4789Y.s 			page 38
+
+
+ 2215 0104 8AF83830 		strb	r3, [r10, #56]
+ 2216 0108 9AF80030 		ldrb	r3, [r10]	@ zero_extendqisi2
+ 2217 010c 03F06000 		and	r0, r3, #96
+ 2218 0110 6028     		cmp	r0, #96
+ 2219 0112 00F00681 		beq	.L456
+ 2220 0116 4028     		cmp	r0, #64
+ 2221 0118 00F08881 		beq	.L695
+ 2222 011c 03F01F02 		and	r2, r3, #31
+ 2223 0120 012A     		cmp	r2, #1
+ 2224 0122 00F04581 		beq	.L454
+ 2225 0126 022A     		cmp	r2, #2
+ 2226 0128 00F01881 		beq	.L455
+ 2227 012c 002A     		cmp	r2, #0
+ 2228 012e 40F0F880 		bne	.L456
+ 2229 0132 2028     		cmp	r0, #32
+ 2230 0134 40F08381 		bne	.L457
+ 2231 0138 9AF80430 		ldrb	r3, [r10, #4]	@ zero_extendqisi2
+ 2232 013c 0F2B     		cmp	r3, #15
+ 2233 013e 18D8     		bhi	.L451
+ 2234 0140 624A     		ldr	r2, .L704+12
+ 2235 0142 5344     		add	r3, r3, r10
+ 2236 0144 1278     		ldrb	r2, [r2]	@ zero_extendqisi2
+ 2237 0146 DB7E     		ldrb	r3, [r3, #27]	@ zero_extendqisi2
+ 2238 0148 9342     		cmp	r3, r2
+ 2239 014a 80F04282 		bcs	.L458
+ 2240 014e 604A     		ldr	r2, .L704+16
+ 2241 0150 1268     		ldr	r2, [r2]
+ 2242 0152 03EBC303 		add	r3, r3, r3, lsl #3
+ 2243 0156 12EB8302 		adds	r2, r2, r3, lsl #2
+ 2244 015a 0AD0     		beq	.L451
+ 2245 015c 5369     		ldr	r3, [r2, #20]
+ 2246              	.L524:
+ 2247 015e 5D4A     		ldr	r2, .L704+20
+ 2248 0160 CAF81030 		str	r3, [r10, #16]
+ 2249 0164 5846     		mov	r0, fp
+ 2250 0166 0121     		movs	r1, #1
+ 2251 0168 9847     		blx	r3
+ 2252              	.L453:
+ 2253 016a 0028     		cmp	r0, #0
+ 2254 016c 84D1     		bne	.L448
+ 2255              	.L673:
+ 2256 016e 9DF824B0 		ldrb	fp, [sp, #36]	@ zero_extendqisi2
+ 2257              	.L451:
+ 2258 0172 5846     		mov	r0, fp
+ 2259 0174 0021     		movs	r1, #0
+ 2260 0176 FFF7FEFF 		bl	dcd_edpt_stall
+ 2261 017a 9DF82400 		ldrb	r0, [sp, #36]	@ zero_extendqisi2
+ 2262 017e 8021     		movs	r1, #128
+ 2263 0180 FFF7FEFF 		bl	dcd_edpt_stall
+ 2264 0184 78E7     		b	.L448
+ 2265              	.L443:
+ 2266 0186 98F81430 		ldrb	r3, [r8, #20]	@ zero_extendqisi2
+ 2267 018a 002B     		cmp	r3, #0
+ 2268 018c 3FF474AF 		beq	.L448
+ 2269 0190 FFF7FEFF 		bl	tud_resume_cb
+ 2270 0194 70E7     		b	.L448
+ 2271              	.L444:
+ARM GAS  /tmp/cct4789Y.s 			page 39
+
+
+ 2272 0196 98F81430 		ldrb	r3, [r8, #20]	@ zero_extendqisi2
+ 2273 019a 002B     		cmp	r3, #0
+ 2274 019c 3FF46CAF 		beq	.L448
+ 2275 01a0 98F81700 		ldrb	r0, [r8, #23]	@ zero_extendqisi2
+ 2276 01a4 C0F34000 		ubfx	r0, r0, #1, #1
+ 2277 01a8 FFF7FEFF 		bl	tud_suspend_cb
+ 2278 01ac 64E7     		b	.L448
+ 2279              	.L445:
+ 2280 01ae 98F81A30 		ldrb	r3, [r8, #26]	@ zero_extendqisi2
+ 2281 01b2 DA07     		lsls	r2, r3, #31
+ 2282 01b4 7FF560AF 		bpl	.L448
+ 2283 01b8 0A98     		ldr	r0, [sp, #40]
+ 2284 01ba FFF7FEFF 		bl	tud_sof_cb
+ 2285 01be 5BE7     		b	.L448
+ 2286              	.L446:
+ 2287 01c0 9DF82400 		ldrb	r0, [sp, #36]	@ zero_extendqisi2
+ 2288 01c4 FFF7FEFF 		bl	configuration_reset
+ 2289 01c8 4FF00003 		mov	r3, #0
+ 2290 01cc 89F80030 		strb	r3, [r9]
+ 2291 01d0 FFF7FEFF 		bl	tud_umount_cb
+ 2292 01d4 50E7     		b	.L448
+ 2293              	.L447:
+ 2294 01d6 9DF82400 		ldrb	r0, [sp, #36]	@ zero_extendqisi2
+ 2295 01da FFF7FEFF 		bl	configuration_reset
+ 2296 01de 4FF00003 		mov	r3, #0
+ 2297 01e2 89F80030 		strb	r3, [r9]
+ 2298 01e6 9DF82830 		ldrb	r3, [sp, #40]	@ zero_extendqisi2
+ 2299 01ea 88F81930 		strb	r3, [r8, #25]
+ 2300 01ee 43E7     		b	.L448
+ 2301              	.L433:
+ 2302 01f0 0020     		movs	r0, #0
+ 2303 01f2 9847     		blx	r3
+ 2304 01f4 1CE7     		b	.L434
+ 2305              	.L435:
+ 2306 01f6 0120     		movs	r0, #1
+ 2307 01f8 9847     		blx	r3
+ 2308 01fa 2AE7     		b	.L436
+ 2309              	.L694:
+ 2310 01fc 344A     		ldr	r2, .L704+16
+ 2311 01fe 1268     		ldr	r2, [r2]
+ 2312 0200 03EBC303 		add	r3, r3, r3, lsl #3
+ 2313 0204 12EB8302 		adds	r2, r2, r3, lsl #2
+ 2314 0208 7FD0     		beq	.L542
+ 2315 020a D2F818A0 		ldr	r10, [r2, #24]
+ 2316 020e 54E7     		b	.L544
+ 2317              	.L693:
+ 2318 0210 B8F806C0 		ldrh	ip, [r8, #6]
+ 2319 0214 9DF824B0 		ldrb	fp, [sp, #36]	@ zero_extendqisi2
+ 2320 0218 0B9A     		ldr	r2, [sp, #44]
+ 2321 021a BCF1000F 		cmp	ip, #0
+ 2322 021e 41D0     		beq	.L553
+ 2323 0220 98F800A0 		ldrb	r10, [r8]	@ zero_extendqisi2
+ 2324 0224 8AF0FF0A 		eor	r10, r10, #255
+ 2325 0228 0AF0800A 		and	r10, r10, #128
+ 2326              	.L532:
+ 2327 022c 5145     		cmp	r1, r10
+ 2328 022e 3CD0     		beq	.L696
+ARM GAS  /tmp/cct4789Y.s 			page 40
+
+
+ 2329 0230 98F90030 		ldrsb	r3, [r8]
+ 2330 0234 D8F80800 		ldr	r0, [r8, #8]
+ 2331 0238 002B     		cmp	r3, #0
+ 2332 023a 6FDB     		blt	.L697
+ 2333 023c 0028     		cmp	r0, #0
+ 2334 023e 3FF41BAF 		beq	.L448
+ 2335 0242 B8F80E30 		ldrh	r3, [r8, #14]
+ 2336 0246 B8F80C10 		ldrh	r1, [r8, #12]
+ 2337 024a C91A     		subs	r1, r1, r3
+ 2338 024c 8A42     		cmp	r2, r1
+ 2339 024e 28BF     		it	cs
+ 2340 0250 0A46     		movcs	r2, r1
+ 2341 0252 2149     		ldr	r1, .L704+24
+ 2342 0254 8842     		cmp	r0, r1
+ 2343 0256 09D0     		beq	.L536
+ 2344 0258 0292     		str	r2, [sp, #8]
+ 2345 025a FFF7FEFF 		bl	memcpy
+ 2346 025e B8F80E30 		ldrh	r3, [r8, #14]
+ 2347 0262 D8F80800 		ldr	r0, [r8, #8]
+ 2348 0266 B8F806C0 		ldrh	ip, [r8, #6]
+ 2349 026a 029A     		ldr	r2, [sp, #8]
+ 2350              	.L536:
+ 2351 026c 1344     		add	r3, r3, r2
+ 2352 026e 9BB2     		uxth	r3, r3
+ 2353 0270 1044     		add	r0, r0, r2
+ 2354 0272 6345     		cmp	r3, ip
+ 2355 0274 C8F80800 		str	r0, [r8, #8]
+ 2356 0278 A8F80E30 		strh	r3, [r8, #14]	@ movhi
+ 2357 027c 02D0     		beq	.L537
+ 2358 027e 3F2A     		cmp	r2, #63
+ 2359 0280 00F28F80 		bhi	.L538
+ 2360              	.L537:
+ 2361 0284 D8F81030 		ldr	r3, [r8, #16]
+ 2362 0288 002B     		cmp	r3, #0
+ 2363 028a 33D0     		beq	.L539
+ 2364 028c 134A     		ldr	r2, .L704+28
+ 2365 028e 9342     		cmp	r3, r2
+ 2366 0290 2AD1     		bne	.L698
+ 2367              	.L540:
+ 2368 0292 5846     		mov	r0, fp
+ 2369 0294 0021     		movs	r1, #0
+ 2370 0296 FFF7FEFF 		bl	dcd_edpt_stall
+ 2371 029a 5846     		mov	r0, fp
+ 2372 029c 8021     		movs	r1, #128
+ 2373 029e FFF7FEFF 		bl	dcd_edpt_stall
+ 2374 02a2 E9E6     		b	.L448
+ 2375              	.L553:
+ 2376 02a4 4FF0800A 		mov	r10, #128
+ 2377 02a8 C0E7     		b	.L532
+ 2378              	.L696:
+ 2379 02aa 002A     		cmp	r2, #0
+ 2380 02ac 44D0     		beq	.L534
+ 2381              	.L438:
+ 2382 02ae 4FF0E023 		mov	r3, #-536813568
+ 2383 02b2 D3F8F03D 		ldr	r3, [r3, #3568]
+ 2384 02b6 DB07     		lsls	r3, r3, #31
+ 2385 02b8 7FF5DEAE 		bpl	.L448
+ARM GAS  /tmp/cct4789Y.s 			page 41
+
+
+ 2386              		.syntax unified
+ 2387              	@ 799 "libs/tinyusb/device/usbd.c" 1
+ 2388 02bc 00BE     		BKPT #0
+ 2389              	
+ 2390              	@ 0 "" 2
+ 2391              		.thumb
+ 2392              		.syntax unified
+ 2393 02be DBE6     		b	.L448
+ 2394              	.L705:
+ 2395              		.align	2
+ 2396              	.L704:
+ 2397 02c0 00000000 		.word	_usbd_rhport
+ 2398 02c4 00000000 		.word	_usbd_q
+ 2399 02c8 00000000 		.word	usbd_int_set
+ 2400 02cc 00000000 		.word	_app_driver_count
+ 2401 02d0 00000000 		.word	_app_driver
+ 2402 02d4 00000000 		.word	_usbd_dev
+ 2403 02d8 00000000 		.word	_ctrl_epbuf
+ 2404 02dc 00000000 		.word	tud_vendor_control_xfer_cb.localalias
+ 2405 02e0 00000000 		.word	_usbd_queued_setup
+ 2406 02e4 00000000 		.word	cdcd_xfer_cb
+ 2407              	.L698:
+ 2408 02e8 BC4A     		ldr	r2, .L706
+ 2409 02ea 0221     		movs	r1, #2
+ 2410 02ec 5846     		mov	r0, fp
+ 2411 02ee 9847     		blx	r3
+ 2412 02f0 0028     		cmp	r0, #0
+ 2413 02f2 CED0     		beq	.L540
+ 2414              	.L539:
+ 2415 02f4 0023     		movs	r3, #0
+ 2416 02f6 5146     		mov	r1, r10
+ 2417 02f8 5846     		mov	r0, fp
+ 2418 02fa 0093     		str	r3, [sp]
+ 2419 02fc 1A46     		mov	r2, r3
+ 2420 02fe FFF7FEFF 		bl	usbd_edpt_xfer
+ 2421 0302 0028     		cmp	r0, #0
+ 2422 0304 7FF4B8AE 		bne	.L448
+ 2423 0308 D1E7     		b	.L438
+ 2424              	.L542:
+ 2425 030a 4FF0E023 		mov	r3, #-536813568
+ 2426 030e D3F8F03D 		ldr	r3, [r3, #3568]
+ 2427 0312 D907     		lsls	r1, r3, #31
+ 2428 0314 7FF5B2AE 		bpl	.L431
+ 2429              		.syntax unified
+ 2430              	@ 755 "libs/tinyusb/device/usbd.c" 1
+ 2431 0318 00BE     		BKPT #0
+ 2432              	
+ 2433              	@ 0 "" 2
+ 2434              		.thumb
+ 2435              		.syntax unified
+ 2436 031a AFE6     		b	.L431
+ 2437              	.L697:
+ 2438 031c B8F80E30 		ldrh	r3, [r8, #14]
+ 2439 0320 A4E7     		b	.L536
+ 2440              	.L456:
+ 2441 0322 4FF0E023 		mov	r3, #-536813568
+ 2442 0326 D3F8F03D 		ldr	r3, [r3, #3568]
+ARM GAS  /tmp/cct4789Y.s 			page 42
+
+
+ 2443 032a D807     		lsls	r0, r3, #31
+ 2444 032c 7FF521AF 		bpl	.L451
+ 2445              	.L672:
+ 2446              		.syntax unified
+ 2447              	@ 1239 "libs/tinyusb/device/usbd.c" 1
+ 2448 0330 00BE     		BKPT #0
+ 2449              	
+ 2450              	@ 0 "" 2
+ 2451              		.thumb
+ 2452              		.syntax unified
+ 2453 0332 9DF824B0 		ldrb	fp, [sp, #36]	@ zero_extendqisi2
+ 2454 0336 1CE7     		b	.L451
+ 2455              	.L534:
+ 2456 0338 A849     		ldr	r1, .L706
+ 2457 033a 5846     		mov	r0, fp
+ 2458 033c FFF7FEFF 		bl	dcd_edpt0_status_complete
+ 2459 0340 D8F81030 		ldr	r3, [r8, #16]
+ 2460 0344 002B     		cmp	r3, #0
+ 2461 0346 3FF497AE 		beq	.L448
+ 2462 034a A54A     		ldr	r2, .L706+4
+ 2463 034c 9342     		cmp	r3, r2
+ 2464 034e 3FF493AE 		beq	.L448
+ 2465 0352 A24A     		ldr	r2, .L706
+ 2466 0354 5846     		mov	r0, fp
+ 2467 0356 0321     		movs	r1, #3
+ 2468 0358 9847     		blx	r3
+ 2469 035a 8DE6     		b	.L448
+ 2470              	.L455:
+ 2471 035c 9AF80410 		ldrb	r1, [r10, #4]	@ zero_extendqisi2
+ 2472 0360 01F00F02 		and	r2, r1, #15
+ 2473 0364 052A     		cmp	r2, #5
+ 2474 0366 0292     		str	r2, [sp, #8]
+ 2475 0368 DBD8     		bhi	.L456
+ 2476 036a 029A     		ldr	r2, [sp, #8]
+ 2477 036c 0AEB4202 		add	r2, r10, r2, lsl #1
+ 2478 0370 02EBD112 		add	r2, r2, r1, lsr #7
+ 2479 0374 92F82BC0 		ldrb	ip, [r2, #43]	@ zero_extendqisi2
+ 2480 0378 9A4A     		ldr	r2, .L706+8
+ 2481 037a 1278     		ldrb	r2, [r2]	@ zero_extendqisi2
+ 2482 037c 9445     		cmp	ip, r2
+ 2483 037e 80F00881 		bcs	.L520
+ 2484 0382 994A     		ldr	r2, .L706+12
+ 2485 0384 1268     		ldr	r2, [r2]
+ 2486 0386 0CEBCC0C 		add	ip, ip, ip, lsl #3
+ 2487 038a 02EB8C02 		add	r2, r2, ip, lsl #2
+ 2488 038e 0392     		str	r2, [sp, #12]
+ 2489 0390 0028     		cmp	r0, #0
+ 2490 0392 00F00281 		beq	.L522
+ 2491 0396 039B     		ldr	r3, [sp, #12]
+ 2492 0398 002B     		cmp	r3, #0
+ 2493 039a 3FF4EAAE 		beq	.L451
+ 2494 039e 5B69     		ldr	r3, [r3, #20]
+ 2495 03a0 DDE6     		b	.L524
+ 2496              	.L538:
+ 2497 03a2 5846     		mov	r0, fp
+ 2498 03a4 FFF7FEFF 		bl	data_stage_xact
+ 2499 03a8 0028     		cmp	r0, #0
+ARM GAS  /tmp/cct4789Y.s 			page 43
+
+
+ 2500 03aa 7FF465AE 		bne	.L448
+ 2501 03ae 7EE7     		b	.L438
+ 2502              	.L454:
+ 2503 03b0 9AF80430 		ldrb	r3, [r10, #4]	@ zero_extendqisi2
+ 2504 03b4 0F2B     		cmp	r3, #15
+ 2505 03b6 3FF6DCAE 		bhi	.L451
+ 2506 03ba 8A4A     		ldr	r2, .L706+8
+ 2507 03bc 5344     		add	r3, r3, r10
+ 2508 03be 1278     		ldrb	r2, [r2]	@ zero_extendqisi2
+ 2509 03c0 DB7E     		ldrb	r3, [r3, #27]	@ zero_extendqisi2
+ 2510 03c2 9342     		cmp	r3, r2
+ 2511 03c4 80F00181 		bcs	.L510
+ 2512 03c8 874A     		ldr	r2, .L706+12
+ 2513 03ca 1268     		ldr	r2, [r2]
+ 2514 03cc 03EBC303 		add	r3, r3, r3, lsl #3
+ 2515 03d0 12EB8302 		adds	r2, r2, r3, lsl #2
+ 2516 03d4 3FF4CDAE 		beq	.L451
+ 2517 03d8 5369     		ldr	r3, [r2, #20]
+ 2518              	.L511:
+ 2519 03da 804A     		ldr	r2, .L706
+ 2520 03dc CAF81030 		str	r3, [r10, #16]
+ 2521 03e0 0121     		movs	r1, #1
+ 2522 03e2 5846     		mov	r0, fp
+ 2523 03e4 9847     		blx	r3
+ 2524 03e6 0028     		cmp	r0, #0
+ 2525 03e8 7FF446AE 		bne	.L448
+ 2526 03ec 9AF80030 		ldrb	r3, [r10]	@ zero_extendqisi2
+ 2527 03f0 13F06001 		ands	r1, r3, #96
+ 2528 03f4 7FF4BBAE 		bne	.L673
+ 2529 03f8 9AF80120 		ldrb	r2, [r10, #1]	@ zero_extendqisi2
+ 2530 03fc CAF81010 		str	r1, [r10, #16]
+ 2531 0400 0A2A     		cmp	r2, #10
+ 2532 0402 00F08A81 		beq	.L513
+ 2533 0406 0B2A     		cmp	r2, #11
+ 2534 0408 00F02C81 		beq	.L514
+ 2535 040c 002A     		cmp	r2, #0
+ 2536 040e 7FF4AEAE 		bne	.L673
+ 2537 0412 1906     		lsls	r1, r3, #24
+ 2538 0414 ADF82220 		strh	r2, [sp, #34]	@ movhi
+ 2539 0418 7FF5A9AE 		bpl	.L673
+ 2540              	.L671:
+ 2541 041c 6F49     		ldr	r1, .L706
+ 2542 041e 5846     		mov	r0, fp
+ 2543 0420 0223     		movs	r3, #2
+ 2544 0422 0DF12202 		add	r2, sp, #34
+ 2545 0426 FFF7FEFF 		bl	tud_control_xfer
+ 2546 042a 9EE6     		b	.L453
+ 2547              	.L695:
+ 2548 042c 6F4B     		ldr	r3, .L706+16
+ 2549 042e CAF81030 		str	r3, [r10, #16]
+ 2550 0432 1146     		mov	r1, r2
+ 2551 0434 5846     		mov	r0, fp
+ 2552 0436 5246     		mov	r2, r10
+ 2553 0438 FFF7FEFF 		bl	tud_vendor_control_xfer_cb
+ 2554 043c 95E6     		b	.L453
+ 2555              	.L457:
+ 2556 043e 9AF80120 		ldrb	r2, [r10, #1]	@ zero_extendqisi2
+ARM GAS  /tmp/cct4789Y.s 			page 44
+
+
+ 2557 0442 092A     		cmp	r2, #9
+ 2558 0444 3FF66DAF 		bhi	.L456
+ 2559 0448 01A1     		adr	r1, .L462
+ 2560 044a 51F822F0 		ldr	pc, [r1, r2, lsl #2]
+ 2561 044e 00BF     		.p2align 2
+ 2562              	.L462:
+ 2563 0450 83050000 		.word	.L468+1
+ 2564 0454 61050000 		.word	.L467+1
+ 2565 0458 23030000 		.word	.L456+1
+ 2566 045c E5040000 		.word	.L466+1
+ 2567 0460 23030000 		.word	.L456+1
+ 2568 0464 D3040000 		.word	.L465+1
+ 2569 0468 0D050000 		.word	.L464+1
+ 2570 046c 23030000 		.word	.L456+1
+ 2571 0470 BB040000 		.word	.L463+1
+ 2572 0474 79040000 		.word	.L461+1
+ 2573              		.p2align 1
+ 2574              	.L461:
+ 2575 0478 9AF80220 		ldrb	r2, [r10, #2]	@ zero_extendqisi2
+ 2576 047c 9AF81830 		ldrb	r3, [r10, #24]	@ zero_extendqisi2
+ 2577 0480 9A42     		cmp	r2, r3
+ 2578 0482 09D0     		beq	.L692
+ 2579 0484 002B     		cmp	r3, #0
+ 2580 0486 40F08A81 		bne	.L699
+ 2581              	.L470:
+ 2582 048a 8AF81820 		strb	r2, [r10, #24]
+ 2583 048e 002A     		cmp	r2, #0
+ 2584 0490 40F0F380 		bne	.L471
+ 2585 0494 FFF7FEFF 		bl	tud_umount_cb
+ 2586              	.L692:
+ 2587 0498 BAF80630 		ldrh	r3, [r10, #6]
+ 2588 049c 002B     		cmp	r3, #0
+ 2589 049e 6ED0     		beq	.L552
+ 2590 04a0 9AF80010 		ldrb	r1, [r10]	@ zero_extendqisi2
+ 2591 04a4 81F0FF01 		eor	r1, r1, #255
+ 2592 04a8 01F08001 		and	r1, r1, #128
+ 2593              	.L530:
+ 2594 04ac 0023     		movs	r3, #0
+ 2595 04ae 5846     		mov	r0, fp
+ 2596 04b0 0093     		str	r3, [sp]
+ 2597 04b2 1A46     		mov	r2, r3
+ 2598 04b4 FFF7FEFF 		bl	usbd_edpt_xfer
+ 2599 04b8 DEE5     		b	.L448
+ 2600              	.L463:
+ 2601 04ba 9AF81830 		ldrb	r3, [r10, #24]	@ zero_extendqisi2
+ 2602 04be 8DF82230 		strb	r3, [sp, #34]
+ 2603              	.L675:
+ 2604 04c2 4649     		ldr	r1, .L706
+ 2605 04c4 5846     		mov	r0, fp
+ 2606 04c6 0123     		movs	r3, #1
+ 2607 04c8 0DF12202 		add	r2, sp, #34
+ 2608 04cc FFF7FEFF 		bl	tud_control_xfer
+ 2609 04d0 D2E5     		b	.L448
+ 2610              	.L465:
+ 2611 04d2 9AF80210 		ldrb	r1, [r10, #2]	@ zero_extendqisi2
+ 2612 04d6 5846     		mov	r0, fp
+ 2613 04d8 FFF7FEFF 		bl	dcd_set_address
+ARM GAS  /tmp/cct4789Y.s 			page 45
+
+
+ 2614 04dc 0123     		movs	r3, #1
+ 2615 04de 8AF81530 		strb	r3, [r10, #21]
+ 2616 04e2 C9E5     		b	.L448
+ 2617              	.L466:
+ 2618 04e4 BAF80220 		ldrh	r2, [r10, #2]
+ 2619 04e8 012A     		cmp	r2, #1
+ 2620 04ea 7FF442AE 		bne	.L451
+ 2621 04ee 9AF81720 		ldrb	r2, [r10, #23]	@ zero_extendqisi2
+ 2622 04f2 42F00202 		orr	r2, r2, #2
+ 2623 04f6 8AF81720 		strb	r2, [r10, #23]
+ 2624 04fa BAF80620 		ldrh	r2, [r10, #6]
+ 2625 04fe 002A     		cmp	r2, #0
+ 2626 0500 3DD0     		beq	.L552
+ 2627              	.L681:
+ 2628 0502 83F0FF03 		eor	r3, r3, #255
+ 2629 0506 03F08001 		and	r1, r3, #128
+ 2630 050a CFE7     		b	.L530
+ 2631              	.L464:
+ 2632 050c BAF80200 		ldrh	r0, [r10, #2]
+ 2633 0510 030A     		lsrs	r3, r0, #8
+ 2634 0512 5A1E     		subs	r2, r3, #1
+ 2635 0514 C0B2     		uxtb	r0, r0
+ 2636 0516 0E2A     		cmp	r2, #14
+ 2637 0518 3FF62BAE 		bhi	.L451
+ 2638 051c 01A1     		adr	r1, .L491
+ 2639 051e 51F822F0 		ldr	pc, [r1, r2, lsl #2]
+ 2640 0522 00BF     		.p2align 2
+ 2641              	.L491:
+ 2642 0524 FD070000 		.word	.L495+1
+ 2643 0528 ED070000 		.word	.L492+1
+ 2644 052c DD070000 		.word	.L494+1
+ 2645 0530 73010000 		.word	.L451+1
+ 2646 0534 73010000 		.word	.L451+1
+ 2647 0538 C5070000 		.word	.L493+1
+ 2648 053c ED070000 		.word	.L492+1
+ 2649 0540 73010000 		.word	.L451+1
+ 2650 0544 73010000 		.word	.L451+1
+ 2651 0548 73010000 		.word	.L451+1
+ 2652 054c 73010000 		.word	.L451+1
+ 2653 0550 73010000 		.word	.L451+1
+ 2654 0554 73010000 		.word	.L451+1
+ 2655 0558 73010000 		.word	.L451+1
+ 2656 055c 87070000 		.word	.L490+1
+ 2657              		.p2align 1
+ 2658              	.L467:
+ 2659 0560 BAF80220 		ldrh	r2, [r10, #2]
+ 2660 0564 012A     		cmp	r2, #1
+ 2661 0566 7FF404AE 		bne	.L451
+ 2662 056a 9AF81720 		ldrb	r2, [r10, #23]	@ zero_extendqisi2
+ 2663 056e 22F00202 		bic	r2, r2, #2
+ 2664 0572 8AF81720 		strb	r2, [r10, #23]
+ 2665 0576 BAF80620 		ldrh	r2, [r10, #6]
+ 2666 057a 002A     		cmp	r2, #0
+ 2667 057c C1D1     		bne	.L681
+ 2668              	.L552:
+ 2669 057e 8021     		movs	r1, #128
+ 2670 0580 94E7     		b	.L530
+ARM GAS  /tmp/cct4789Y.s 			page 46
+
+
+ 2671              	.L468:
+ 2672 0582 9AF81720 		ldrb	r2, [r10, #23]	@ zero_extendqisi2
+ 2673 0586 ADF82220 		strh	r2, [sp, #34]	@ movhi
+ 2674 058a 1806     		lsls	r0, r3, #24
+ 2675 058c 7FF5F1AD 		bpl	.L451
+ 2676 0590 44E7     		b	.L671
+ 2677              	.L520:
+ 2678 0592 62D1     		bne	.L523
+ 2679 0594 F8B9     		cbnz	r0, .L551
+ 2680 0596 164A     		ldr	r2, .L706+20
+ 2681 0598 0392     		str	r2, [sp, #12]
+ 2682              	.L522:
+ 2683 059a 9AF80120 		ldrb	r2, [r10, #1]	@ zero_extendqisi2
+ 2684 059e 02F0FD00 		and	r0, r2, #253
+ 2685 05a2 0128     		cmp	r0, #1
+ 2686 05a4 28D0     		beq	.L525
+ 2687 05a6 002A     		cmp	r2, #0
+ 2688 05a8 7FF4BBAE 		bne	.L456
+ 2689 05ac 029A     		ldr	r2, [sp, #8]
+ 2690 05ae 0AEB420A 		add	r10, r10, r2, lsl #1
+ 2691 05b2 0AEBD11A 		add	r10, r10, r1, lsr #7
+ 2692 05b6 9AF83720 		ldrb	r2, [r10, #55]	@ zero_extendqisi2
+ 2693 05ba C2F34002 		ubfx	r2, r2, #1, #1
+ 2694 05be ADF82220 		strh	r2, [sp, #34]	@ movhi
+ 2695 05c2 1A06     		lsls	r2, r3, #24
+ 2696 05c4 7FF5D5AD 		bpl	.L451
+ 2697 05c8 28E7     		b	.L671
+ 2698              	.L510:
+ 2699 05ca 7FF4D2AD 		bne	.L451
+ 2700 05ce 094B     		ldr	r3, .L706+24
+ 2701 05d0 03E7     		b	.L511
+ 2702              	.L458:
+ 2703 05d2 7FF4CEAD 		bne	.L451
+ 2704              	.L551:
+ 2705 05d6 074B     		ldr	r3, .L706+24
+ 2706 05d8 C1E5     		b	.L524
+ 2707              	.L707:
+ 2708 05da 00BF     		.align	2
+ 2709              	.L706:
+ 2710 05dc 00000000 		.word	_usbd_dev
+ 2711 05e0 00000000 		.word	tud_vendor_control_xfer_cb.localalias
+ 2712 05e4 00000000 		.word	_app_driver_count
+ 2713 05e8 00000000 		.word	_app_driver
+ 2714 05ec 00000000 		.word	tud_vendor_control_xfer_cb
+ 2715 05f0 00000000 		.word	_usbd_driver
+ 2716 05f4 00000000 		.word	cdcd_control_xfer_cb
+ 2717              	.L525:
+ 2718 05f8 BAF80230 		ldrh	r3, [r10, #2]
+ 2719 05fc 002B     		cmp	r3, #0
+ 2720 05fe 7FF4B8AD 		bne	.L451
+ 2721 0602 029B     		ldr	r3, [sp, #8]
+ 2722 0604 002B     		cmp	r3, #0
+ 2723 0606 3FF4B4AD 		beq	.L451
+ 2724 060a 039B     		ldr	r3, [sp, #12]
+ 2725 060c 002B     		cmp	r3, #0
+ 2726 060e 3FF4B0AD 		beq	.L451
+ 2727 0612 012A     		cmp	r2, #1
+ARM GAS  /tmp/cct4789Y.s 			page 47
+
+
+ 2728 0614 00F08480 		beq	.L700
+ 2729 0618 3078     		ldrb	r0, [r6]	@ zero_extendqisi2
+ 2730 061a 0491     		str	r1, [sp, #16]
+ 2731 061c FFF7FEFF 		bl	dcd_edpt_stall
+ 2732 0620 029B     		ldr	r3, [sp, #8]
+ 2733 0622 0499     		ldr	r1, [sp, #16]
+ 2734 0624 0AEB4303 		add	r3, r10, r3, lsl #1
+ 2735 0628 03EBD113 		add	r3, r3, r1, lsr #7
+ 2736 062c 93F83720 		ldrb	r2, [r3, #55]	@ zero_extendqisi2
+ 2737 0630 42F00302 		orr	r2, r2, #3
+ 2738 0634 83F83720 		strb	r2, [r3, #55]
+ 2739              	.L529:
+ 2740 0638 039B     		ldr	r3, [sp, #12]
+ 2741 063a 7C4A     		ldr	r2, .L708
+ 2742 063c 5B69     		ldr	r3, [r3, #20]
+ 2743 063e CAF81030 		str	r3, [r10, #16]
+ 2744 0642 0121     		movs	r1, #1
+ 2745 0644 5846     		mov	r0, fp
+ 2746 0646 9847     		blx	r3
+ 2747 0648 0023     		movs	r3, #0
+ 2748 064a CAF81030 		str	r3, [r10, #16]
+ 2749 064e 9AF83830 		ldrb	r3, [r10, #56]	@ zero_extendqisi2
+ 2750 0652 DB07     		lsls	r3, r3, #31
+ 2751 0654 3FF510AD 		bmi	.L448
+ 2752 0658 1EE7     		b	.L692
+ 2753              	.L523:
+ 2754 065a 0028     		cmp	r0, #0
+ 2755 065c 7FF489AD 		bne	.L451
+ 2756 0660 0390     		str	r0, [sp, #12]
+ 2757 0662 9AE7     		b	.L522
+ 2758              	.L514:
+ 2759 0664 9AF80220 		ldrb	r2, [r10, #2]	@ zero_extendqisi2
+ 2760 0668 002A     		cmp	r2, #0
+ 2761 066a 7FF480AD 		bne	.L673
+ 2762 066e BAF80620 		ldrh	r2, [r10, #6]
+ 2763 0672 002A     		cmp	r2, #0
+ 2764 0674 7FF445AF 		bne	.L681
+ 2765 0678 81E7     		b	.L552
+ 2766              	.L471:
+ 2767 067a 501E     		subs	r0, r2, #1
+ 2768 067c C0B2     		uxtb	r0, r0
+ 2769 067e FFF7FEFF 		bl	tud_descriptor_configuration_cb
+ 2770 0682 0028     		cmp	r0, #0
+ 2771 0684 6DD0     		beq	.L680
+ 2772 0686 4378     		ldrb	r3, [r0, #1]	@ zero_extendqisi2
+ 2773 0688 022B     		cmp	r3, #2
+ 2774 068a 6AD1     		bne	.L680
+ 2775 068c C379     		ldrb	r3, [r0, #7]	@ zero_extendqisi2
+ 2776 068e 9AF81720 		ldrb	r2, [r10, #23]	@ zero_extendqisi2
+ 2777 0692 9B11     		asrs	r3, r3, #6
+ 2778 0694 63F30002 		bfi	r2, r3, #0, #1
+ 2779 0698 8AF81720 		strb	r2, [r10, #23]
+ 2780 069c 4388     		ldrh	r3, [r0, #2]	@ unaligned
+ 2781 069e 0294     		str	r4, [sp, #8]
+ 2782 06a0 C318     		adds	r3, r0, r3
+ 2783 06a2 CDE9043B 		strd	r3, fp, [sp, #16]
+ 2784 06a6 00F1090B 		add	fp, r0, #9
+ARM GAS  /tmp/cct4789Y.s 			page 48
+
+
+ 2785              	.L475:
+ 2786 06aa 049B     		ldr	r3, [sp, #16]
+ 2787 06ac 5B45     		cmp	r3, fp
+ 2788 06ae 3DD9     		bls	.L486
+ 2789 06b0 9BF80040 		ldrb	r4, [fp]	@ zero_extendqisi2
+ 2790 06b4 5C44     		add	r4, r4, fp
+ 2791 06b6 A342     		cmp	r3, r4
+ 2792 06b8 38D3     		bcc	.L486
+ 2793 06ba 9BF80130 		ldrb	r3, [fp, #1]	@ zero_extendqisi2
+ 2794 06be 0B2B     		cmp	r3, #11
+ 2795 06c0 32D0     		beq	.L484
+ 2796 06c2 042B     		cmp	r3, #4
+ 2797 06c4 4CD1     		bne	.L669
+ 2798 06c6 049B     		ldr	r3, [sp, #16]
+ 2799 06c8 A3EB0B02 		sub	r2, r3, fp
+ 2800 06cc 584B     		ldr	r3, .L708+4
+ 2801 06ce 0693     		str	r3, [sp, #24]
+ 2802 06d0 0023     		movs	r3, #0
+ 2803 06d2 92B2     		uxth	r2, r2
+ 2804 06d4 0393     		str	r3, [sp, #12]
+ 2805 06d6 13E0     		b	.L477
+ 2806              	.L702:
+ 2807 06d8 564B     		ldr	r3, .L708+8
+ 2808 06da 1B68     		ldr	r3, [r3]
+ 2809 06dc 2421     		movs	r1, #36
+ 2810 06de 01FB0433 		mla	r3, r1, r4, r3
+ 2811 06e2 002B     		cmp	r3, #0
+ 2812 06e4 3CD0     		beq	.L669
+ 2813              	.L480:
+ 2814 06e6 1B69     		ldr	r3, [r3, #16]
+ 2815 06e8 0598     		ldr	r0, [sp, #20]
+ 2816 06ea 0792     		str	r2, [sp, #28]
+ 2817 06ec 5946     		mov	r1, fp
+ 2818 06ee 9847     		blx	r3
+ 2819 06f0 0828     		cmp	r0, #8
+ 2820 06f2 079A     		ldr	r2, [sp, #28]
+ 2821 06f4 01D9     		bls	.L481
+ 2822 06f6 8242     		cmp	r2, r0
+ 2823 06f8 1ED2     		bcs	.L701
+ 2824              	.L481:
+ 2825 06fa 039B     		ldr	r3, [sp, #12]
+ 2826 06fc 0133     		adds	r3, r3, #1
+ 2827 06fe 0393     		str	r3, [sp, #12]
+ 2828              	.L477:
+ 2829 0700 069B     		ldr	r3, [sp, #24]
+ 2830 0702 9DF80C40 		ldrb	r4, [sp, #12]	@ zero_extendqisi2
+ 2831 0706 1878     		ldrb	r0, [r3]	@ zero_extendqisi2
+ 2832 0708 431C     		adds	r3, r0, #1
+ 2833 070a DBB2     		uxtb	r3, r3
+ 2834 070c A342     		cmp	r3, r4
+ 2835 070e 27D9     		bls	.L669
+ 2836 0710 A042     		cmp	r0, r4
+ 2837 0712 E1D8     		bhi	.L702
+ 2838 0714 24D1     		bne	.L669
+ 2839 0716 484B     		ldr	r3, .L708+12
+ 2840 0718 E5E7     		b	.L480
+ 2841              	.L513:
+ARM GAS  /tmp/cct4789Y.s 			page 49
+
+
+ 2842 071a 8DF82210 		strb	r1, [sp, #34]
+ 2843 071e D0E6     		b	.L675
+ 2844              	.L700:
+ 2845 0720 5846     		mov	r0, fp
+ 2846 0722 FFF7FEFF 		bl	usbd_edpt_clear_stall
+ 2847 0726 87E7     		b	.L529
+ 2848              	.L484:
+ 2849 0728 A346     		mov	fp, r4
+ 2850 072a BEE7     		b	.L475
+ 2851              	.L486:
+ 2852 072c DDF814B0 		ldr	fp, [sp, #20]
+ 2853 0730 029C     		ldr	r4, [sp, #8]
+ 2854 0732 FFF7FEFF 		bl	tud_mount_cb
+ 2855 0736 AFE6     		b	.L692
+ 2856              	.L701:
+ 2857 0738 404A     		ldr	r2, .L708+16
+ 2858 073a 0394     		str	r4, [sp, #12]
+ 2859 073c A446     		mov	ip, r4
+ 2860 073e 1023     		movs	r3, #16
+ 2861 0740 CDE900B0 		strd	fp, r0, [sp]
+ 2862 0744 0446     		mov	r4, r0
+ 2863 0746 D118     		adds	r1, r2, r3
+ 2864 0748 6046     		mov	r0, ip
+ 2865 074a FFF7FEFF 		bl	tu_bind_driver_to_ep_itf
+ 2866 074e 38B1     		cbz	r0, .L669
+ 2867 0750 069B     		ldr	r3, [sp, #24]
+ 2868 0752 039A     		ldr	r2, [sp, #12]
+ 2869 0754 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 2870 0756 0133     		adds	r3, r3, #1
+ 2871 0758 DBB2     		uxtb	r3, r3
+ 2872 075a 9342     		cmp	r3, r2
+ 2873 075c 5C44     		add	r4, r4, fp
+ 2874 075e E3D8     		bhi	.L484
+ 2875              	.L669:
+ 2876 0760 029C     		ldr	r4, [sp, #8]
+ 2877              	.L680:
+ 2878 0762 4FF0E023 		mov	r3, #-536813568
+ 2879 0766 D3F8F03D 		ldr	r3, [r3, #3568]
+ 2880 076a D907     		lsls	r1, r3, #31
+ 2881 076c 00D5     		bpl	.L474
+ 2882              		.syntax unified
+ 2883              	@ 1293 "libs/tinyusb/device/usbd.c" 1
+ 2884 076e 00BE     		BKPT #0
+ 2885              	
+ 2886              	@ 0 "" 2
+ 2887              		.thumb
+ 2888              		.syntax unified
+ 2889              	.L474:
+ 2890 0770 4FF0E023 		mov	r3, #-536813568
+ 2891 0774 0022     		movs	r2, #0
+ 2892 0776 D3F8F03D 		ldr	r3, [r3, #3568]
+ 2893 077a 8AF81820 		strb	r2, [r10, #24]
+ 2894 077e DA07     		lsls	r2, r3, #31
+ 2895 0780 3FF5D6AD 		bmi	.L672
+ 2896 0784 F3E4     		b	.L673
+ 2897              	.L490:
+ 2898 0786 FFF7FEFF 		bl	tud_descriptor_bos_cb
+ARM GAS  /tmp/cct4789Y.s 			page 50
+
+
+ 2899 078a 0246     		mov	r2, r0
+ 2900 078c 0028     		cmp	r0, #0
+ 2901 078e 3FF4EEAC 		beq	.L673
+ 2902              	.L503:
+ 2903 0792 5388     		ldrh	r3, [r2, #2]
+ 2904 0794 2549     		ldr	r1, .L708
+ 2905 0796 5846     		mov	r0, fp
+ 2906 0798 FFF7FEFF 		bl	tud_control_xfer
+ 2907 079c E5E4     		b	.L453
+ 2908              	.L699:
+ 2909 079e 0021     		movs	r1, #0
+ 2910 07a0 5846     		mov	r0, fp
+ 2911 07a2 0392     		str	r2, [sp, #12]
+ 2912 07a4 FFF7FEFF 		bl	dcd_sof_enable
+ 2913 07a8 5846     		mov	r0, fp
+ 2914 07aa FFF7FEFF 		bl	dcd_edpt_close_all
+ 2915 07ae 9AF81930 		ldrb	r3, [r10, #25]	@ zero_extendqisi2
+ 2916 07b2 0293     		str	r3, [sp, #8]
+ 2917 07b4 5846     		mov	r0, fp
+ 2918 07b6 FFF7FEFF 		bl	configuration_reset
+ 2919 07ba 029B     		ldr	r3, [sp, #8]
+ 2920 07bc 039A     		ldr	r2, [sp, #12]
+ 2921 07be 8AF81930 		strb	r3, [r10, #25]
+ 2922 07c2 62E6     		b	.L470
+ 2923              	.L493:
+ 2924 07c4 FFF7FEFF 		bl	tud_descriptor_device_qualifier_cb
+ 2925 07c8 0246     		mov	r2, r0
+ 2926 07ca 0028     		cmp	r0, #0
+ 2927 07cc 3FF4CFAC 		beq	.L673
+ 2928              	.L505:
+ 2929 07d0 1378     		ldrb	r3, [r2]	@ zero_extendqisi2
+ 2930 07d2 1649     		ldr	r1, .L708
+ 2931 07d4 5846     		mov	r0, fp
+ 2932 07d6 FFF7FEFF 		bl	tud_control_xfer
+ 2933 07da C6E4     		b	.L453
+ 2934              	.L494:
+ 2935 07dc BAF80410 		ldrh	r1, [r10, #4]
+ 2936 07e0 FFF7FEFF 		bl	tud_descriptor_string_cb
+ 2937 07e4 0246     		mov	r2, r0
+ 2938 07e6 0028     		cmp	r0, #0
+ 2939 07e8 F2D1     		bne	.L505
+ 2940 07ea C0E4     		b	.L673
+ 2941              	.L492:
+ 2942 07ec 022B     		cmp	r3, #2
+ 2943 07ee 0FD0     		beq	.L703
+ 2944 07f0 FFF7FEFF 		bl	tud_descriptor_other_speed_configuration_cb
+ 2945 07f4 0246     		mov	r2, r0
+ 2946 07f6 0028     		cmp	r0, #0
+ 2947 07f8 CBD1     		bne	.L503
+ 2948 07fa B8E4     		b	.L673
+ 2949              	.L495:
+ 2950 07fc FFF7FEFF 		bl	tud_descriptor_device_cb
+ 2951 0800 0246     		mov	r2, r0
+ 2952 0802 50B1     		cbz	r0, .L685
+ 2953 0804 0949     		ldr	r1, .L708
+ 2954 0806 5846     		mov	r0, fp
+ 2955 0808 1223     		movs	r3, #18
+ARM GAS  /tmp/cct4789Y.s 			page 51
+
+
+ 2956 080a FFF7FEFF 		bl	tud_control_xfer
+ 2957 080e ACE4     		b	.L453
+ 2958              	.L703:
+ 2959 0810 FFF7FEFF 		bl	tud_descriptor_configuration_cb
+ 2960 0814 0246     		mov	r2, r0
+ 2961 0816 0028     		cmp	r0, #0
+ 2962 0818 BBD1     		bne	.L503
+ 2963              	.L685:
+ 2964 081a 4FF0E023 		mov	r3, #-536813568
+ 2965 081e D3F8F03D 		ldr	r3, [r3, #3568]
+ 2966 0822 DB07     		lsls	r3, r3, #31
+ 2967 0824 3FF584AD 		bmi	.L672
+ 2968 0828 A1E4     		b	.L673
+ 2969              	.L709:
+ 2970 082a 00BF     		.align	2
+ 2971              	.L708:
+ 2972 082c 00000000 		.word	_usbd_dev
+ 2973 0830 00000000 		.word	_app_driver_count
+ 2974 0834 00000000 		.word	_app_driver
+ 2975 0838 00000000 		.word	_usbd_driver
+ 2976 083c 1B000000 		.word	_usbd_dev+27
+ 2978              		.section	.text.usbd_edpt_stalled,"ax",%progbits
+ 2979              		.align	1
+ 2980              		.p2align 2,,3
+ 2981              		.global	usbd_edpt_stalled
+ 2982              		.syntax unified
+ 2983              		.thumb
+ 2984              		.thumb_func
+ 2986              	usbd_edpt_stalled:
+ 2987              		@ args = 0, pretend = 0, frame = 0
+ 2988              		@ frame_needed = 0, uses_anonymous_args = 0
+ 2989              		@ link register save eliminated.
+ 2990 0000 054B     		ldr	r3, .L711
+ 2991 0002 01F00F02 		and	r2, r1, #15
+ 2992 0006 03EB4203 		add	r3, r3, r2, lsl #1
+ 2993 000a 03EBD113 		add	r3, r3, r1, lsr #7
+ 2994 000e 93F83700 		ldrb	r0, [r3, #55]	@ zero_extendqisi2
+ 2995 0012 C0F34000 		ubfx	r0, r0, #1, #1
+ 2996 0016 7047     		bx	lr
+ 2997              	.L712:
+ 2998              		.align	2
+ 2999              	.L711:
+ 3000 0018 00000000 		.word	_usbd_dev
+ 3002              		.section	.text.usbd_edpt_close,"ax",%progbits
+ 3003              		.align	1
+ 3004              		.p2align 2,,3
+ 3005              		.global	usbd_edpt_close
+ 3006              		.syntax unified
+ 3007              		.thumb
+ 3008              		.thumb_func
+ 3010              	usbd_edpt_close:
+ 3011              		@ args = 0, pretend = 0, frame = 0
+ 3012              		@ frame_needed = 0, uses_anonymous_args = 0
+ 3013              		@ link register save eliminated.
+ 3014 0000 7047     		bx	lr
+ 3016 0002 00BF     		.section	.text.usbd_sof_enable,"ax",%progbits
+ 3017              		.align	1
+ARM GAS  /tmp/cct4789Y.s 			page 52
+
+
+ 3018              		.p2align 2,,3
+ 3019              		.global	usbd_sof_enable
+ 3020              		.syntax unified
+ 3021              		.thumb
+ 3022              		.thumb_func
+ 3024              	usbd_sof_enable:
+ 3025              		@ args = 0, pretend = 0, frame = 0
+ 3026              		@ frame_needed = 0, uses_anonymous_args = 0
+ 3027 0000 00B5     		push	{lr}
+ 3028 0002 144B     		ldr	r3, .L720
+ 3029 0004 1448     		ldr	r0, .L720+4
+ 3030 0006 93F800E0 		ldrb	lr, [r3]	@ zero_extendqisi2
+ 3031 000a 837E     		ldrb	r3, [r0, #26]	@ zero_extendqisi2
+ 3032 000c 4FF0010C 		mov	ip, #1
+ 3033 0010 0CFA01FC 		lsl	ip, ip, r1
+ 3034 0014 5FFA8CFC 		uxtb	ip, ip
+ 3035 0018 6AB1     		cbz	r2, .L715
+ 3036 001a 827E     		ldrb	r2, [r0, #26]	@ zero_extendqisi2
+ 3037 001c 42EA0C02 		orr	r2, r2, ip
+ 3038 0020 8276     		strb	r2, [r0, #26]
+ 3039              	.L716:
+ 3040 0022 827E     		ldrb	r2, [r0, #26]	@ zero_extendqisi2
+ 3041 0024 B3FA83F3 		clz	r3, r3
+ 3042 0028 B2FA82F2 		clz	r2, r2
+ 3043 002c 5209     		lsrs	r2, r2, #5
+ 3044 002e 5B09     		lsrs	r3, r3, #5
+ 3045 0030 9A42     		cmp	r2, r3
+ 3046 0032 05D1     		bne	.L719
+ 3047 0034 00BD     		pop	{pc}
+ 3048              	.L715:
+ 3049 0036 827E     		ldrb	r2, [r0, #26]	@ zero_extendqisi2
+ 3050 0038 22EA0C02 		bic	r2, r2, ip
+ 3051 003c 8276     		strb	r2, [r0, #26]
+ 3052 003e F0E7     		b	.L716
+ 3053              	.L719:
+ 3054 0040 817E     		ldrb	r1, [r0, #26]	@ zero_extendqisi2
+ 3055 0042 0039     		subs	r1, r1, #0
+ 3056 0044 7046     		mov	r0, lr
+ 3057 0046 18BF     		it	ne
+ 3058 0048 0121     		movne	r1, #1
+ 3059 004a 5DF804EB 		ldr	lr, [sp], #4
+ 3060 004e FFF7FEBF 		b	dcd_sof_enable
+ 3061              	.L721:
+ 3062 0052 00BF     		.align	2
+ 3063              	.L720:
+ 3064 0054 00000000 		.word	_usbd_rhport
+ 3065 0058 00000000 		.word	_usbd_dev
+ 3067              		.section	.text.usbd_edpt_iso_alloc,"ax",%progbits
+ 3068              		.align	1
+ 3069              		.p2align 2,,3
+ 3070              		.global	usbd_edpt_iso_alloc
+ 3071              		.syntax unified
+ 3072              		.thumb
+ 3073              		.thumb_func
+ 3075              	usbd_edpt_iso_alloc:
+ 3076              		@ args = 0, pretend = 0, frame = 0
+ 3077              		@ frame_needed = 0, uses_anonymous_args = 0
+ARM GAS  /tmp/cct4789Y.s 			page 53
+
+
+ 3078              		@ link register save eliminated.
+ 3079 0000 01F00F03 		and	r3, r1, #15
+ 3080 0004 052B     		cmp	r3, #5
+ 3081 0006 08D9     		bls	.L723
+ 3082 0008 4FF0E023 		mov	r3, #-536813568
+ 3083 000c D3F8F03D 		ldr	r3, [r3, #3568]
+ 3084 0010 DB07     		lsls	r3, r3, #31
+ 3085 0012 00D5     		bpl	.L725
+ 3086              		.syntax unified
+ 3087              	@ 1748 "libs/tinyusb/device/usbd.c" 1
+ 3088 0014 00BE     		BKPT #0
+ 3089              	
+ 3090              	@ 0 "" 2
+ 3091              		.thumb
+ 3092              		.syntax unified
+ 3093              	.L725:
+ 3094 0016 0020     		movs	r0, #0
+ 3095 0018 7047     		bx	lr
+ 3096              	.L723:
+ 3097 001a 024B     		ldr	r3, .L727
+ 3098 001c 1878     		ldrb	r0, [r3]	@ zero_extendqisi2
+ 3099 001e FFF7FEBF 		b	dcd_edpt_iso_alloc
+ 3100              	.L728:
+ 3101 0022 00BF     		.align	2
+ 3102              	.L727:
+ 3103 0024 00000000 		.word	_usbd_rhport
+ 3105              		.section	.text.usbd_edpt_iso_activate,"ax",%progbits
+ 3106              		.align	1
+ 3107              		.p2align 2,,3
+ 3108              		.global	usbd_edpt_iso_activate
+ 3109              		.syntax unified
+ 3110              		.thumb
+ 3111              		.thumb_func
+ 3113              	usbd_edpt_iso_activate:
+ 3114              		@ args = 0, pretend = 0, frame = 0
+ 3115              		@ frame_needed = 0, uses_anonymous_args = 0
+ 3116              		@ link register save eliminated.
+ 3117 0000 8A78     		ldrb	r2, [r1, #2]	@ zero_extendqisi2
+ 3118 0002 02F00F00 		and	r0, r2, #15
+ 3119 0006 0528     		cmp	r0, #5
+ 3120 0008 03D8     		bhi	.L742
+ 3121 000a 8B88     		ldrh	r3, [r1, #4]	@ unaligned
+ 3122 000c C3F30A03 		ubfx	r3, r3, #0, #11
+ 3123 0010 43B9     		cbnz	r3, .L733
+ 3124              	.L742:
+ 3125 0012 4FF0E023 		mov	r3, #-536813568
+ 3126 0016 D3F8F03D 		ldr	r3, [r3, #3568]
+ 3127 001a DB07     		lsls	r3, r3, #31
+ 3128 001c 00D5     		bpl	.L732
+ 3129              		.syntax unified
+ 3130              	@ 1764 "libs/tinyusb/device/usbd.c" 1
+ 3131 001e 00BE     		BKPT #0
+ 3132              	
+ 3133              	@ 0 "" 2
+ 3134              		.thumb
+ 3135              		.syntax unified
+ 3136              	.L732:
+ARM GAS  /tmp/cct4789Y.s 			page 54
+
+
+ 3137 0020 0020     		movs	r0, #0
+ 3138 0022 7047     		bx	lr
+ 3139              	.L733:
+ 3140 0024 064B     		ldr	r3, .L743
+ 3141 0026 DFF81CC0 		ldr	ip, .L743+4
+ 3142 002a 03EB4003 		add	r3, r3, r0, lsl #1
+ 3143 002e 03EBD213 		add	r3, r3, r2, lsr #7
+ 3144 0032 9CF80000 		ldrb	r0, [ip]	@ zero_extendqisi2
+ 3145 0036 0022     		movs	r2, #0
+ 3146 0038 83F83720 		strb	r2, [r3, #55]
+ 3147 003c FFF7FEBF 		b	dcd_edpt_iso_activate
+ 3148              	.L744:
+ 3149              		.align	2
+ 3150              	.L743:
+ 3151 0040 00000000 		.word	_usbd_dev
+ 3152 0044 00000000 		.word	_usbd_rhport
+ 3154              		.section	.bss._usbd_q,"aw",%nobits
+ 3155              		.align	2
+ 3158              	_usbd_q:
+ 3159 0000 00000000 		.space	4
+ 3160              		.global	_usbd_qdef
+ 3161              		.section	.data._usbd_qdef,"aw"
+ 3162              		.align	2
+ 3165              	_usbd_qdef:
+ 3166 0000 00000000 		.word	usbd_int_set
+ 3167 0004 0C00     		.short	12
+ 3168 0006 0000     		.space	2
+ 3169 0008 00000000 		.word	_usbd_qdef_buf
+ 3170 000c C000     		.short	192
+ 3171 000e 00       		.byte	0
+ 3172 000f 00000000 		.space	5
+ 3172      00
+ 3173              		.global	_usbd_qdef_buf
+ 3174              		.section	.bss._usbd_qdef_buf,"aw",%nobits
+ 3175              		.align	2
+ 3178              	_usbd_qdef_buf:
+ 3179 0000 00000000 		.space	192
+ 3179      00000000 
+ 3179      00000000 
+ 3179      00000000 
+ 3179      00000000 
+ 3180              		.section	.data._usbd_spin,"aw"
+ 3181              		.align	2
+ 3184              	_usbd_spin:
+ 3185 0000 00000000 		.word	usbd_int_set
+ 3186 0004 00000000 		.word	0
+ 3187              		.section	.data._usbd_rhport,"aw"
+ 3190              	_usbd_rhport:
+ 3191 0000 FF       		.byte	-1
+ 3192              		.section	.bss._app_driver_count,"aw",%nobits
+ 3195              	_app_driver_count:
+ 3196 0000 00       		.space	1
+ 3197              		.section	.bss._app_driver,"aw",%nobits
+ 3198              		.align	2
+ 3201              	_app_driver:
+ 3202 0000 00000000 		.space	4
+ 3203              		.section	.rodata._usbd_driver,"a"
+ARM GAS  /tmp/cct4789Y.s 			page 55
+
+
+ 3204              		.align	2
+ 3207              	_usbd_driver:
+ 3208 0000 00000000 		.word	0
+ 3209 0004 00000000 		.word	cdcd_init
+ 3210 0008 00000000 		.word	cdcd_deinit
+ 3211 000c 00000000 		.word	cdcd_reset
+ 3212 0010 00000000 		.word	cdcd_open
+ 3213 0014 00000000 		.word	cdcd_control_xfer_cb
+ 3214 0018 00000000 		.word	cdcd_xfer_cb
+ 3215 001c 00000000 		.word	0
+ 3216 0020 00000000 		.word	0
+ 3217              		.section	.bss._ctrl_epbuf,"aw",%nobits
+ 3218              		.align	2
+ 3221              	_ctrl_epbuf:
+ 3222 0000 00000000 		.space	64
+ 3222      00000000 
+ 3222      00000000 
+ 3222      00000000 
+ 3222      00000000 
+ 3223              		.section	.bss._usbd_queued_setup,"aw",%nobits
+ 3226              	_usbd_queued_setup:
+ 3227 0000 00       		.space	1
+ 3228              		.section	.bss._usbd_dev,"aw",%nobits
+ 3229              		.align	2
+ 3232              	_usbd_dev:
+ 3233 0000 00000000 		.space	68
+ 3233      00000000 
+ 3233      00000000 
+ 3233      00000000 
+ 3233      00000000 
+ 3234              		.ident	"GCC: (Arch Repository) 16.2.0"
+ARM GAS  /tmp/cct4789Y.s 			page 56
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 usbd.c
+     /tmp/cct4789Y.s:18     .text.tud_vendor_control_xfer_cb:00000000 $t
+     /tmp/cct4789Y.s:25     .text.tud_vendor_control_xfer_cb:00000000 tud_vendor_control_xfer_cb
+     /tmp/cct4789Y.s:25     .text.tud_vendor_control_xfer_cb:00000000 tud_vendor_control_xfer_cb.localalias
+     /tmp/cct4789Y.s:34     .text.configuration_reset:00000000 $t
+     /tmp/cct4789Y.s:40     .text.configuration_reset:00000000 configuration_reset
+     /tmp/cct4789Y.s:107    .text.configuration_reset:00000088 $d
+     /tmp/cct4789Y.s:3195   .bss._app_driver_count:00000000 _app_driver_count
+     /tmp/cct4789Y.s:3232   .bss._usbd_dev:00000000 _usbd_dev
+     /tmp/cct4789Y.s:3201   .bss._app_driver:00000000 _app_driver
+     /tmp/cct4789Y.s:113    .text.usbd_int_set:00000000 $t
+     /tmp/cct4789Y.s:120    .text.usbd_int_set:00000000 usbd_int_set
+     /tmp/cct4789Y.s:135    .text.usbd_int_set:00000014 $d
+     /tmp/cct4789Y.s:3190   .data._usbd_rhport:00000000 _usbd_rhport
+     /tmp/cct4789Y.s:138    .text.tud_event_hook_cb:00000000 $t
+     /tmp/cct4789Y.s:145    .text.tud_event_hook_cb:00000000 tud_event_hook_cb
+     /tmp/cct4789Y.s:152    .text.tud_sof_cb:00000000 $t
+     /tmp/cct4789Y.s:159    .text.tud_sof_cb:00000000 tud_sof_cb
+     /tmp/cct4789Y.s:166    .text.tud_descriptor_bos_cb:00000000 $t
+     /tmp/cct4789Y.s:173    .text.tud_descriptor_bos_cb:00000000 tud_descriptor_bos_cb
+     /tmp/cct4789Y.s:181    .text.tud_descriptor_device_qualifier_cb:00000000 $t
+     /tmp/cct4789Y.s:188    .text.tud_descriptor_device_qualifier_cb:00000000 tud_descriptor_device_qualifier_cb
+     /tmp/cct4789Y.s:196    .text.tud_descriptor_other_speed_configuration_cb:00000000 $t
+     /tmp/cct4789Y.s:203    .text.tud_descriptor_other_speed_configuration_cb:00000000 tud_descriptor_other_speed_configuration_cb
+     /tmp/cct4789Y.s:211    .text.tud_mount_cb:00000000 $t
+     /tmp/cct4789Y.s:218    .text.tud_mount_cb:00000000 tud_mount_cb
+     /tmp/cct4789Y.s:225    .text.tud_umount_cb:00000000 $t
+     /tmp/cct4789Y.s:232    .text.tud_umount_cb:00000000 tud_umount_cb
+     /tmp/cct4789Y.s:239    .text.tud_suspend_cb:00000000 $t
+     /tmp/cct4789Y.s:246    .text.tud_suspend_cb:00000000 tud_suspend_cb
+     /tmp/cct4789Y.s:253    .text.tud_resume_cb:00000000 $t
+     /tmp/cct4789Y.s:260    .text.tud_resume_cb:00000000 tud_resume_cb
+     /tmp/cct4789Y.s:267    .text.dcd_deinit:00000000 $t
+     /tmp/cct4789Y.s:274    .text.dcd_deinit:00000000 dcd_deinit
+     /tmp/cct4789Y.s:282    .text.dcd_connect:00000000 $t
+     /tmp/cct4789Y.s:289    .text.dcd_connect:00000000 dcd_connect
+     /tmp/cct4789Y.s:296    .text.dcd_disconnect:00000000 $t
+     /tmp/cct4789Y.s:303    .text.dcd_disconnect:00000000 dcd_disconnect
+     /tmp/cct4789Y.s:310    .text.dcd_dcache_clean:00000000 $t
+     /tmp/cct4789Y.s:317    .text.dcd_dcache_clean:00000000 dcd_dcache_clean
+     /tmp/cct4789Y.s:325    .text.dcd_dcache_invalidate:00000000 $t
+     /tmp/cct4789Y.s:332    .text.dcd_dcache_invalidate:00000000 dcd_dcache_invalidate
+     /tmp/cct4789Y.s:340    .text.dcd_dcache_clean_invalidate:00000000 $t
+     /tmp/cct4789Y.s:347    .text.dcd_dcache_clean_invalidate:00000000 dcd_dcache_clean_invalidate
+     /tmp/cct4789Y.s:355    .text.usbd_app_driver_get_cb:00000000 $t
+     /tmp/cct4789Y.s:362    .text.usbd_app_driver_get_cb:00000000 usbd_app_driver_get_cb
+     /tmp/cct4789Y.s:372    .text.dcd_edpt_xfer_fifo:00000000 $t
+     /tmp/cct4789Y.s:379    .text.dcd_edpt_xfer_fifo:00000000 dcd_edpt_xfer_fifo
+     /tmp/cct4789Y.s:387    .text.dcd_configure:00000000 $t
+     /tmp/cct4789Y.s:394    .text.dcd_configure:00000000 dcd_configure
+     /tmp/cct4789Y.s:402    .text.tud_speed_get:00000000 $t
+     /tmp/cct4789Y.s:409    .text.tud_speed_get:00000000 tud_speed_get
+     /tmp/cct4789Y.s:419    .text.tud_speed_get:00000008 $d
+     /tmp/cct4789Y.s:422    .text.tud_connected:00000000 $t
+     /tmp/cct4789Y.s:429    .text.tud_connected:00000000 tud_connected
+     /tmp/cct4789Y.s:442    .text.tud_connected:0000000c $d
+ARM GAS  /tmp/cct4789Y.s 			page 57
+
+
+     /tmp/cct4789Y.s:445    .text.tud_mounted:00000000 $t
+     /tmp/cct4789Y.s:452    .text.tud_mounted:00000000 tud_mounted
+     /tmp/cct4789Y.s:465    .text.tud_mounted:0000000c $d
+     /tmp/cct4789Y.s:468    .text.tud_suspended:00000000 $t
+     /tmp/cct4789Y.s:475    .text.tud_suspended:00000000 tud_suspended
+     /tmp/cct4789Y.s:488    .text.tud_suspended:0000000c $d
+     /tmp/cct4789Y.s:491    .text.tud_remote_wakeup:00000000 $t
+     /tmp/cct4789Y.s:498    .text.tud_remote_wakeup:00000000 tud_remote_wakeup
+     /tmp/cct4789Y.s:520    .text.tud_remote_wakeup:00000020 $d
+     /tmp/cct4789Y.s:524    .text.tud_disconnect:00000000 $t
+     /tmp/cct4789Y.s:531    .text.tud_disconnect:00000000 tud_disconnect
+     /tmp/cct4789Y.s:543    .text.tud_disconnect:00000010 $d
+     /tmp/cct4789Y.s:546    .text.tud_connect:00000000 $t
+     /tmp/cct4789Y.s:553    .text.tud_connect:00000000 tud_connect
+     /tmp/cct4789Y.s:565    .text.tud_connect:00000010 $d
+     /tmp/cct4789Y.s:568    .text.tud_sof_cb_enable:00000000 $t
+     /tmp/cct4789Y.s:575    .text.tud_sof_cb_enable:00000000 tud_sof_cb_enable
+     /tmp/cct4789Y.s:610    .text.tud_sof_cb_enable:00000040 $d
+     /tmp/cct4789Y.s:614    .text.tud_inited:00000000 $t
+     /tmp/cct4789Y.s:621    .text.tud_inited:00000000 tud_inited
+     /tmp/cct4789Y.s:634    .text.tud_inited:0000000c $d
+     /tmp/cct4789Y.s:637    .text.tud_configure:00000000 $t
+     /tmp/cct4789Y.s:644    .text.tud_configure:00000000 tud_configure
+     /tmp/cct4789Y.s:652    .text.tud_rhport_init:00000000 $t
+     /tmp/cct4789Y.s:659    .text.tud_rhport_init:00000000 tud_rhport_init
+     /tmp/cct4789Y.s:761    .text.tud_rhport_init:000000b8 $d
+     /tmp/cct4789Y.s:3226   .bss._usbd_queued_setup:00000000 _usbd_queued_setup
+     /tmp/cct4789Y.s:3165   .data._usbd_qdef:00000000 _usbd_qdef
+     /tmp/cct4789Y.s:3158   .bss._usbd_q:00000000 _usbd_q
+     /tmp/cct4789Y.s:772    .text.tud_deinit:00000000 $t
+     /tmp/cct4789Y.s:779    .text.tud_deinit:00000000 tud_deinit
+     /tmp/cct4789Y.s:866    .text.tud_deinit:000000ac $d
+     /tmp/cct4789Y.s:874    .text.tud_task_event_ready:00000000 $t
+     /tmp/cct4789Y.s:881    .text.tud_task_event_ready:00000000 tud_task_event_ready
+     /tmp/cct4789Y.s:903    .text.tud_task_event_ready:0000001c $d
+     /tmp/cct4789Y.s:907    .text.dcd_edpt0_status_complete:00000000 $t
+     /tmp/cct4789Y.s:914    .text.dcd_edpt0_status_complete:00000000 dcd_edpt0_status_complete
+     /tmp/cct4789Y.s:921    .text.usbd_get_ctrl_buf:00000000 $t
+     /tmp/cct4789Y.s:928    .text.usbd_get_ctrl_buf:00000000 usbd_get_ctrl_buf
+     /tmp/cct4789Y.s:937    .text.usbd_get_ctrl_buf:00000004 $d
+     /tmp/cct4789Y.s:3221   .bss._ctrl_epbuf:00000000 _ctrl_epbuf
+     /tmp/cct4789Y.s:940    .text.dcd_event_handler:00000000 $t
+     /tmp/cct4789Y.s:947    .text.dcd_event_handler:00000000 dcd_event_handler
+     /tmp/cct4789Y.s:960    .text.dcd_event_handler:00000016 $d
+     /tmp/cct4789Y.s:966    .text.dcd_event_handler:00000022 $t
+     /tmp/cct4789Y.s:1275   .text.dcd_event_handler:000002ac $d
+     /tmp/cct4789Y.s:1283   .text.dcd_event_handler:000002c8 $t
+     /tmp/cct4789Y.s:1327   .text.usbd_spin_lock:00000000 $t
+     /tmp/cct4789Y.s:1334   .text.usbd_spin_lock:00000000 usbd_spin_lock
+     /tmp/cct4789Y.s:1363   .text.usbd_spin_lock:0000002c $d
+     /tmp/cct4789Y.s:3184   .data._usbd_spin:00000000 _usbd_spin
+     /tmp/cct4789Y.s:1368   .text.usbd_spin_unlock:00000000 $t
+     /tmp/cct4789Y.s:1375   .text.usbd_spin_unlock:00000000 usbd_spin_unlock
+     /tmp/cct4789Y.s:1401   .text.usbd_spin_unlock:00000024 $d
+     /tmp/cct4789Y.s:1406   .text.usbd_open_edpt_pair:00000000 $t
+     /tmp/cct4789Y.s:1413   .text.usbd_open_edpt_pair:00000000 usbd_open_edpt_pair
+     /tmp/cct4789Y.s:1493   .text.usbd_open_edpt_pair:00000080 $d
+ARM GAS  /tmp/cct4789Y.s 			page 58
+
+
+     /tmp/cct4789Y.s:1496   .text.usbd_defer_func:00000000 $t
+     /tmp/cct4789Y.s:1503   .text.usbd_defer_func:00000000 usbd_defer_func
+     /tmp/cct4789Y.s:1585   .text.usbd_defer_func:00000090 $d
+     /tmp/cct4789Y.s:1590   .text.usbd_edpt_open:00000000 $t
+     /tmp/cct4789Y.s:1597   .text.usbd_edpt_open:00000000 usbd_edpt_open
+     /tmp/cct4789Y.s:1630   .text.usbd_edpt_open:0000002c $d
+     /tmp/cct4789Y.s:1633   .text.usbd_edpt_claim:00000000 $t
+     /tmp/cct4789Y.s:1640   .text.usbd_edpt_claim:00000000 usbd_edpt_claim
+     /tmp/cct4789Y.s:1655   .text.usbd_edpt_claim:00000018 $d
+     /tmp/cct4789Y.s:1658   .text.usbd_edpt_release:00000000 $t
+     /tmp/cct4789Y.s:1665   .text.usbd_edpt_release:00000000 usbd_edpt_release
+     /tmp/cct4789Y.s:1680   .text.usbd_edpt_release:00000018 $d
+     /tmp/cct4789Y.s:1683   .text.usbd_edpt_xfer:00000000 $t
+     /tmp/cct4789Y.s:1690   .text.usbd_edpt_xfer:00000000 usbd_edpt_xfer
+     /tmp/cct4789Y.s:1752   .text.usbd_edpt_xfer:00000070 $d
+     /tmp/cct4789Y.s:1756   .text.tud_control_status:00000000 $t
+     /tmp/cct4789Y.s:1763   .text.tud_control_status:00000000 tud_control_status
+     /tmp/cct4789Y.s:1788   .text.tud_control_status:00000028 $d
+     /tmp/cct4789Y.s:1791   .text.data_stage_xact:00000000 $t
+     /tmp/cct4789Y.s:1797   .text.data_stage_xact:00000000 data_stage_xact
+     /tmp/cct4789Y.s:1860   .text.data_stage_xact:0000006c $d
+     /tmp/cct4789Y.s:1864   .text.tud_control_xfer:00000000 $t
+     /tmp/cct4789Y.s:1871   .text.tud_control_xfer:00000000 tud_control_xfer
+     /tmp/cct4789Y.s:1935   .text.tud_control_xfer:00000060 $d
+     /tmp/cct4789Y.s:1938   .text.usbd_edpt_xfer_fifo:00000000 $t
+     /tmp/cct4789Y.s:1945   .text.usbd_edpt_xfer_fifo:00000000 usbd_edpt_xfer_fifo
+     /tmp/cct4789Y.s:2007   .text.usbd_edpt_xfer_fifo:00000070 $d
+     /tmp/cct4789Y.s:2011   .text.usbd_edpt_busy:00000000 $t
+     /tmp/cct4789Y.s:2018   .text.usbd_edpt_busy:00000000 usbd_edpt_busy
+     /tmp/cct4789Y.s:2032   .text.usbd_edpt_busy:00000018 $d
+     /tmp/cct4789Y.s:2035   .text.usbd_edpt_stall:00000000 $t
+     /tmp/cct4789Y.s:2042   .text.usbd_edpt_stall:00000000 usbd_edpt_stall
+     /tmp/cct4789Y.s:2065   .text.usbd_edpt_stall:00000030 $d
+     /tmp/cct4789Y.s:2069   .text.usbd_edpt_clear_stall:00000000 $t
+     /tmp/cct4789Y.s:2076   .text.usbd_edpt_clear_stall:00000000 usbd_edpt_clear_stall
+     /tmp/cct4789Y.s:2099   .text.usbd_edpt_clear_stall:00000034 $d
+     /tmp/cct4789Y.s:2103   .text.tud_task_ext:00000000 $t
+     /tmp/cct4789Y.s:2110   .text.tud_task_ext:00000000 tud_task_ext
+     /tmp/cct4789Y.s:2152   .text.tud_task_ext:00000068 $d
+     /tmp/cct4789Y.s:2160   .text.tud_task_ext:00000070 $t
+     /tmp/cct4789Y.s:2397   .text.tud_task_ext:000002c0 $d
+     /tmp/cct4789Y.s:2408   .text.tud_task_ext:000002e8 $t
+     /tmp/cct4789Y.s:2563   .text.tud_task_ext:00000450 $d
+     /tmp/cct4789Y.s:2573   .text.tud_task_ext:00000478 $t
+     /tmp/cct4789Y.s:2642   .text.tud_task_ext:00000524 $d
+     /tmp/cct4789Y.s:2657   .text.tud_task_ext:00000560 $t
+     /tmp/cct4789Y.s:2710   .text.tud_task_ext:000005dc $d
+     /tmp/cct4789Y.s:3207   .rodata._usbd_driver:00000000 _usbd_driver
+     /tmp/cct4789Y.s:2718   .text.tud_task_ext:000005f8 $t
+     /tmp/cct4789Y.s:2972   .text.tud_task_ext:0000082c $d
+     /tmp/cct4789Y.s:2979   .text.usbd_edpt_stalled:00000000 $t
+     /tmp/cct4789Y.s:2986   .text.usbd_edpt_stalled:00000000 usbd_edpt_stalled
+     /tmp/cct4789Y.s:3000   .text.usbd_edpt_stalled:00000018 $d
+     /tmp/cct4789Y.s:3003   .text.usbd_edpt_close:00000000 $t
+     /tmp/cct4789Y.s:3010   .text.usbd_edpt_close:00000000 usbd_edpt_close
+     /tmp/cct4789Y.s:3017   .text.usbd_sof_enable:00000000 $t
+     /tmp/cct4789Y.s:3024   .text.usbd_sof_enable:00000000 usbd_sof_enable
+ARM GAS  /tmp/cct4789Y.s 			page 59
+
+
+     /tmp/cct4789Y.s:3064   .text.usbd_sof_enable:00000054 $d
+     /tmp/cct4789Y.s:3068   .text.usbd_edpt_iso_alloc:00000000 $t
+     /tmp/cct4789Y.s:3075   .text.usbd_edpt_iso_alloc:00000000 usbd_edpt_iso_alloc
+     /tmp/cct4789Y.s:3103   .text.usbd_edpt_iso_alloc:00000024 $d
+     /tmp/cct4789Y.s:3106   .text.usbd_edpt_iso_activate:00000000 $t
+     /tmp/cct4789Y.s:3113   .text.usbd_edpt_iso_activate:00000000 usbd_edpt_iso_activate
+     /tmp/cct4789Y.s:3151   .text.usbd_edpt_iso_activate:00000040 $d
+     /tmp/cct4789Y.s:3155   .bss._usbd_q:00000000 $d
+     /tmp/cct4789Y.s:3162   .data._usbd_qdef:00000000 $d
+     /tmp/cct4789Y.s:3178   .bss._usbd_qdef_buf:00000000 _usbd_qdef_buf
+     /tmp/cct4789Y.s:3175   .bss._usbd_qdef_buf:00000000 $d
+     /tmp/cct4789Y.s:3181   .data._usbd_spin:00000000 $d
+     /tmp/cct4789Y.s:3196   .bss._app_driver_count:00000000 $d
+     /tmp/cct4789Y.s:3198   .bss._app_driver:00000000 $d
+     /tmp/cct4789Y.s:3204   .rodata._usbd_driver:00000000 $d
+     /tmp/cct4789Y.s:3218   .bss._ctrl_epbuf:00000000 $d
+     /tmp/cct4789Y.s:3227   .bss._usbd_queued_setup:00000000 $d
+     /tmp/cct4789Y.s:3229   .bss._usbd_dev:00000000 $d
+
+UNDEFINED SYMBOLS
+memset
+cdcd_reset
+dcd_int_enable
+dcd_int_disable
+dcd_remote_wakeup
+dcd_sof_enable
+tu_fifo_clear
+dcd_init
+cdcd_init
+cdcd_deinit
+tu_fifo_write_n_access_mode
+dcd_edpt_open
+tu_edpt_claim
+tu_edpt_release
+dcd_edpt_xfer
+memcpy
+dcd_edpt_stall
+dcd_edpt_clear_stall
+tu_fifo_read_n_access_mode
+cdcd_xfer_cb
+dcd_set_address
+cdcd_control_xfer_cb
+tud_descriptor_configuration_cb
+tu_bind_driver_to_ep_itf
+dcd_edpt_close_all
+tud_descriptor_string_cb
+tud_descriptor_device_cb
+dcd_edpt_iso_alloc
+dcd_edpt_iso_activate
+cdcd_open

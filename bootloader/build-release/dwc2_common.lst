@@ -1,0 +1,495 @@
+ARM GAS  /tmp/ccH3RMQy.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 2
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"dwc2_common.c"
+  16              		.text
+  17              		.section	.text.reset_core.constprop.0,"ax",%progbits
+  18              		.align	1
+  19              		.p2align 2,,3
+  20              		.syntax unified
+  21              		.thumb
+  22              		.thumb_func
+  24              	reset_core.constprop.0:
+  25              		@ args = 0, pretend = 0, frame = 0
+  26              		@ frame_needed = 0, uses_anonymous_args = 0
+  27              		@ link register save eliminated.
+  28 0000 4FF0A042 		mov	r2, #1342177280
+  29              	.L2:
+  30 0004 1369     		ldr	r3, [r2, #16]
+  31 0006 002B     		cmp	r3, #0
+  32 0008 FCDA     		bge	.L2
+  33 000a 136C     		ldr	r3, [r2, #64]
+  34 000c 1169     		ldr	r1, [r2, #16]
+  35 000e 9BB2     		uxth	r3, r3
+  36 0010 44F20920 		movw	r0, #16905
+  37 0014 41F00101 		orr	r1, r1, #1
+  38 0018 8342     		cmp	r3, r0
+  39 001a 1161     		str	r1, [r2, #16]
+  40 001c 4FF0A042 		mov	r2, #1342177280
+  41 0020 08D8     		bhi	.L3
+  42              	.L4:
+  43 0022 1369     		ldr	r3, [r2, #16]
+  44 0024 D907     		lsls	r1, r3, #31
+  45 0026 FCD4     		bmi	.L4
+  46              	.L5:
+  47 0028 4FF0A042 		mov	r2, #1342177280
+  48              	.L6:
+  49 002c 1369     		ldr	r3, [r2, #16]
+  50 002e 002B     		cmp	r3, #0
+  51 0030 FCDA     		bge	.L6
+  52 0032 7047     		bx	lr
+  53              	.L3:
+  54 0034 1369     		ldr	r3, [r2, #16]
+  55 0036 9B00     		lsls	r3, r3, #2
+  56 0038 FCD5     		bpl	.L3
+  57 003a 1369     		ldr	r3, [r2, #16]
+  58 003c 23F00053 		bic	r3, r3, #536870912
+ARM GAS  /tmp/ccH3RMQy.s 			page 2
+
+
+  59 0040 23F00103 		bic	r3, r3, #1
+  60 0044 43F00053 		orr	r3, r3, #536870912
+  61 0048 1361     		str	r3, [r2, #16]
+  62 004a EDE7     		b	.L5
+  64              		.section	.text.dwc2_core_is_highspeed_phy,"ax",%progbits
+  65              		.align	1
+  66              		.p2align 2,,3
+  67              		.global	dwc2_core_is_highspeed_phy
+  68              		.syntax unified
+  69              		.thumb
+  70              		.thumb_func
+  72              	dwc2_core_is_highspeed_phy:
+  73              		@ args = 0, pretend = 0, frame = 0
+  74              		@ frame_needed = 0, uses_anonymous_args = 0
+  75              		@ link register save eliminated.
+  76 0000 836C     		ldr	r3, [r0, #72]
+  77 0002 D8B2     		uxtb	r0, r3
+  78 0004 3F28     		cmp	r0, #63
+  79 0006 94BF     		ite	ls
+  80 0008 0020     		movls	r0, #0
+  81 000a 0120     		movhi	r0, #1
+  82 000c 29B9     		cbnz	r1, .L16
+  83 000e 13F4407F 		tst	r3, #768
+  84 0012 00F00100 		and	r0, r0, #1
+  85 0016 18BF     		it	ne
+  86 0018 0020     		movne	r0, #0
+  87              	.L16:
+  88 001a 7047     		bx	lr
+  90              		.section	.text.dwc2_core_init,"ax",%progbits
+  91              		.align	1
+  92              		.p2align 2,,3
+  93              		.global	dwc2_core_init
+  94              		.syntax unified
+  95              		.thumb
+  96              		.thumb_func
+  98              	dwc2_core_init:
+  99              		@ args = 0, pretend = 0, frame = 8
+ 100              		@ frame_needed = 0, uses_anonymous_args = 0
+ 101 0000 4FF0A043 		mov	r3, #1342177280
+ 102 0004 AE48     		ldr	r0, .L93
+ 103 0006 1B6C     		ldr	r3, [r3, #64]
+ 104 0008 6FF30F03 		bfc	r3, #0, #16
+ 105 000c 8342     		cmp	r3, r0
+ 106 000e 16D0     		beq	.L18
+ 107 0010 AC48     		ldr	r0, .L93+4
+ 108 0012 8342     		cmp	r3, r0
+ 109 0014 13D0     		beq	.L18
+ 110 0016 00F58030 		add	r0, r0, #65536
+ 111 001a 8342     		cmp	r3, r0
+ 112 001c 0FD0     		beq	.L18
+ 113 001e 4FF0E023 		mov	r3, #-536813568
+ 114 0022 D3F8F03D 		ldr	r3, [r3, #3568]
+ 115 0026 D907     		lsls	r1, r3, #31
+ 116 0028 00D5     		bpl	.L19
+ 117              		.syntax unified
+ 118              	@ 158 "libs/tinyusb/portable/synopsys/dwc2/dwc2_common.c" 1
+ 119 002a 00BE     		BKPT #0
+ARM GAS  /tmp/ccH3RMQy.s 			page 3
+
+
+ 120              	
+ 121              	@ 0 "" 2
+ 122              		.thumb
+ 123              		.syntax unified
+ 124              	.L19:
+ 125 002c 4FF0E023 		mov	r3, #-536813568
+ 126 0030 D3F8F03D 		ldr	r3, [r3, #3568]
+ 127 0034 DA07     		lsls	r2, r3, #31
+ 128 0036 00D5     		bpl	.L20
+ 129              		.syntax unified
+ 130              	@ 184 "libs/tinyusb/portable/synopsys/dwc2/dwc2_common.c" 1
+ 131 0038 00BE     		BKPT #0
+ 132              	
+ 133              	@ 0 "" 2
+ 134              		.thumb
+ 135              		.syntax unified
+ 136              	.L20:
+ 137 003a 0020     		movs	r0, #0
+ 138 003c 7047     		bx	lr
+ 139              	.L18:
+ 140 003e 10B5     		push	{r4, lr}
+ 141 0040 4FF0A043 		mov	r3, #1342177280
+ 142 0044 1046     		mov	r0, r2
+ 143 0046 9A68     		ldr	r2, [r3, #8]
+ 144 0048 22F00102 		bic	r2, r2, #1
+ 145 004c 82B0     		sub	sp, sp, #8
+ 146 004e 9A60     		str	r2, [r3, #8]
+ 147 0050 0029     		cmp	r1, #0
+ 148 0052 5BD0     		beq	.L22
+ 149 0054 DC68     		ldr	r4, [r3, #12]
+ 150 0056 9A6C     		ldr	r2, [r3, #72]
+ 151 0058 196D     		ldr	r1, [r3, #80]
+ 152 005a C1F30721 		ubfx	r1, r1, #8, #8
+ 153 005e 3F29     		cmp	r1, #63
+ 154 0060 C2F3811C 		ubfx	ip, r2, #6, #2
+ 155 0064 02F0C002 		and	r2, r2, #192
+ 156 0068 00F29B80 		bhi	.L23
+ 157 006c 802A     		cmp	r2, #128
+ 158 006e 00F0CE80 		beq	.L24
+ 159 0072 24F05802 		bic	r2, r4, #88
+ 160 0076 DA60     		str	r2, [r3, #12]
+ 161 0078 BCF1000F 		cmp	ip, #0
+ 162 007c 40F0B280 		bne	.L90
+ 163 0080 9A6B     		ldr	r2, [r3, #56]
+ 164 0082 0090     		str	r0, [sp]
+ 165 0084 42F48032 		orr	r2, r2, #65536
+ 166 0088 9A63     		str	r2, [r3, #56]
+ 167 008a FFF7FEFF 		bl	reset_core.constprop.0
+ 168 008e 24F47153 		bic	r3, r4, #15424
+ 169 0092 0098     		ldr	r0, [sp]
+ 170 0094 23F01803 		bic	r3, r3, #24
+ 171              	.L40:
+ 172 0098 4FF0A042 		mov	r2, #1342177280
+ 173 009c 43F41053 		orr	r3, r3, #9216
+ 174 00a0 D360     		str	r3, [r2, #12]
+ 175              	.L32:
+ 176 00a2 894B     		ldr	r3, .L93+8
+ARM GAS  /tmp/ccH3RMQy.s 			page 4
+
+
+ 177 00a4 894A     		ldr	r2, .L93+12
+ 178 00a6 1B68     		ldr	r3, [r3]
+ 179 00a8 9342     		cmp	r3, r2
+ 180 00aa 4BD3     		bcc	.L89
+ 181              	.L54:
+ 182 00ac 4FF4C052 		mov	r2, #6144
+ 183              	.L35:
+ 184 00b0 4FF0A041 		mov	r1, #1342177280
+ 185 00b4 CB68     		ldr	r3, [r1, #12]
+ 186 00b6 23F47053 		bic	r3, r3, #15360
+ 187 00ba 1343     		orrs	r3, r3, r2
+ 188 00bc CB60     		str	r3, [r1, #12]
+ 189              	.L34:
+ 190 00be 4FF0A041 		mov	r1, #1342177280
+ 191 00c2 4FF48462 		mov	r2, #1056
+ 192 00c6 CB68     		ldr	r3, [r1, #12]
+ 193 00c8 43F00703 		orr	r3, r3, #7
+ 194 00cc CB60     		str	r3, [r1, #12]
+ 195 00ce D1F8003E 		ldr	r3, [r1, #3584]
+ 196 00d2 23F00F03 		bic	r3, r3, #15
+ 197 00d6 C1F8003E 		str	r3, [r1, #3584]
+ 198 00da 0A61     		str	r2, [r1, #16]
+ 199              	.L36:
+ 200 00dc 0B69     		ldr	r3, [r1, #16]
+ 201 00de 9B06     		lsls	r3, r3, #26
+ 202 00e0 FCD4     		bmi	.L36
+ 203 00e2 1023     		movs	r3, #16
+ 204 00e4 0B61     		str	r3, [r1, #16]
+ 205 00e6 4FF0A041 		mov	r1, #1342177280
+ 206              	.L37:
+ 207 00ea 0B69     		ldr	r3, [r1, #16]
+ 208 00ec 13F01003 		ands	r3, r3, #16
+ 209 00f0 FBD1     		bne	.L37
+ 210 00f2 4FF0FF32 		mov	r2, #-1
+ 211 00f6 4A61     		str	r2, [r1, #20]
+ 212 00f8 4A60     		str	r2, [r1, #4]
+ 213 00fa 8B61     		str	r3, [r1, #24]
+ 214 00fc 0028     		cmp	r0, #0
+ 215 00fe 49D0     		beq	.L38
+ 216 0100 8B68     		ldr	r3, [r1, #8]
+ 217 0102 43F02603 		orr	r3, r3, #38
+ 218 0106 8B60     		str	r3, [r1, #8]
+ 219 0108 02B0     		add	sp, sp, #8
+ 220              		@ sp needed
+ 221 010a 10BD     		pop	{r4, pc}
+ 222              	.L22:
+ 223 010c DA68     		ldr	r2, [r3, #12]
+ 224 010e 0190     		str	r0, [sp, #4]
+ 225 0110 42F04001 		orr	r1, r2, #64
+ 226 0114 0092     		str	r2, [sp]
+ 227 0116 D960     		str	r1, [r3, #12]
+ 228 0118 996B     		ldr	r1, [r3, #56]
+ 229 011a 41F48031 		orr	r1, r1, #65536
+ 230 011e 9963     		str	r1, [r3, #56]
+ 231 0120 FFF7FEFF 		bl	reset_core.constprop.0
+ 232 0124 009A     		ldr	r2, [sp]
+ 233 0126 DFF8A0C1 		ldr	ip, .L93+8
+ARM GAS  /tmp/ccH3RMQy.s 			page 5
+
+
+ 234 012a 6849     		ldr	r1, .L93+12
+ 235 012c 0198     		ldr	r0, [sp, #4]
+ 236 012e 4FF0A043 		mov	r3, #1342177280
+ 237 0132 22F47052 		bic	r2, r2, #15360
+ 238 0136 42F4A252 		orr	r2, r2, #5184
+ 239 013a DA60     		str	r2, [r3, #12]
+ 240 013c DCF80030 		ldr	r3, [ip]
+ 241 0140 8B42     		cmp	r3, r1
+ 242 0142 B3D2     		bcs	.L54
+ 243              	.L89:
+ 244 0144 624A     		ldr	r2, .L93+16
+ 245 0146 9342     		cmp	r3, r2
+ 246 0148 49D8     		bhi	.L55
+ 247 014a 624A     		ldr	r2, .L93+20
+ 248 014c 9342     		cmp	r3, r2
+ 249 014e 5BD2     		bcs	.L56
+ 250 0150 614A     		ldr	r2, .L93+24
+ 251 0152 9342     		cmp	r3, r2
+ 252 0154 00F29B80 		bhi	.L57
+ 253 0158 A2F5DB12 		sub	r2, r2, #1794048
+ 254 015c A2F5BA52 		sub	r2, r2, #5952
+ 255 0160 9342     		cmp	r3, r2
+ 256 0162 00F2A480 		bhi	.L58
+ 257 0166 A2F5B712 		sub	r2, r2, #1499136
+ 258 016a A2F55872 		sub	r2, r2, #864
+ 259 016e 9342     		cmp	r3, r2
+ 260 0170 00F2A080 		bhi	.L59
+ 261 0174 594A     		ldr	r2, .L93+28
+ 262 0176 9342     		cmp	r3, r2
+ 263 0178 80F09F80 		bcs	.L60
+ 264 017c 584A     		ldr	r2, .L93+32
+ 265 017e 9342     		cmp	r3, r2
+ 266 0180 80F0C180 		bcs	.L61
+ 267 0184 574A     		ldr	r2, .L93+36
+ 268 0186 9342     		cmp	r3, r2
+ 269 0188 34BF     		ite	cc
+ 270 018a 4FF47052 		movcc	r2, #15360
+ 271 018e 4FF46052 		movcs	r2, #14336
+ 272 0192 8DE7     		b	.L35
+ 273              	.L38:
+ 274 0194 8B69     		ldr	r3, [r1, #24]
+ 275 0196 0120     		movs	r0, #1
+ 276 0198 43F01003 		orr	r3, r3, #16
+ 277 019c 8B61     		str	r3, [r1, #24]
+ 278 019e 02B0     		add	sp, sp, #8
+ 279              		@ sp needed
+ 280 01a0 10BD     		pop	{r4, pc}
+ 281              	.L23:
+ 282 01a2 802A     		cmp	r2, #128
+ 283 01a4 4AD0     		beq	.L27
+ 284 01a6 24F05002 		bic	r2, r4, #80
+ 285 01aa 42F00802 		orr	r2, r2, #8
+ 286 01ae DA60     		str	r2, [r3, #12]
+ 287 01b0 9A6B     		ldr	r2, [r3, #56]
+ 288 01b2 0090     		str	r0, [sp]
+ 289 01b4 BCF1000F 		cmp	ip, #0
+ 290 01b8 57D0     		beq	.L28
+ARM GAS  /tmp/ccH3RMQy.s 			page 6
+
+
+ 291 01ba 22F48032 		bic	r2, r2, #65536
+ 292 01be 9A63     		str	r2, [r3, #56]
+ 293 01c0 FFF7FEFF 		bl	reset_core.constprop.0
+ 294 01c4 24F47153 		bic	r3, r4, #15424
+ 295 01c8 23F01003 		bic	r3, r3, #16
+ 296 01cc 0098     		ldr	r0, [sp]
+ 297 01ce 43F00803 		orr	r3, r3, #8
+ 298              	.L29:
+ 299 01d2 4FF0A042 		mov	r2, #1342177280
+ 300 01d6 43F4A053 		orr	r3, r3, #5120
+ 301 01da D360     		str	r3, [r2, #12]
+ 302 01dc 6FE7     		b	.L34
+ 303              	.L55:
+ 304 01de 4FF4E052 		mov	r2, #7168
+ 305 01e2 65E7     		b	.L35
+ 306              	.L90:
+ 307 01e4 9A6B     		ldr	r2, [r3, #56]
+ 308 01e6 0090     		str	r0, [sp]
+ 309 01e8 22F48032 		bic	r2, r2, #65536
+ 310 01ec 9A63     		str	r2, [r3, #56]
+ 311 01ee FFF7FEFF 		bl	reset_core.constprop.0
+ 312 01f2 24F47153 		bic	r3, r4, #15424
+ 313 01f6 0098     		ldr	r0, [sp]
+ 314 01f8 23F01803 		bic	r3, r3, #24
+ 315              	.L30:
+ 316 01fc 4FF0A042 		mov	r2, #1342177280
+ 317 0200 43F41053 		orr	r3, r3, #9216
+ 318 0204 D360     		str	r3, [r2, #12]
+ 319 0206 5AE7     		b	.L34
+ 320              	.L56:
+ 321 0208 4FF40052 		mov	r2, #8192
+ 322 020c 50E7     		b	.L35
+ 323              	.L24:
+ 324 020e 24F46812 		bic	r2, r4, #3801088
+ 325 0212 22F0C802 		bic	r2, r2, #200
+ 326 0216 42F01002 		orr	r2, r2, #16
+ 327 021a DA60     		str	r2, [r3, #12]
+ 328 021c BCF1000F 		cmp	ip, #0
+ 329 0220 38D1     		bne	.L91
+ 330 0222 9A6B     		ldr	r2, [r3, #56]
+ 331 0224 0090     		str	r0, [sp]
+ 332 0226 42F48032 		orr	r2, r2, #65536
+ 333 022a 9A63     		str	r2, [r3, #56]
+ 334 022c FFF7FEFF 		bl	reset_core.constprop.0
+ 335 0230 2D4B     		ldr	r3, .L93+40
+ 336 0232 0098     		ldr	r0, [sp]
+ 337 0234 2340     		ands	r3, r3, r4
+ 338 0236 43F01003 		orr	r3, r3, #16
+ 339 023a 2DE7     		b	.L40
+ 340              	.L27:
+ 341 023c 24F46812 		bic	r2, r4, #3801088
+ 342 0240 22F0C802 		bic	r2, r2, #200
+ 343 0244 42F01002 		orr	r2, r2, #16
+ 344 0248 DA60     		str	r2, [r3, #12]
+ 345 024a BCF1000F 		cmp	ip, #0
+ 346 024e 4DD0     		beq	.L92
+ 347 0250 9A6B     		ldr	r2, [r3, #56]
+ARM GAS  /tmp/ccH3RMQy.s 			page 7
+
+
+ 348 0252 0090     		str	r0, [sp]
+ 349 0254 22F48032 		bic	r2, r2, #65536
+ 350 0258 9A63     		str	r2, [r3, #56]
+ 351 025a FFF7FEFF 		bl	reset_core.constprop.0
+ 352 025e 224B     		ldr	r3, .L93+40
+ 353 0260 0098     		ldr	r0, [sp]
+ 354 0262 2340     		ands	r3, r3, r4
+ 355 0264 43F01003 		orr	r3, r3, #16
+ 356 0268 B3E7     		b	.L29
+ 357              	.L28:
+ 358 026a 42F48032 		orr	r2, r2, #65536
+ 359 026e 9A63     		str	r2, [r3, #56]
+ 360 0270 FFF7FEFF 		bl	reset_core.constprop.0
+ 361 0274 24F47153 		bic	r3, r4, #15424
+ 362 0278 23F01003 		bic	r3, r3, #16
+ 363 027c 0098     		ldr	r0, [sp]
+ 364 027e 43F00803 		orr	r3, r3, #8
+ 365              	.L39:
+ 366 0282 4FF0A042 		mov	r2, #1342177280
+ 367 0286 43F4A053 		orr	r3, r3, #5120
+ 368 028a D360     		str	r3, [r2, #12]
+ 369 028c 09E7     		b	.L32
+ 370              	.L57:
+ 371 028e 4FF41052 		mov	r2, #9216
+ 372 0292 0DE7     		b	.L35
+ 373              	.L91:
+ 374 0294 9A6B     		ldr	r2, [r3, #56]
+ 375 0296 0090     		str	r0, [sp]
+ 376 0298 22F48032 		bic	r2, r2, #65536
+ 377 029c 9A63     		str	r2, [r3, #56]
+ 378 029e FFF7FEFF 		bl	reset_core.constprop.0
+ 379 02a2 114B     		ldr	r3, .L93+40
+ 380 02a4 0098     		ldr	r0, [sp]
+ 381 02a6 2340     		ands	r3, r3, r4
+ 382 02a8 43F01003 		orr	r3, r3, #16
+ 383 02ac A6E7     		b	.L30
+ 384              	.L58:
+ 385 02ae 4FF42052 		mov	r2, #10240
+ 386 02b2 FDE6     		b	.L35
+ 387              	.L59:
+ 388 02b4 4FF43052 		mov	r2, #11264
+ 389 02b8 FAE6     		b	.L35
+ 390              	.L60:
+ 391 02ba 4FF44052 		mov	r2, #12288
+ 392 02be F7E6     		b	.L35
+ 393              	.L94:
+ 394              		.align	2
+ 395              	.L93:
+ 396 02c0 0000544F 		.word	1330905088
+ 397 02c4 00003155 		.word	1429274624
+ 398 02c8 00000000 		.word	SystemCoreClock
+ 399 02cc 0048E801 		.word	32000000
+ 400 02d0 DF9DA301 		.word	27499999
+ 401 02d4 00366E01 		.word	24000000
+ 402 02d8 3FA44C01 		.word	21799999
+ 403 02dc 80730601 		.word	17200000
+ 404 02e0 0024F400 		.word	16000000
+ARM GAS  /tmp/ccH3RMQy.s 			page 8
+
+
+ 405 02e4 C0E1E400 		.word	15000000
+ 406 02e8 37C3C5FF 		.word	-3816649
+ 407              	.L92:
+ 408 02ec 9A6B     		ldr	r2, [r3, #56]
+ 409 02ee 0090     		str	r0, [sp]
+ 410 02f0 42F48032 		orr	r2, r2, #65536
+ 411 02f4 9A63     		str	r2, [r3, #56]
+ 412 02f6 FFF7FEFF 		bl	reset_core.constprop.0
+ 413 02fa 044B     		ldr	r3, .L95
+ 414 02fc 0098     		ldr	r0, [sp]
+ 415 02fe 2340     		ands	r3, r3, r4
+ 416 0300 43F01003 		orr	r3, r3, #16
+ 417 0304 BDE7     		b	.L39
+ 418              	.L61:
+ 419 0306 4FF45052 		mov	r2, #13312
+ 420 030a D1E6     		b	.L35
+ 421              	.L96:
+ 422              		.align	2
+ 423              	.L95:
+ 424 030c 37C3C5FF 		.word	-3816649
+ 426              		.section	.text.dwc2_core_deinit,"ax",%progbits
+ 427              		.align	1
+ 428              		.p2align 2,,3
+ 429              		.global	dwc2_core_deinit
+ 430              		.syntax unified
+ 431              		.thumb
+ 432              		.thumb_func
+ 434              	dwc2_core_deinit:
+ 435              		@ args = 0, pretend = 0, frame = 0
+ 436              		@ frame_needed = 0, uses_anonymous_args = 0
+ 437 0000 10B5     		push	{r4, lr}
+ 438 0002 4FF0A044 		mov	r4, #1342177280
+ 439 0006 A368     		ldr	r3, [r4, #8]
+ 440 0008 23F00103 		bic	r3, r3, #1
+ 441 000c A360     		str	r3, [r4, #8]
+ 442 000e FFF7FEFF 		bl	reset_core.constprop.0
+ 443 0012 D4F8003E 		ldr	r3, [r4, #3584]
+ 444 0016 43F00303 		orr	r3, r3, #3
+ 445 001a C4F8003E 		str	r3, [r4, #3584]
+ 446 001e A26C     		ldr	r2, [r4, #72]
+ 447 0020 E368     		ldr	r3, [r4, #12]
+ 448 0022 5B06     		lsls	r3, r3, #25
+ 449 0024 02D4     		bmi	.L98
+ 450 0026 12F0C00F 		tst	r2, #192
+ 451 002a 05D1     		bne	.L97
+ 452              	.L98:
+ 453 002c 4FF0A042 		mov	r2, #1342177280
+ 454 0030 936B     		ldr	r3, [r2, #56]
+ 455 0032 23F48033 		bic	r3, r3, #65536
+ 456 0036 9363     		str	r3, [r2, #56]
+ 457              	.L97:
+ 458 0038 10BD     		pop	{r4, pc}
+ 460 003a 00BF     		.ident	"GCC: (Arch Repository) 16.2.0"
+ARM GAS  /tmp/ccH3RMQy.s 			page 9
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 dwc2_common.c
+     /tmp/ccH3RMQy.s:18     .text.reset_core.constprop.0:00000000 $t
+     /tmp/ccH3RMQy.s:24     .text.reset_core.constprop.0:00000000 reset_core.constprop.0
+     /tmp/ccH3RMQy.s:65     .text.dwc2_core_is_highspeed_phy:00000000 $t
+     /tmp/ccH3RMQy.s:72     .text.dwc2_core_is_highspeed_phy:00000000 dwc2_core_is_highspeed_phy
+     /tmp/ccH3RMQy.s:91     .text.dwc2_core_init:00000000 $t
+     /tmp/ccH3RMQy.s:98     .text.dwc2_core_init:00000000 dwc2_core_init
+     /tmp/ccH3RMQy.s:396    .text.dwc2_core_init:000002c0 $d
+     /tmp/ccH3RMQy.s:408    .text.dwc2_core_init:000002ec $t
+     /tmp/ccH3RMQy.s:424    .text.dwc2_core_init:0000030c $d
+     /tmp/ccH3RMQy.s:427    .text.dwc2_core_deinit:00000000 $t
+     /tmp/ccH3RMQy.s:434    .text.dwc2_core_deinit:00000000 dwc2_core_deinit
+
+UNDEFINED SYMBOLS
+SystemCoreClock

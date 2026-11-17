@@ -1,0 +1,493 @@
+ARM GAS  /tmp/ccmHZPOI.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 2
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"stm32f4xx_hal_gpio.c"
+  16              		.text
+  17              		.section	.text.HAL_GPIO_Init,"ax",%progbits
+  18              		.align	1
+  19              		.p2align 2,,3
+  20              		.global	HAL_GPIO_Init
+  21              		.syntax unified
+  22              		.thumb
+  23              		.thumb_func
+  25              	HAL_GPIO_Init:
+  26              		@ args = 0, pretend = 0, frame = 24
+  27              		@ frame_needed = 0, uses_anonymous_args = 0
+  28 0000 2DE9F04F 		push	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+  29 0004 D1F800C0 		ldr	ip, [r1]
+  30 0008 DFF8B8A1 		ldr	r10, .L33+20
+  31 000c 684C     		ldr	r4, .L33
+  32 000e 87B0     		sub	sp, sp, #28
+  33 0010 0023     		movs	r3, #0
+  34 0012 4FF0010B 		mov	fp, #1
+  35 0016 8946     		mov	r9, r1
+  36 0018 02E0     		b	.L20
+  37              	.L2:
+  38 001a 0133     		adds	r3, r3, #1
+  39 001c 102B     		cmp	r3, #16
+  40 001e 7ED0     		beq	.L28
+  41              	.L20:
+  42 0020 0BFA03F2 		lsl	r2, fp, r3
+  43 0024 02EA0C08 		and	r8, r2, ip
+  44 0028 32EA0C02 		bics	r2, r2, ip
+  45 002c F5D1     		bne	.L2
+  46 002e D9F80410 		ldr	r1, [r9, #4]
+  47 0032 01F00305 		and	r5, r1, #3
+  48 0036 5A00     		lsls	r2, r3, #1
+  49 0038 6E1E     		subs	r6, r5, #1
+  50 003a 0327     		movs	r7, #3
+  51 003c 9740     		lsls	r7, r7, r2
+  52 003e 012E     		cmp	r6, #1
+  53 0040 0197     		str	r7, [sp, #4]
+  54 0042 6FD9     		bls	.L29
+  55 0044 032D     		cmp	r5, #3
+  56 0046 09D0     		beq	.L5
+  57 0048 C668     		ldr	r6, [r0, #12]
+  58 004a 019F     		ldr	r7, [sp, #4]
+ARM GAS  /tmp/ccmHZPOI.s 			page 2
+
+
+  59 004c 26EA070E 		bic	lr, r6, r7
+  60 0050 D9F80860 		ldr	r6, [r9, #8]
+  61 0054 9640     		lsls	r6, r6, r2
+  62 0056 46EA0E06 		orr	r6, r6, lr
+  63 005a C660     		str	r6, [r0, #12]
+  64              	.L5:
+  65 005c 05FA02F2 		lsl	r2, r5, r2
+  66 0060 019E     		ldr	r6, [sp, #4]
+  67 0062 0568     		ldr	r5, [r0]
+  68 0064 25EA0605 		bic	r5, r5, r6
+  69 0068 2A43     		orrs	r2, r2, r5
+  70 006a 11F4403F 		tst	r1, #196608
+  71 006e 0260     		str	r2, [r0]
+  72 0070 D3D0     		beq	.L2
+  73 0072 0022     		movs	r2, #0
+  74 0074 0592     		str	r2, [sp, #20]
+  75 0076 DAF84420 		ldr	r2, [r10, #68]
+  76 007a 42F48042 		orr	r2, r2, #16384
+  77 007e CAF84420 		str	r2, [r10, #68]
+  78 0082 DAF84420 		ldr	r2, [r10, #68]
+  79 0086 02F48042 		and	r2, r2, #16384
+  80 008a 0592     		str	r2, [sp, #20]
+  81 008c 059A     		ldr	r2, [sp, #20]
+  82 008e 23F00302 		bic	r2, r3, #3
+  83 0092 02F18042 		add	r2, r2, #1073741824
+  84 0096 02F59C32 		add	r2, r2, #79872
+  85 009a 03F00306 		and	r6, r3, #3
+  86 009e 9568     		ldr	r5, [r2, #8]
+  87 00a0 B600     		lsls	r6, r6, #2
+  88 00a2 0F27     		movs	r7, #15
+  89 00a4 B740     		lsls	r7, r7, r6
+  90 00a6 25EA0705 		bic	r5, r5, r7
+  91 00aa 424F     		ldr	r7, .L33+4
+  92 00ac B842     		cmp	r0, r7
+  93 00ae 11D0     		beq	.L7
+  94 00b0 07F58067 		add	r7, r7, #1024
+  95 00b4 B842     		cmp	r0, r7
+  96 00b6 6CD0     		beq	.L30
+  97 00b8 3F4F     		ldr	r7, .L33+8
+  98 00ba B842     		cmp	r0, r7
+  99 00bc 6ED0     		beq	.L31
+ 100 00be 3F4F     		ldr	r7, .L33+12
+ 101 00c0 B842     		cmp	r0, r7
+ 102 00c2 70D0     		beq	.L32
+ 103 00c4 3E4F     		ldr	r7, .L33+16
+ 104 00c6 B842     		cmp	r0, r7
+ 105 00c8 0CBF     		ite	eq
+ 106 00ca 0427     		moveq	r7, #4
+ 107 00cc 0727     		movne	r7, #7
+ 108 00ce 07FA06F6 		lsl	r6, r7, r6
+ 109 00d2 3543     		orrs	r5, r5, r6
+ 110              	.L7:
+ 111 00d4 9560     		str	r5, [r2, #8]
+ 112 00d6 A268     		ldr	r2, [r4, #8]
+ 113 00d8 CF02     		lsls	r7, r1, #11
+ 114 00da 54BF     		ite	pl
+ 115 00dc 22EA0802 		bicpl	r2, r2, r8
+ARM GAS  /tmp/ccmHZPOI.s 			page 3
+
+
+ 116 00e0 48EA0202 		orrmi	r2, r8, r2
+ 117 00e4 A260     		str	r2, [r4, #8]
+ 118 00e6 E268     		ldr	r2, [r4, #12]
+ 119 00e8 8E02     		lsls	r6, r1, #10
+ 120 00ea 54BF     		ite	pl
+ 121 00ec 22EA0802 		bicpl	r2, r2, r8
+ 122 00f0 48EA0202 		orrmi	r2, r8, r2
+ 123 00f4 E260     		str	r2, [r4, #12]
+ 124 00f6 6268     		ldr	r2, [r4, #4]
+ 125 00f8 8D03     		lsls	r5, r1, #14
+ 126 00fa 54BF     		ite	pl
+ 127 00fc 22EA0802 		bicpl	r2, r2, r8
+ 128 0100 48EA0202 		orrmi	r2, r8, r2
+ 129 0104 6260     		str	r2, [r4, #4]
+ 130 0106 2268     		ldr	r2, [r4]
+ 131 0108 C903     		lsls	r1, r1, #15
+ 132 010a 03F10103 		add	r3, r3, #1
+ 133 010e 54BF     		ite	pl
+ 134 0110 22EA0802 		bicpl	r2, r2, r8
+ 135 0114 48EA0202 		orrmi	r2, r8, r2
+ 136 0118 102B     		cmp	r3, #16
+ 137 011a 2260     		str	r2, [r4]
+ 138 011c 80D1     		bne	.L20
+ 139              	.L28:
+ 140 011e 07B0     		add	sp, sp, #28
+ 141              		@ sp needed
+ 142 0120 BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 143              	.L29:
+ 144 0124 8668     		ldr	r6, [r0, #8]
+ 145 0126 26EA070E 		bic	lr, r6, r7
+ 146 012a D9F80C60 		ldr	r6, [r9, #12]
+ 147 012e 9640     		lsls	r6, r6, r2
+ 148 0130 46EA0E06 		orr	r6, r6, lr
+ 149 0134 8660     		str	r6, [r0, #8]
+ 150 0136 4668     		ldr	r6, [r0, #4]
+ 151 0138 26EA080E 		bic	lr, r6, r8
+ 152 013c C1F30016 		ubfx	r6, r1, #4, #1
+ 153 0140 9E40     		lsls	r6, r6, r3
+ 154 0142 46EA0E06 		orr	r6, r6, lr
+ 155 0146 4660     		str	r6, [r0, #4]
+ 156 0148 C668     		ldr	r6, [r0, #12]
+ 157 014a 26EA070E 		bic	lr, r6, r7
+ 158 014e D9F80860 		ldr	r6, [r9, #8]
+ 159 0152 9640     		lsls	r6, r6, r2
+ 160 0154 46EA0E06 		orr	r6, r6, lr
+ 161 0158 022D     		cmp	r5, #2
+ 162 015a C660     		str	r6, [r0, #12]
+ 163 015c 7FF47EAF 		bne	.L5
+ 164 0160 DE08     		lsrs	r6, r3, #3
+ 165 0162 00EB8606 		add	r6, r0, r6, lsl #2
+ 166 0166 0296     		str	r6, [sp, #8]
+ 167 0168 376A     		ldr	r7, [r6, #32]
+ 168 016a D9F81060 		ldr	r6, [r9, #16]
+ 169 016e 0397     		str	r7, [sp, #12]
+ 170 0170 03F0070E 		and	lr, r3, #7
+ 171 0174 4FEA8E0E 		lsl	lr, lr, #2
+ 172 0178 0F27     		movs	r7, #15
+ARM GAS  /tmp/ccmHZPOI.s 			page 4
+
+
+ 173 017a 06FA0EF6 		lsl	r6, r6, lr
+ 174 017e 07FA0EFE 		lsl	lr, r7, lr
+ 175 0182 039F     		ldr	r7, [sp, #12]
+ 176 0184 27EA0E0E 		bic	lr, r7, lr
+ 177 0188 029F     		ldr	r7, [sp, #8]
+ 178 018a 46EA0E06 		orr	r6, r6, lr
+ 179 018e 3E62     		str	r6, [r7, #32]
+ 180 0190 64E7     		b	.L5
+ 181              	.L30:
+ 182 0192 0127     		movs	r7, #1
+ 183 0194 07FA06F6 		lsl	r6, r7, r6
+ 184 0198 3543     		orrs	r5, r5, r6
+ 185 019a 9BE7     		b	.L7
+ 186              	.L31:
+ 187 019c 0227     		movs	r7, #2
+ 188 019e 07FA06F6 		lsl	r6, r7, r6
+ 189 01a2 3543     		orrs	r5, r5, r6
+ 190 01a4 96E7     		b	.L7
+ 191              	.L32:
+ 192 01a6 0327     		movs	r7, #3
+ 193 01a8 07FA06F6 		lsl	r6, r7, r6
+ 194 01ac 3543     		orrs	r5, r5, r6
+ 195 01ae 91E7     		b	.L7
+ 196              	.L34:
+ 197              		.align	2
+ 198              	.L33:
+ 199 01b0 003C0140 		.word	1073822720
+ 200 01b4 00000240 		.word	1073872896
+ 201 01b8 00080240 		.word	1073874944
+ 202 01bc 000C0240 		.word	1073875968
+ 203 01c0 00100240 		.word	1073876992
+ 204 01c4 00380240 		.word	1073887232
+ 206              		.section	.text.HAL_GPIO_DeInit,"ax",%progbits
+ 207              		.align	1
+ 208              		.p2align 2,,3
+ 209              		.global	HAL_GPIO_DeInit
+ 210              		.syntax unified
+ 211              		.thumb
+ 212              		.thumb_func
+ 214              	HAL_GPIO_DeInit:
+ 215              		@ args = 0, pretend = 0, frame = 0
+ 216              		@ frame_needed = 0, uses_anonymous_args = 0
+ 217 0000 2DE9F04F 		push	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 218 0004 0023     		movs	r3, #0
+ 219 0006 DFF80CA1 		ldr	r10, .L51+20
+ 220 000a 0126     		movs	r6, #1
+ 221 000c 4FF00F09 		mov	r9, #15
+ 222 0010 4FF0030B 		mov	fp, #3
+ 223 0014 02E0     		b	.L43
+ 224              	.L36:
+ 225 0016 0133     		adds	r3, r3, #1
+ 226 0018 102B     		cmp	r3, #16
+ 227 001a 64D0     		beq	.L47
+ 228              	.L43:
+ 229 001c 06FA03F2 		lsl	r2, r6, r3
+ 230 0020 32EA0104 		bics	r4, r2, r1
+ 231 0024 02EA010C 		and	ip, r2, r1
+ARM GAS  /tmp/ccmHZPOI.s 			page 5
+
+
+ 232 0028 F5D1     		bne	.L36
+ 233 002a 23F00305 		bic	r5, r3, #3
+ 234 002e 05F18045 		add	r5, r5, #1073741824
+ 235 0032 05F59C35 		add	r5, r5, #79872
+ 236 0036 03F00304 		and	r4, r3, #3
+ 237 003a A400     		lsls	r4, r4, #2
+ 238 003c D5F808E0 		ldr	lr, [r5, #8]
+ 239 0040 09FA04F8 		lsl	r8, r9, r4
+ 240 0044 5045     		cmp	r0, r10
+ 241 0046 2746     		mov	r7, r4
+ 242 0048 08EA0E0E 		and	lr, r8, lr
+ 243 004c 4DD0     		beq	.L44
+ 244 004e 2C4C     		ldr	r4, .L51
+ 245 0050 A042     		cmp	r0, r4
+ 246 0052 4CD0     		beq	.L48
+ 247 0054 2B4C     		ldr	r4, .L51+4
+ 248 0056 A042     		cmp	r0, r4
+ 249 0058 4CD0     		beq	.L49
+ 250 005a 2B4C     		ldr	r4, .L51+8
+ 251 005c A042     		cmp	r0, r4
+ 252 005e 4CD0     		beq	.L50
+ 253 0060 2A4C     		ldr	r4, .L51+12
+ 254 0062 A042     		cmp	r0, r4
+ 255 0064 0CBF     		ite	eq
+ 256 0066 0424     		moveq	r4, #4
+ 257 0068 0724     		movne	r4, #7
+ 258 006a BC40     		lsls	r4, r4, r7
+ 259              	.L37:
+ 260 006c A645     		cmp	lr, r4
+ 261 006e 15D1     		bne	.L42
+ 262 0070 274C     		ldr	r4, .L51+16
+ 263 0072 274F     		ldr	r7, .L51+16
+ 264 0074 2468     		ldr	r4, [r4]
+ 265 0076 24EA0C04 		bic	r4, r4, ip
+ 266 007a 3C60     		str	r4, [r7]
+ 267 007c 7C68     		ldr	r4, [r7, #4]
+ 268 007e 24EA0C04 		bic	r4, r4, ip
+ 269 0082 7C60     		str	r4, [r7, #4]
+ 270 0084 FC68     		ldr	r4, [r7, #12]
+ 271 0086 24EA0C04 		bic	r4, r4, ip
+ 272 008a FC60     		str	r4, [r7, #12]
+ 273 008c BC68     		ldr	r4, [r7, #8]
+ 274 008e 24EA0C04 		bic	r4, r4, ip
+ 275 0092 BC60     		str	r4, [r7, #8]
+ 276 0094 AC68     		ldr	r4, [r5, #8]
+ 277 0096 24EA0804 		bic	r4, r4, r8
+ 278 009a AC60     		str	r4, [r5, #8]
+ 279              	.L42:
+ 280 009c 0568     		ldr	r5, [r0]
+ 281 009e 5C00     		lsls	r4, r3, #1
+ 282 00a0 0BFA04F4 		lsl	r4, fp, r4
+ 283 00a4 4FEAD30C 		lsr	ip, r3, #3
+ 284 00a8 25EA0405 		bic	r5, r5, r4
+ 285 00ac 00EB8C0C 		add	ip, r0, ip, lsl #2
+ 286 00b0 0560     		str	r5, [r0]
+ 287 00b2 03F00705 		and	r5, r3, #7
+ 288 00b6 DCF820E0 		ldr	lr, [ip, #32]
+ARM GAS  /tmp/ccmHZPOI.s 			page 6
+
+
+ 289 00ba AD00     		lsls	r5, r5, #2
+ 290 00bc 09FA05F5 		lsl	r5, r9, r5
+ 291 00c0 2EEA0505 		bic	r5, lr, r5
+ 292 00c4 CCF82050 		str	r5, [ip, #32]
+ 293 00c8 C568     		ldr	r5, [r0, #12]
+ 294 00ca 25EA0405 		bic	r5, r5, r4
+ 295 00ce C560     		str	r5, [r0, #12]
+ 296 00d0 4568     		ldr	r5, [r0, #4]
+ 297 00d2 25EA0202 		bic	r2, r5, r2
+ 298 00d6 4260     		str	r2, [r0, #4]
+ 299 00d8 8268     		ldr	r2, [r0, #8]
+ 300 00da 0133     		adds	r3, r3, #1
+ 301 00dc 22EA0402 		bic	r2, r2, r4
+ 302 00e0 102B     		cmp	r3, #16
+ 303 00e2 8260     		str	r2, [r0, #8]
+ 304 00e4 9AD1     		bne	.L43
+ 305              	.L47:
+ 306 00e6 BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 307              	.L44:
+ 308 00ea 0024     		movs	r4, #0
+ 309 00ec BEE7     		b	.L37
+ 310              	.L48:
+ 311 00ee 06FA07F4 		lsl	r4, r6, r7
+ 312 00f2 BBE7     		b	.L37
+ 313              	.L49:
+ 314 00f4 0224     		movs	r4, #2
+ 315 00f6 BC40     		lsls	r4, r4, r7
+ 316 00f8 B8E7     		b	.L37
+ 317              	.L50:
+ 318 00fa 0324     		movs	r4, #3
+ 319 00fc BC40     		lsls	r4, r4, r7
+ 320 00fe B5E7     		b	.L37
+ 321              	.L52:
+ 322              		.align	2
+ 323              	.L51:
+ 324 0100 00040240 		.word	1073873920
+ 325 0104 00080240 		.word	1073874944
+ 326 0108 000C0240 		.word	1073875968
+ 327 010c 00100240 		.word	1073876992
+ 328 0110 003C0140 		.word	1073822720
+ 329 0114 00000240 		.word	1073872896
+ 331              		.section	.text.HAL_GPIO_ReadPin,"ax",%progbits
+ 332              		.align	1
+ 333              		.p2align 2,,3
+ 334              		.global	HAL_GPIO_ReadPin
+ 335              		.syntax unified
+ 336              		.thumb
+ 337              		.thumb_func
+ 339              	HAL_GPIO_ReadPin:
+ 340              		@ args = 0, pretend = 0, frame = 0
+ 341              		@ frame_needed = 0, uses_anonymous_args = 0
+ 342              		@ link register save eliminated.
+ 343 0000 0369     		ldr	r3, [r0, #16]
+ 344 0002 1942     		tst	r1, r3
+ 345 0004 14BF     		ite	ne
+ 346 0006 0120     		movne	r0, #1
+ 347 0008 0020     		moveq	r0, #0
+ARM GAS  /tmp/ccmHZPOI.s 			page 7
+
+
+ 348 000a 7047     		bx	lr
+ 350              		.section	.text.HAL_GPIO_WritePin,"ax",%progbits
+ 351              		.align	1
+ 352              		.p2align 2,,3
+ 353              		.global	HAL_GPIO_WritePin
+ 354              		.syntax unified
+ 355              		.thumb
+ 356              		.thumb_func
+ 358              	HAL_GPIO_WritePin:
+ 359              		@ args = 0, pretend = 0, frame = 0
+ 360              		@ frame_needed = 0, uses_anonymous_args = 0
+ 361              		@ link register save eliminated.
+ 362 0000 02B9     		cbnz	r2, .L57
+ 363 0002 0904     		lsls	r1, r1, #16
+ 364              	.L57:
+ 365 0004 8161     		str	r1, [r0, #24]
+ 366 0006 7047     		bx	lr
+ 368              		.section	.text.HAL_GPIO_TogglePin,"ax",%progbits
+ 369              		.align	1
+ 370              		.p2align 2,,3
+ 371              		.global	HAL_GPIO_TogglePin
+ 372              		.syntax unified
+ 373              		.thumb
+ 374              		.thumb_func
+ 376              	HAL_GPIO_TogglePin:
+ 377              		@ args = 0, pretend = 0, frame = 0
+ 378              		@ frame_needed = 0, uses_anonymous_args = 0
+ 379              		@ link register save eliminated.
+ 380 0000 4369     		ldr	r3, [r0, #20]
+ 381 0002 01EA0302 		and	r2, r1, r3
+ 382 0006 21EA0301 		bic	r1, r1, r3
+ 383 000a 41EA0241 		orr	r1, r1, r2, lsl #16
+ 384 000e 8161     		str	r1, [r0, #24]
+ 385 0010 7047     		bx	lr
+ 387 0012 00BF     		.section	.text.HAL_GPIO_LockPin,"ax",%progbits
+ 388              		.align	1
+ 389              		.p2align 2,,3
+ 390              		.global	HAL_GPIO_LockPin
+ 391              		.syntax unified
+ 392              		.thumb
+ 393              		.thumb_func
+ 395              	HAL_GPIO_LockPin:
+ 396              		@ args = 0, pretend = 0, frame = 8
+ 397              		@ frame_needed = 0, uses_anonymous_args = 0
+ 398              		@ link register save eliminated.
+ 399 0000 82B0     		sub	sp, sp, #8
+ 400 0002 4FF48033 		mov	r3, #65536
+ 401 0006 0193     		str	r3, [sp, #4]
+ 402 0008 019B     		ldr	r3, [sp, #4]
+ 403 000a 0B43     		orrs	r3, r3, r1
+ 404 000c 0193     		str	r3, [sp, #4]
+ 405 000e 019B     		ldr	r3, [sp, #4]
+ 406 0010 C361     		str	r3, [r0, #28]
+ 407 0012 C161     		str	r1, [r0, #28]
+ 408 0014 019B     		ldr	r3, [sp, #4]
+ 409 0016 C361     		str	r3, [r0, #28]
+ 410 0018 C369     		ldr	r3, [r0, #28]
+ARM GAS  /tmp/ccmHZPOI.s 			page 8
+
+
+ 411 001a 0193     		str	r3, [sp, #4]
+ 412 001c C069     		ldr	r0, [r0, #28]
+ 413 001e 80F48030 		eor	r0, r0, #65536
+ 414 0022 C0F30040 		ubfx	r0, r0, #16, #1
+ 415 0026 02B0     		add	sp, sp, #8
+ 416              		@ sp needed
+ 417 0028 7047     		bx	lr
+ 419 002a 00BF     		.section	.text.HAL_GPIO_EXTI_Callback,"ax",%progbits
+ 420              		.align	1
+ 421              		.p2align 2,,3
+ 422              		.weak	HAL_GPIO_EXTI_Callback
+ 423              		.syntax unified
+ 424              		.thumb
+ 425              		.thumb_func
+ 427              	HAL_GPIO_EXTI_Callback:
+ 428              		@ args = 0, pretend = 0, frame = 0
+ 429              		@ frame_needed = 0, uses_anonymous_args = 0
+ 430              		@ link register save eliminated.
+ 431 0000 7047     		bx	lr
+ 433 0002 00BF     		.section	.text.HAL_GPIO_EXTI_IRQHandler,"ax",%progbits
+ 434              		.align	1
+ 435              		.p2align 2,,3
+ 436              		.global	HAL_GPIO_EXTI_IRQHandler
+ 437              		.syntax unified
+ 438              		.thumb
+ 439              		.thumb_func
+ 441              	HAL_GPIO_EXTI_IRQHandler:
+ 442              		@ args = 0, pretend = 0, frame = 0
+ 443              		@ frame_needed = 0, uses_anonymous_args = 0
+ 444 0000 044A     		ldr	r2, .L72
+ 445 0002 5169     		ldr	r1, [r2, #20]
+ 446 0004 0142     		tst	r1, r0
+ 447 0006 00D1     		bne	.L71
+ 448 0008 7047     		bx	lr
+ 449              	.L71:
+ 450 000a 08B5     		push	{r3, lr}
+ 451 000c 5061     		str	r0, [r2, #20]
+ 452 000e FFF7FEFF 		bl	HAL_GPIO_EXTI_Callback
+ 453 0012 08BD     		pop	{r3, pc}
+ 454              	.L73:
+ 455              		.align	2
+ 456              	.L72:
+ 457 0014 003C0140 		.word	1073822720
+ 459              		.ident	"GCC: (Arch Repository) 16.2.0"
+ARM GAS  /tmp/ccmHZPOI.s 			page 9
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 stm32f4xx_hal_gpio.c
+     /tmp/ccmHZPOI.s:18     .text.HAL_GPIO_Init:00000000 $t
+     /tmp/ccmHZPOI.s:25     .text.HAL_GPIO_Init:00000000 HAL_GPIO_Init
+     /tmp/ccmHZPOI.s:199    .text.HAL_GPIO_Init:000001b0 $d
+     /tmp/ccmHZPOI.s:207    .text.HAL_GPIO_DeInit:00000000 $t
+     /tmp/ccmHZPOI.s:214    .text.HAL_GPIO_DeInit:00000000 HAL_GPIO_DeInit
+     /tmp/ccmHZPOI.s:324    .text.HAL_GPIO_DeInit:00000100 $d
+     /tmp/ccmHZPOI.s:332    .text.HAL_GPIO_ReadPin:00000000 $t
+     /tmp/ccmHZPOI.s:339    .text.HAL_GPIO_ReadPin:00000000 HAL_GPIO_ReadPin
+     /tmp/ccmHZPOI.s:351    .text.HAL_GPIO_WritePin:00000000 $t
+     /tmp/ccmHZPOI.s:358    .text.HAL_GPIO_WritePin:00000000 HAL_GPIO_WritePin
+     /tmp/ccmHZPOI.s:369    .text.HAL_GPIO_TogglePin:00000000 $t
+     /tmp/ccmHZPOI.s:376    .text.HAL_GPIO_TogglePin:00000000 HAL_GPIO_TogglePin
+     /tmp/ccmHZPOI.s:388    .text.HAL_GPIO_LockPin:00000000 $t
+     /tmp/ccmHZPOI.s:395    .text.HAL_GPIO_LockPin:00000000 HAL_GPIO_LockPin
+     /tmp/ccmHZPOI.s:420    .text.HAL_GPIO_EXTI_Callback:00000000 $t
+     /tmp/ccmHZPOI.s:427    .text.HAL_GPIO_EXTI_Callback:00000000 HAL_GPIO_EXTI_Callback
+     /tmp/ccmHZPOI.s:434    .text.HAL_GPIO_EXTI_IRQHandler:00000000 $t
+     /tmp/ccmHZPOI.s:441    .text.HAL_GPIO_EXTI_IRQHandler:00000000 HAL_GPIO_EXTI_IRQHandler
+     /tmp/ccmHZPOI.s:457    .text.HAL_GPIO_EXTI_IRQHandler:00000014 $d
+
+NO UNDEFINED SYMBOLS

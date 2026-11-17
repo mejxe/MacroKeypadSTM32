@@ -1,0 +1,37 @@
+[
+  {
+    "file": "Core/Src/main.c",
+    "arguments": [
+      "/usr/bin/arm-none-eabi-gcc",
+      "-c",
+      "-mcpu=cortex-m4",
+      "-mthumb",
+      "-mfpu=fpv4-sp-d16",
+      "-mfloat-abi=hard",
+      "-DUSE_HAL_DRIVER",
+      "-DSTM32F411xE",
+      "-ICore/Inc",
+      "-IDrivers/STM32F4xx_HAL_Driver/Inc",
+      "-IDrivers/STM32F4xx_HAL_Driver/Inc/Legacy",
+      "-IDrivers/CMSIS/Device/ST/STM32F4xx/Include",
+      "-IDrivers/CMSIS/Include",
+      "-Ilibs/tinyusb",
+      "-Ilibs/tinyusb/src",
+      "-Og",
+      "-Wall",
+      "-fdata-sections",
+      "-ffunction-sections",
+      "-g",
+      "-gdwarf-2",
+      "-MMD",
+      "-MP",
+      "-MFbuild/main.d",
+      "-Wa,-a,-ad,-alms=build/main.lst",
+      "Core/Src/main.c",
+      "-o",
+      "build/main.o"
+    ],
+    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/bootloader",
+    "output": "build/main.o"
+  }
+]
