@@ -19,33 +19,32 @@ TARGET = MacroKeyboard
 ######################################
 # building variables
 ######################################
-# debug build?
+# default is a debug build, "make release" or "make flashr" builds RELEASE=1
+RELEASE ?= 0
+ifeq ($(RELEASE), 1)
+DEBUG = 0
+OPT = -O2
+# separate dir, so debug and release objects never mix
+BUILD_DIR = build-release
+else
 DEBUG = 1
-# optimization
 OPT = -Og
-
-
-#######################################
-# paths
-#######################################
-# Build path
 BUILD_DIR = build
+endif
 
 ######################################
 # source
 ######################################
 # C sources
 C_SOURCES =  \
-Core/Src/main.c \
-Core/Src/stm32f4xx_it.c \
-Core/Src/stm32f4xx_hal_msp.c \
-Core/Src/usb_descriptors.c \
-Core/Src/macros.c \
-Core/Src/encoder.c \
-Core/Src/usb_hid.c \
-Core/Src/utils.c \
-Core/Src/buttons.c \
-Core/Src/flash.c \
+src/main.c \
+src/stm/stm32f4xx_it.c \
+src/stm/stm32f4xx_hal_msp.c \
+$(wildcard src/mod/usb/*.c ) \
+$(wildcard src/mod/macros/*.c ) \
+$(wildcard src/mod/buttons/*.c ) \
+src/utils.c \
+src/mod/flash.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.c \
@@ -59,13 +58,15 @@ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_exti.c \
-Core/Src/system_stm32f4xx.c \
-Core/Src/sysmem.c \
-Core/Src/syscalls.c \
+src/stm/system_stm32f4xx.c \
+src/stm/sysmem.c \
+src/stm/syscalls.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd_ex.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.c \
-Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.c
+Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.c \
+Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rtc.c \
+Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rtc_ex.c
 
 # ASM sources
 ASM_SOURCES =  \
@@ -126,11 +127,12 @@ AS_INCLUDES =
 
 # C includes
 C_INCLUDES =  \
--ICore/Inc \
 -IDrivers/STM32F4xx_HAL_Driver/Inc \
 -IDrivers/STM32F4xx_HAL_Driver/Inc/Legacy \
 -IDrivers/CMSIS/Device/ST/STM32F4xx/Include \
 -IDrivers/CMSIS/Include \
+
+C_INCLUDES += $(addprefix -I, $(shell find src -type d))
 
 
 # compile gcc flags
@@ -217,6 +219,14 @@ clean:
 
 flash: all
 	openocd -f interface/stlink.cfg -f target/stm32f4x.cfg -c "adapter speed 1000" -c "set WORKAREASIZE 0" -c "program $(BUILD_DIR)/$(TARGET).elf verify reset exit"
+release:
+	$(MAKE) RELEASE=1 all
+
+flashr:
+	$(MAKE) RELEASE=1 flash
+
+.PHONY: all clean flash release flashr
+
 #######################################
 # dependencies
 #######################################

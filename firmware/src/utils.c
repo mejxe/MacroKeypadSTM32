@@ -29,15 +29,6 @@ const char keycode_to_char_lookup(uint8_t keycode)
 {
   return keycode_names[keycode];
 }
-bool delay_non_blocking_ms(uint32_t interval, uint32_t *start_ms)
-{
-  if (HAL_GetTick() - *start_ms < interval)
-  {
-    return false;
-  }
-  (*start_ms) += interval;
-  return true;
-}
 bool debounce_ok(uint32_t interval, uint32_t *start_ms)
 {
   if (HAL_GetTick() - *start_ms < interval)

@@ -24,6 +24,7 @@
 #include "buttons.h"
 #include "encoder.h"
 #include "flash.h"
+#include "flash_layout.h"
 #include "macros.h"
 #include "stdbool.h"
 #include "tusb.h"
@@ -52,8 +53,11 @@
 /* Private variables ---------------------------------------------------------*/
 TIM_HandleTypeDef htim2;
 TIM_HandleTypeDef htim9;
+RTC_HandleTypeDef hrtc;
 
 /* USER CODE BEGIN PV */
+
+bool SHOULD_REBOOT_FOR_FLASHING = false;
 
 MacroKeyboard MK_Struct = {.columns = {col0_Pin, col1_Pin, col2_Pin},
                            .rows = {row0_Pin, row1_Pin, row2_Pin},
@@ -76,6 +80,7 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_TIM2_Init(void);
 static void MX_TIM9_Init(void);
+static void MX_RTC_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -83,7 +88,20 @@ static void MX_TIM9_Init(void);
 /* Private user code
  * ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+void set_should_flash_firmware(void)
+{
+  HAL_RTCEx_BKUPWrite(&hrtc, RTC_BKP_DR0, 1);
+}
+
+void flash_firmware_mode(void)
+{
+  set_should_flash_firmware();
+  printf("Flash request ACK");
+  printf("Restarting...");
+  HAL_NVIC_SystemReset();
+}
 void setup_button_callbacks()
+
 {
   encoder_button.press_func = cycle_profiles;
   encoder_button.hold_func = _placeholder_button_func;
@@ -104,12 +122,14 @@ void flash_macros_from_msg(uint8_t *msg, uint32_t msg_len)
 // tasks
 void cdc_task()
 {
+  const static uint8_t MACRO_FLASH_MSG = 0x01;
+  const static uint8_t FIRMWARE_FLASH_MSG = 0x02;
   static uint8_t message_buf[MESSAGE_LENGTH_BYTES];
   static uint32_t used = 0;
   static bool magic_number_read = false;
   if (tud_cdc_available())
   {
-    uint8_t temp_buf[CFG_TUD_CDC_TX_BUFSIZE];
+    uint8_t temp_buf[CFG_TUD_CDC_RX_BUFSIZE];
     uint32_t read = tud_cdc_read(temp_buf, 64);
     if (!magic_number_read)
     {
@@ -117,6 +137,16 @@ void cdc_task()
           temp_buf[3] == 0x7a)
       {
         magic_number_read = true;
+        switch (temp_buf[4])
+        {
+        case MACRO_FLASH_MSG:
+          printf("Received request for programming macros");
+          break;
+        case FIRMWARE_FLASH_MSG:
+          printf("Received request for flashing!\r\n");
+          SHOULD_REBOOT_FOR_FLASHING = true;
+          break;
+        }
       }
       else
       {
@@ -156,6 +186,10 @@ int main(void)
 
   /* USER CODE BEGIN 1 */
 
+  HAL_Init();
+  SCB->VTOR = APP_SECTOR_START;
+
+  __enable_irq();
   /* USER CODE END 1 */
 
   /* MCU
@@ -164,11 +198,11 @@ int main(void)
   MX_GPIO_Init();
   MX_TIM2_Init();
   MX_TIM9_Init();
+  MX_RTC_Init();
 
   /* Reset of all peripherals, Initializes the Flash interface and the
    * Systick.
    */
-  HAL_Init();
 
   /* USER CODE BEGIN Init */
   /* USER CODE END Init */
@@ -185,17 +219,14 @@ int main(void)
   HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
 
   // USB NVIC INTERRUPTS
-  HAL_NVIC_SetPriority(OTG_FS_IRQn, 5, 0);
-  HAL_NVIC_EnableIRQ(OTG_FS_IRQn);
+
+  setup_macros(&MK_Struct);
+  setup_button_callbacks();
 
   tusb_rhport_init_t dev_init = {.role = TUSB_ROLE_DEVICE,
                                  .speed = TUSB_SPEED_AUTO};
   tusb_init(0, &dev_init);
 
-  setup_macros(&MK_Struct);
-  setup_button_callbacks();
-  // default_setup_macros(&MK_Struct);
-  //  Flash_Write_Data(MACRO_VECTOR_SECTOR_START_ADDRESS, &MK_Struct);
   /* USER CODE END 2 */
 
   /* USER CODE BEGIN WHILE */
@@ -206,11 +237,47 @@ int main(void)
     buttons_task(&MK_Struct);
     cdc_task();
     dequeue_macros_task(&MK_Struct);
+
+    if (SHOULD_REBOOT_FOR_FLASHING)
+      flash_firmware_mode();
   }
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
   /* USER CODE END 3 */
+}
+/**
+ * @brief RTC Initialization Function
+ * @param None
+ * @retval None
+ */
+static void MX_RTC_Init(void)
+{
+
+  /* USER CODE BEGIN RTC_Init 0 */
+
+  /* USER CODE END RTC_Init 0 */
+
+  /* USER CODE BEGIN RTC_Init 1 */
+
+  /* USER CODE END RTC_Init 1 */
+
+  /** Initialize RTC Only
+   */
+  hrtc.Instance = RTC;
+  hrtc.Init.HourFormat = RTC_HOURFORMAT_24;
+  hrtc.Init.AsynchPrediv = 127;
+  hrtc.Init.SynchPrediv = 255;
+  hrtc.Init.OutPut = RTC_OUTPUT_DISABLE;
+  hrtc.Init.OutPutPolarity = RTC_OUTPUT_POLARITY_HIGH;
+  hrtc.Init.OutPutType = RTC_OUTPUT_TYPE_OPENDRAIN;
+  if (HAL_RTC_Init(&hrtc) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN RTC_Init 2 */
+
+  /* USER CODE END RTC_Init 2 */
 }
 /**
  * @brief System Clock Configuration
@@ -229,7 +296,9 @@ void SystemClock_Config(void)
   /** Initializes the RCC Oscillators according to the specified parameters
    * in the RCC_OscInitTypeDef structure.
    */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
+  RCC_OscInitStruct.OscillatorType =
+      RCC_OSCILLATORTYPE_LSI | RCC_OSCILLATORTYPE_HSE;
+  RCC_OscInitStruct.LSIState = RCC_LSI_ON;
   RCC_OscInitStruct.HSEState = RCC_HSE_ON;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
