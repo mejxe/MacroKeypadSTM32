@@ -74,12 +74,12 @@ void encoder_scan(Encoder *encoder, MacroKeyboard *MK)
     switch (encoder->direction)
     {
     case DIRECTION_LEFT:
-      MK->macro_To_Send =
-          &MK->Encoder_Macros[DIRECTION_LEFT][MK->macro_profile];
+      delegate_macro(MK,
+                     &MK->Encoder_Macros[DIRECTION_LEFT][MK->macro_profile]);
       break;
     case DIRECTION_RIGHT:
-      MK->macro_To_Send =
-          &MK->Encoder_Macros[DIRECTION_RIGHT][MK->macro_profile];
+      delegate_macro(MK,
+                     &MK->Encoder_Macros[DIRECTION_RIGHT][MK->macro_profile]);
       break;
     case DIRECTION_NONE:
       return; // illegal state btw, probably call error or smthing

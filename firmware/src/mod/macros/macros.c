@@ -75,14 +75,15 @@ Macro *get_macro_by_row_col(MacroKeyboard *MK_Struct, uint8_t row_index,
               ->Macros_Array[row_index][col_index][MK_Struct->macro_profile];
 }
 
-void delegate_macro(MacroKeyboard *MK_Struct, uint8_t row, uint8_t column)
+void mq_enqueue(MacroQueue *mq, Macro *macro);
+
+void delegate_macro(MacroKeyboard *MK_Struct, Macro *macro)
 {
-  Macro *fetched_macro = get_macro_by_row_col(MK_Struct, row, column);
-  if (fetched_macro == NULL)
+  if (macro == NULL)
   {
     return;
   }
-  MK_Struct->macro_To_Send = fetched_macro;
+  mq_enqueue(&MK_Struct->MQ, macro);
 }
 void keyboard_scan(MacroKeyboard *MK_Struct)
 {
@@ -100,7 +101,8 @@ void keyboard_scan(MacroKeyboard *MK_Struct)
       else if (row_in == GPIO_PIN_SET &&
                should_register_keypress(&MK_Struct->Keyboard_State_Array[j][i]))
       {
-        delegate_macro(MK_Struct, j, i);
+        Macro *fetched_macro = get_macro_by_row_col(MK_Struct, j, i);
+        delegate_macro(MK_Struct, fetched_macro);
         reset_switch_counter(&MK_Struct->Keyboard_State_Array[j][i]);
       }
       else
@@ -174,6 +176,91 @@ void print_macro_array(MacroKeyboard *MK_Struct)
                              bufsize - used_up);
       used_up += snprintf(buf + used_up, bufsize - used_up, "}\r\n") + 1;
     }
+  }
+  used_up += snprintf(buf + used_up, bufsize - used_up, "}\r\n") + 1;
+  print_buffered(buf, used_up);
+}
+
+MacroLink _macro_link_arena[5] = {0};
+bool mlink_is_null(MacroLink mlink) { return mlink.self == NULL; }
+
+MacroLink *mlink_allocate()
+{
+  for (int i = 0; i < 5; i++)
+  {
+    if (mlink_is_null(_macro_link_arena[i]))
+      return &_macro_link_arena[i];
+  }
+  return NULL;
+}
+void mlink_deallocate(MacroLink *mlink)
+{
+  mlink->self = NULL;
+  mlink->next = NULL;
+}
+bool mq_is_empty(MacroQueue *mq) { return mq->curr_size <= 0; }
+Macro *mq_peek(MacroQueue *mq)
+{
+  if (mq_is_empty(mq))
+    return NULL;
+  return mq->head->self;
+}
+Macro *mq_dequeue(MacroQueue *mq)
+{
+  if (mq_is_empty(mq))
+    return NULL;
+  MacroLink *mlink = mq->head;
+  Macro *head_macro = mlink->self;
+
+  mq->curr_size--;
+  mq->head = mq->head->next;
+
+  mlink_deallocate(mlink);
+  return head_macro;
+}
+void mq_enqueue(MacroQueue *mq, Macro *macro)
+{
+  if (mq->curr_size >= 5)
+  {
+    return;
+  }
+
+  MacroLink *mlink = mlink_allocate();
+  if (mlink == NULL)
+    return;
+  mlink->self = macro;
+  mlink->next = NULL;
+
+  if (mq_is_empty(mq))
+  {
+    mq->head = mlink;
+  }
+  else
+  {
+    MacroLink *visitor = mq->head;
+    while (visitor->next != NULL)
+    {
+      visitor = visitor->next;
+    }
+    visitor->next = mlink;
+  }
+  mq->curr_size++;
+}
+
+void print_mq(MacroKeyboard *MK)
+{
+  if (MK->MQ.curr_size == 0)
+    return;
+  uint32_t bufsize = 2048;
+  char buf[bufsize];
+  uint32_t used_up = 0;
+  used_up += snprintf(buf + used_up, bufsize - used_up, "MacroQueue {\r\n") + 1;
+  MacroLink *visitor = MK->MQ.head;
+  while (visitor->next != NULL)
+  {
+    used_up += snprintf(buf + used_up, bufsize - used_up, "MACRO:\r\n") + 1;
+    used_up += print_macro(*visitor->self, buf + used_up, bufsize - used_up);
+    visitor = visitor->next;
   }
   used_up += snprintf(buf + used_up, bufsize - used_up, "}\r\n") + 1;
   print_buffered(buf, used_up);

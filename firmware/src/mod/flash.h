@@ -1,8 +1,9 @@
 #ifndef FLASH_H
 #define FLASH_H
+#include "flash_layout.h"
 #include "macros.h"
 
-#define MACRO_VECTOR_SECTOR_START_ADDRESS 0x08040000
+#define MACRO_VECTOR_SECTOR_START_ADDRESS FLASH_SECTOR3
 #define BYTES_PER_MACRO (MAX_MACRO_LEN + 4)
 #define ENCODER_MACROS 2
 #define HEADER_BYTES 2

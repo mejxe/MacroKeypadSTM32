@@ -40,7 +40,6 @@ extern const char keycode_names[];
 extern const uint8_t char_to_keycode[128];
 uint8_t char_to_keycode_lookup(char c);
 const char keycode_to_char_lookup(uint8_t keycode);
-bool delay_non_blocking_ms(uint32_t interval, uint32_t *last_ms);
 bool debounce_ok(uint32_t interval, uint32_t *start_ms);
 void on_board_button_scan(MacroKeyboard *MK, button_t *on_board_button);
 void encoder_button_scan(MacroKeyboard *MK, button_t *on_board_button);
