@@ -46,3 +46,17 @@ pub struct MacroConfig {
     #[serde(alias = "profile")]
     pub profiles: Vec<MacroProfile>,
 }
+
+pub enum Mode {
+    FlashMode,
+    MacroMode,
+}
+impl From<String> for Mode {
+    fn from(value: String) -> Self {
+        match value.as_str() {
+            "macro" => Mode::MacroMode,
+            "flash" => Mode::FlashMode,
+            other => panic!("Unknown mode: {other}"),
+        }
+    }
+}

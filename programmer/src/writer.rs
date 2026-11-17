@@ -1,14 +1,12 @@
-use std::time::Duration;
-
-use crate::Error;
+use crate::helpers;
+use crate::{
+    Error, FLASH_MACRO_MESSAGE, MACRO_KEYBOARD_PID, MACRO_KEYBOARD_VID, MAGIC_NUMBER, PortErrorType,
+};
 use crate::{
     Result,
     structs::{Macro, MacroConfig, MacroProfile, Modifiers, SerializedConfig},
     usb_hid::{char_to_hid_code, modifiers_to_hid_code},
 };
-const MAGIC_NUMBER: [u8; 4] = [0x25, 0x07, 0xa0, 0x7a];
-const MACRO_KEYBOARD_PID: u16 = 0x2507;
-const MACRO_KEYBOARD_VID: u16 = 0xA07A;
 
 enum MacroChar {
     Char(char),
@@ -19,45 +17,25 @@ pub fn write_to_port(port_name: String, config: SerializedConfig) -> Result<()> 
     let mut message = [0u8; 668];
 
     message[0..4].copy_from_slice(&MAGIC_NUMBER);
+    message[4] = FLASH_MACRO_MESSAGE;
     message[6..].copy_from_slice(&config);
+    dbg!(message);
 
     let mut cdc_port = serialport::new(&port_name, 115_200)
         .open()
-        .map_err(|err| Error::PortError(err.description))?;
+        .map_err(|err| Error::PortError(err.description, PortErrorType::Misc))?;
 
     cdc_port
         .write_all(&message)
-        .map_err(|_| Error::PortError("Write to port failed".to_string()))?;
+        .map_err(|_| Error::PortError("Write to port failed".to_string(), PortErrorType::Misc))?;
 
     Ok(())
 }
 
 pub fn find_macro_keyboard_port() -> Result<String> {
-    find_port(MACRO_KEYBOARD_VID, MACRO_KEYBOARD_PID)
+    helpers::find_port(MACRO_KEYBOARD_VID, MACRO_KEYBOARD_PID)
 }
 
-fn find_port(vid: u16, pid: u16) -> Result<String>
-where
-{
-    let ports = serialport::available_ports();
-    let port_name = ports
-        .map_err(|err| Error::PortError(err.description))?
-        .into_iter()
-        .find_map(|port| {
-            if let serialport::SerialPortType::UsbPort(usb_port) = port.port_type {
-                if usb_port.pid == pid && usb_port.vid == vid {
-                    return Some(port.port_name);
-                }
-                None
-            } else {
-                None
-            }
-        })
-        .ok_or(Error::PortError(
-            "No suitable device found, make sure the device is on.".to_string(),
-        ))?;
-    Ok(port_name)
-}
 pub fn serialize_config(config: &MacroConfig) -> SerializedConfig {
     const HEADER: usize = 2;
     let mut buf = [0 as u8; 662];
