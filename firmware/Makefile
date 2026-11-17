@@ -160,7 +160,7 @@ LIBS = -lc -lm -lnosys
 LIBDIR = 
 LDFLAGS = $(MCU) -specs=nano.specs -T$(LDSCRIPT) $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref -Wl,--gc-sections
 
-TINYUSB_DIR = libs/tinyusb
+TINYUSB_DIR = ../c_libs/tinyusb
 
 TINYUSB_SOURCES = $(wildcard $(TINYUSB_DIR)/*.c) \
                   $(wildcard $(TINYUSB_DIR)/common/*.c) \

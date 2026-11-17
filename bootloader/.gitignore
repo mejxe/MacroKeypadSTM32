@@ -1,0 +1,23 @@
+Debug/
+Release/
+build/
+build-release/
+
+# HAL bloat
+**/Drivers/**/Examples/
+**/Drivers/**/Testing/
+**/Drivers/**/Doc/
+**/Drivers/**/Documentation/
+
+*.o
+*.elf
+*.hex
+*.bin
+*.map
+*.su
+*.list
+
+.mxproject
+*.launch
+.DS_Store
+/debug.md

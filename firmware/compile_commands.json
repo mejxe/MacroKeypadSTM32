@@ -20,8 +20,8 @@
       "-Isrc/mod/buttons",
       "-Isrc/mod/usb",
       "-Isrc/stm",
-      "-Ilibs/tinyusb",
-      "-Ilibs/tinyusb/src",
+      "-I../c_libs/tinyusb",
+      "-I../c_libs/tinyusb/src",
       "-Og",
       "-Wall",
       "-fdata-sections",
@@ -36,7 +36,7 @@
       "-o",
       "build/main.o"
     ],
-    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/firmware",
+    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/MacroKeyboardSTM32/firmware",
     "output": "build/main.o"
   },
   {
@@ -60,8 +60,8 @@
       "-Isrc/mod/buttons",
       "-Isrc/mod/usb",
       "-Isrc/stm",
-      "-Ilibs/tinyusb",
-      "-Ilibs/tinyusb/src",
+      "-I../c_libs/tinyusb",
+      "-I../c_libs/tinyusb/src",
       "-Og",
       "-Wall",
       "-fdata-sections",
@@ -76,7 +76,7 @@
       "-o",
       "build/stm32f4xx_it.o"
     ],
-    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/firmware",
+    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/MacroKeyboardSTM32/firmware",
     "output": "build/stm32f4xx_it.o"
   },
   {
@@ -100,8 +100,8 @@
       "-Isrc/mod/buttons",
       "-Isrc/mod/usb",
       "-Isrc/stm",
-      "-Ilibs/tinyusb",
-      "-Ilibs/tinyusb/src",
+      "-I../c_libs/tinyusb",
+      "-I../c_libs/tinyusb/src",
       "-Og",
       "-Wall",
       "-fdata-sections",
@@ -116,7 +116,7 @@
       "-o",
       "build/stm32f4xx_hal_msp.o"
     ],
-    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/firmware",
+    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/MacroKeyboardSTM32/firmware",
     "output": "build/stm32f4xx_hal_msp.o"
   },
   {
@@ -140,8 +140,8 @@
       "-Isrc/mod/buttons",
       "-Isrc/mod/usb",
       "-Isrc/stm",
-      "-Ilibs/tinyusb",
-      "-Ilibs/tinyusb/src",
+      "-I../c_libs/tinyusb",
+      "-I../c_libs/tinyusb/src",
       "-Og",
       "-Wall",
       "-fdata-sections",
@@ -156,7 +156,7 @@
       "-o",
       "build/usb_descriptors.o"
     ],
-    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/firmware",
+    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/MacroKeyboardSTM32/firmware",
     "output": "build/usb_descriptors.o"
   },
   {
@@ -180,8 +180,8 @@
       "-Isrc/mod/buttons",
       "-Isrc/mod/usb",
       "-Isrc/stm",
-      "-Ilibs/tinyusb",
-      "-Ilibs/tinyusb/src",
+      "-I../c_libs/tinyusb",
+      "-I../c_libs/tinyusb/src",
       "-Og",
       "-Wall",
       "-fdata-sections",
@@ -196,7 +196,7 @@
       "-o",
       "build/usb_hid.o"
     ],
-    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/firmware",
+    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/MacroKeyboardSTM32/firmware",
     "output": "build/usb_hid.o"
   },
   {
@@ -220,8 +220,8 @@
       "-Isrc/mod/buttons",
       "-Isrc/mod/usb",
       "-Isrc/stm",
-      "-Ilibs/tinyusb",
-      "-Ilibs/tinyusb/src",
+      "-I../c_libs/tinyusb",
+      "-I../c_libs/tinyusb/src",
       "-Og",
       "-Wall",
       "-fdata-sections",
@@ -236,7 +236,7 @@
       "-o",
       "build/macros.o"
     ],
-    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/firmware",
+    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/MacroKeyboardSTM32/firmware",
     "output": "build/macros.o"
   },
   {
@@ -260,8 +260,8 @@
       "-Isrc/mod/buttons",
       "-Isrc/mod/usb",
       "-Isrc/stm",
-      "-Ilibs/tinyusb",
-      "-Ilibs/tinyusb/src",
+      "-I../c_libs/tinyusb",
+      "-I../c_libs/tinyusb/src",
       "-Og",
       "-Wall",
       "-fdata-sections",
@@ -276,7 +276,7 @@
       "-o",
       "build/buttons.o"
     ],
-    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/firmware",
+    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/MacroKeyboardSTM32/firmware",
     "output": "build/buttons.o"
   },
   {
@@ -300,8 +300,8 @@
       "-Isrc/mod/buttons",
       "-Isrc/mod/usb",
       "-Isrc/stm",
-      "-Ilibs/tinyusb",
-      "-Ilibs/tinyusb/src",
+      "-I../c_libs/tinyusb",
+      "-I../c_libs/tinyusb/src",
       "-Og",
       "-Wall",
       "-fdata-sections",
@@ -316,7 +316,7 @@
       "-o",
       "build/encoder.o"
     ],
-    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/firmware",
+    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/MacroKeyboardSTM32/firmware",
     "output": "build/encoder.o"
   },
   {
@@ -340,8 +340,8 @@
       "-Isrc/mod/buttons",
       "-Isrc/mod/usb",
       "-Isrc/stm",
-      "-Ilibs/tinyusb",
-      "-Ilibs/tinyusb/src",
+      "-I../c_libs/tinyusb",
+      "-I../c_libs/tinyusb/src",
       "-Og",
       "-Wall",
       "-fdata-sections",
@@ -356,7 +356,7 @@
       "-o",
       "build/utils.o"
     ],
-    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/firmware",
+    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/MacroKeyboardSTM32/firmware",
     "output": "build/utils.o"
   },
   {
@@ -380,8 +380,8 @@
       "-Isrc/mod/buttons",
       "-Isrc/mod/usb",
       "-Isrc/stm",
-      "-Ilibs/tinyusb",
-      "-Ilibs/tinyusb/src",
+      "-I../c_libs/tinyusb",
+      "-I../c_libs/tinyusb/src",
       "-Og",
       "-Wall",
       "-fdata-sections",
@@ -396,7 +396,7 @@
       "-o",
       "build/flash.o"
     ],
-    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/firmware",
+    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/MacroKeyboardSTM32/firmware",
     "output": "build/flash.o"
   },
   {
@@ -420,8 +420,8 @@
       "-Isrc/mod/buttons",
       "-Isrc/mod/usb",
       "-Isrc/stm",
-      "-Ilibs/tinyusb",
-      "-Ilibs/tinyusb/src",
+      "-I../c_libs/tinyusb",
+      "-I../c_libs/tinyusb/src",
       "-Og",
       "-Wall",
       "-fdata-sections",
@@ -436,7 +436,7 @@
       "-o",
       "build/stm32f4xx_hal_rcc.o"
     ],
-    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/firmware",
+    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/MacroKeyboardSTM32/firmware",
     "output": "build/stm32f4xx_hal_rcc.o"
   },
   {
@@ -460,8 +460,8 @@
       "-Isrc/mod/buttons",
       "-Isrc/mod/usb",
       "-Isrc/stm",
-      "-Ilibs/tinyusb",
-      "-Ilibs/tinyusb/src",
+      "-I../c_libs/tinyusb",
+      "-I../c_libs/tinyusb/src",
       "-Og",
       "-Wall",
       "-fdata-sections",
@@ -476,7 +476,7 @@
       "-o",
       "build/stm32f4xx_hal_rcc_ex.o"
     ],
-    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/firmware",
+    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/MacroKeyboardSTM32/firmware",
     "output": "build/stm32f4xx_hal_rcc_ex.o"
   },
   {
@@ -500,8 +500,8 @@
       "-Isrc/mod/buttons",
       "-Isrc/mod/usb",
       "-Isrc/stm",
-      "-Ilibs/tinyusb",
-      "-Ilibs/tinyusb/src",
+      "-I../c_libs/tinyusb",
+      "-I../c_libs/tinyusb/src",
       "-Og",
       "-Wall",
       "-fdata-sections",
@@ -516,7 +516,7 @@
       "-o",
       "build/stm32f4xx_hal_flash.o"
     ],
-    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/firmware",
+    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/MacroKeyboardSTM32/firmware",
     "output": "build/stm32f4xx_hal_flash.o"
   },
   {
@@ -540,8 +540,8 @@
       "-Isrc/mod/buttons",
       "-Isrc/mod/usb",
       "-Isrc/stm",
-      "-Ilibs/tinyusb",
-      "-Ilibs/tinyusb/src",
+      "-I../c_libs/tinyusb",
+      "-I../c_libs/tinyusb/src",
       "-Og",
       "-Wall",
       "-fdata-sections",
@@ -556,7 +556,7 @@
       "-o",
       "build/stm32f4xx_hal_flash_ex.o"
     ],
-    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/firmware",
+    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/MacroKeyboardSTM32/firmware",
     "output": "build/stm32f4xx_hal_flash_ex.o"
   },
   {
@@ -580,8 +580,8 @@
       "-Isrc/mod/buttons",
       "-Isrc/mod/usb",
       "-Isrc/stm",
-      "-Ilibs/tinyusb",
-      "-Ilibs/tinyusb/src",
+      "-I../c_libs/tinyusb",
+      "-I../c_libs/tinyusb/src",
       "-Og",
       "-Wall",
       "-fdata-sections",
@@ -596,7 +596,7 @@
       "-o",
       "build/stm32f4xx_hal_flash_ramfunc.o"
     ],
-    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/firmware",
+    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/MacroKeyboardSTM32/firmware",
     "output": "build/stm32f4xx_hal_flash_ramfunc.o"
   },
   {
@@ -620,8 +620,8 @@
       "-Isrc/mod/buttons",
       "-Isrc/mod/usb",
       "-Isrc/stm",
-      "-Ilibs/tinyusb",
-      "-Ilibs/tinyusb/src",
+      "-I../c_libs/tinyusb",
+      "-I../c_libs/tinyusb/src",
       "-Og",
       "-Wall",
       "-fdata-sections",
@@ -636,7 +636,7 @@
       "-o",
       "build/stm32f4xx_hal_gpio.o"
     ],
-    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/firmware",
+    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/MacroKeyboardSTM32/firmware",
     "output": "build/stm32f4xx_hal_gpio.o"
   },
   {
@@ -660,8 +660,8 @@
       "-Isrc/mod/buttons",
       "-Isrc/mod/usb",
       "-Isrc/stm",
-      "-Ilibs/tinyusb",
-      "-Ilibs/tinyusb/src",
+      "-I../c_libs/tinyusb",
+      "-I../c_libs/tinyusb/src",
       "-Og",
       "-Wall",
       "-fdata-sections",
@@ -676,7 +676,7 @@
       "-o",
       "build/stm32f4xx_hal_dma_ex.o"
     ],
-    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/firmware",
+    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/MacroKeyboardSTM32/firmware",
     "output": "build/stm32f4xx_hal_dma_ex.o"
   },
   {
@@ -700,8 +700,8 @@
       "-Isrc/mod/buttons",
       "-Isrc/mod/usb",
       "-Isrc/stm",
-      "-Ilibs/tinyusb",
-      "-Ilibs/tinyusb/src",
+      "-I../c_libs/tinyusb",
+      "-I../c_libs/tinyusb/src",
       "-Og",
       "-Wall",
       "-fdata-sections",
@@ -716,7 +716,7 @@
       "-o",
       "build/stm32f4xx_hal_dma.o"
     ],
-    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/firmware",
+    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/MacroKeyboardSTM32/firmware",
     "output": "build/stm32f4xx_hal_dma.o"
   },
   {
@@ -740,8 +740,8 @@
       "-Isrc/mod/buttons",
       "-Isrc/mod/usb",
       "-Isrc/stm",
-      "-Ilibs/tinyusb",
-      "-Ilibs/tinyusb/src",
+      "-I../c_libs/tinyusb",
+      "-I../c_libs/tinyusb/src",
       "-Og",
       "-Wall",
       "-fdata-sections",
@@ -756,7 +756,7 @@
       "-o",
       "build/stm32f4xx_hal_pwr.o"
     ],
-    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/firmware",
+    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/MacroKeyboardSTM32/firmware",
     "output": "build/stm32f4xx_hal_pwr.o"
   },
   {
@@ -780,8 +780,8 @@
       "-Isrc/mod/buttons",
       "-Isrc/mod/usb",
       "-Isrc/stm",
-      "-Ilibs/tinyusb",
-      "-Ilibs/tinyusb/src",
+      "-I../c_libs/tinyusb",
+      "-I../c_libs/tinyusb/src",
       "-Og",
       "-Wall",
       "-fdata-sections",
@@ -796,7 +796,7 @@
       "-o",
       "build/stm32f4xx_hal_pwr_ex.o"
     ],
-    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/firmware",
+    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/MacroKeyboardSTM32/firmware",
     "output": "build/stm32f4xx_hal_pwr_ex.o"
   },
   {
@@ -820,8 +820,8 @@
       "-Isrc/mod/buttons",
       "-Isrc/mod/usb",
       "-Isrc/stm",
-      "-Ilibs/tinyusb",
-      "-Ilibs/tinyusb/src",
+      "-I../c_libs/tinyusb",
+      "-I../c_libs/tinyusb/src",
       "-Og",
       "-Wall",
       "-fdata-sections",
@@ -836,7 +836,7 @@
       "-o",
       "build/stm32f4xx_hal_cortex.o"
     ],
-    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/firmware",
+    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/MacroKeyboardSTM32/firmware",
     "output": "build/stm32f4xx_hal_cortex.o"
   },
   {
@@ -860,8 +860,8 @@
       "-Isrc/mod/buttons",
       "-Isrc/mod/usb",
       "-Isrc/stm",
-      "-Ilibs/tinyusb",
-      "-Ilibs/tinyusb/src",
+      "-I../c_libs/tinyusb",
+      "-I../c_libs/tinyusb/src",
       "-Og",
       "-Wall",
       "-fdata-sections",
@@ -876,7 +876,7 @@
       "-o",
       "build/stm32f4xx_hal.o"
     ],
-    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/firmware",
+    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/MacroKeyboardSTM32/firmware",
     "output": "build/stm32f4xx_hal.o"
   },
   {
@@ -900,8 +900,8 @@
       "-Isrc/mod/buttons",
       "-Isrc/mod/usb",
       "-Isrc/stm",
-      "-Ilibs/tinyusb",
-      "-Ilibs/tinyusb/src",
+      "-I../c_libs/tinyusb",
+      "-I../c_libs/tinyusb/src",
       "-Og",
       "-Wall",
       "-fdata-sections",
@@ -916,7 +916,7 @@
       "-o",
       "build/stm32f4xx_hal_exti.o"
     ],
-    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/firmware",
+    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/MacroKeyboardSTM32/firmware",
     "output": "build/stm32f4xx_hal_exti.o"
   },
   {
@@ -940,8 +940,8 @@
       "-Isrc/mod/buttons",
       "-Isrc/mod/usb",
       "-Isrc/stm",
-      "-Ilibs/tinyusb",
-      "-Ilibs/tinyusb/src",
+      "-I../c_libs/tinyusb",
+      "-I../c_libs/tinyusb/src",
       "-Og",
       "-Wall",
       "-fdata-sections",
@@ -956,7 +956,7 @@
       "-o",
       "build/system_stm32f4xx.o"
     ],
-    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/firmware",
+    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/MacroKeyboardSTM32/firmware",
     "output": "build/system_stm32f4xx.o"
   },
   {
@@ -980,8 +980,8 @@
       "-Isrc/mod/buttons",
       "-Isrc/mod/usb",
       "-Isrc/stm",
-      "-Ilibs/tinyusb",
-      "-Ilibs/tinyusb/src",
+      "-I../c_libs/tinyusb",
+      "-I../c_libs/tinyusb/src",
       "-Og",
       "-Wall",
       "-fdata-sections",
@@ -996,7 +996,7 @@
       "-o",
       "build/sysmem.o"
     ],
-    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/firmware",
+    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/MacroKeyboardSTM32/firmware",
     "output": "build/sysmem.o"
   },
   {
@@ -1020,8 +1020,8 @@
       "-Isrc/mod/buttons",
       "-Isrc/mod/usb",
       "-Isrc/stm",
-      "-Ilibs/tinyusb",
-      "-Ilibs/tinyusb/src",
+      "-I../c_libs/tinyusb",
+      "-I../c_libs/tinyusb/src",
       "-Og",
       "-Wall",
       "-fdata-sections",
@@ -1036,7 +1036,7 @@
       "-o",
       "build/syscalls.o"
     ],
-    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/firmware",
+    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/MacroKeyboardSTM32/firmware",
     "output": "build/syscalls.o"
   },
   {
@@ -1060,8 +1060,8 @@
       "-Isrc/mod/buttons",
       "-Isrc/mod/usb",
       "-Isrc/stm",
-      "-Ilibs/tinyusb",
-      "-Ilibs/tinyusb/src",
+      "-I../c_libs/tinyusb",
+      "-I../c_libs/tinyusb/src",
       "-Og",
       "-Wall",
       "-fdata-sections",
@@ -1076,7 +1076,7 @@
       "-o",
       "build/stm32f4xx_hal_pcd.o"
     ],
-    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/firmware",
+    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/MacroKeyboardSTM32/firmware",
     "output": "build/stm32f4xx_hal_pcd.o"
   },
   {
@@ -1100,8 +1100,8 @@
       "-Isrc/mod/buttons",
       "-Isrc/mod/usb",
       "-Isrc/stm",
-      "-Ilibs/tinyusb",
-      "-Ilibs/tinyusb/src",
+      "-I../c_libs/tinyusb",
+      "-I../c_libs/tinyusb/src",
       "-Og",
       "-Wall",
       "-fdata-sections",
@@ -1116,7 +1116,7 @@
       "-o",
       "build/stm32f4xx_hal_pcd_ex.o"
     ],
-    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/firmware",
+    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/MacroKeyboardSTM32/firmware",
     "output": "build/stm32f4xx_hal_pcd_ex.o"
   },
   {
@@ -1140,8 +1140,8 @@
       "-Isrc/mod/buttons",
       "-Isrc/mod/usb",
       "-Isrc/stm",
-      "-Ilibs/tinyusb",
-      "-Ilibs/tinyusb/src",
+      "-I../c_libs/tinyusb",
+      "-I../c_libs/tinyusb/src",
       "-Og",
       "-Wall",
       "-fdata-sections",
@@ -1156,7 +1156,7 @@
       "-o",
       "build/stm32f4xx_hal_tim.o"
     ],
-    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/firmware",
+    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/MacroKeyboardSTM32/firmware",
     "output": "build/stm32f4xx_hal_tim.o"
   },
   {
@@ -1180,8 +1180,8 @@
       "-Isrc/mod/buttons",
       "-Isrc/mod/usb",
       "-Isrc/stm",
-      "-Ilibs/tinyusb",
-      "-Ilibs/tinyusb/src",
+      "-I../c_libs/tinyusb",
+      "-I../c_libs/tinyusb/src",
       "-Og",
       "-Wall",
       "-fdata-sections",
@@ -1196,11 +1196,11 @@
       "-o",
       "build/stm32f4xx_hal_tim_ex.o"
     ],
-    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/firmware",
+    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/MacroKeyboardSTM32/firmware",
     "output": "build/stm32f4xx_hal_tim_ex.o"
   },
   {
-    "file": "libs/tinyusb/tusb.c",
+    "file": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rtc.c",
     "arguments": [
       "/usr/bin/arm-none-eabi-gcc",
       "-c",
@@ -1220,8 +1220,88 @@
       "-Isrc/mod/buttons",
       "-Isrc/mod/usb",
       "-Isrc/stm",
-      "-Ilibs/tinyusb",
-      "-Ilibs/tinyusb/src",
+      "-I../c_libs/tinyusb",
+      "-I../c_libs/tinyusb/src",
+      "-Og",
+      "-Wall",
+      "-fdata-sections",
+      "-ffunction-sections",
+      "-g",
+      "-gdwarf-2",
+      "-MMD",
+      "-MP",
+      "-MFbuild/stm32f4xx_hal_rtc.d",
+      "-Wa,-a,-ad,-alms=build/stm32f4xx_hal_rtc.lst",
+      "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rtc.c",
+      "-o",
+      "build/stm32f4xx_hal_rtc.o"
+    ],
+    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/MacroKeyboardSTM32/firmware",
+    "output": "build/stm32f4xx_hal_rtc.o"
+  },
+  {
+    "file": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rtc_ex.c",
+    "arguments": [
+      "/usr/bin/arm-none-eabi-gcc",
+      "-c",
+      "-mcpu=cortex-m4",
+      "-mthumb",
+      "-mfpu=fpv4-sp-d16",
+      "-mfloat-abi=hard",
+      "-DUSE_HAL_DRIVER",
+      "-DSTM32F411xE",
+      "-IDrivers/STM32F4xx_HAL_Driver/Inc",
+      "-IDrivers/STM32F4xx_HAL_Driver/Inc/Legacy",
+      "-IDrivers/CMSIS/Device/ST/STM32F4xx/Include",
+      "-IDrivers/CMSIS/Include",
+      "-Isrc",
+      "-Isrc/mod",
+      "-Isrc/mod/macros",
+      "-Isrc/mod/buttons",
+      "-Isrc/mod/usb",
+      "-Isrc/stm",
+      "-I../c_libs/tinyusb",
+      "-I../c_libs/tinyusb/src",
+      "-Og",
+      "-Wall",
+      "-fdata-sections",
+      "-ffunction-sections",
+      "-g",
+      "-gdwarf-2",
+      "-MMD",
+      "-MP",
+      "-MFbuild/stm32f4xx_hal_rtc_ex.d",
+      "-Wa,-a,-ad,-alms=build/stm32f4xx_hal_rtc_ex.lst",
+      "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rtc_ex.c",
+      "-o",
+      "build/stm32f4xx_hal_rtc_ex.o"
+    ],
+    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/MacroKeyboardSTM32/firmware",
+    "output": "build/stm32f4xx_hal_rtc_ex.o"
+  },
+  {
+    "file": "../c_libs/tinyusb/tusb.c",
+    "arguments": [
+      "/usr/bin/arm-none-eabi-gcc",
+      "-c",
+      "-mcpu=cortex-m4",
+      "-mthumb",
+      "-mfpu=fpv4-sp-d16",
+      "-mfloat-abi=hard",
+      "-DUSE_HAL_DRIVER",
+      "-DSTM32F411xE",
+      "-IDrivers/STM32F4xx_HAL_Driver/Inc",
+      "-IDrivers/STM32F4xx_HAL_Driver/Inc/Legacy",
+      "-IDrivers/CMSIS/Device/ST/STM32F4xx/Include",
+      "-IDrivers/CMSIS/Include",
+      "-Isrc",
+      "-Isrc/mod",
+      "-Isrc/mod/macros",
+      "-Isrc/mod/buttons",
+      "-Isrc/mod/usb",
+      "-Isrc/stm",
+      "-I../c_libs/tinyusb",
+      "-I../c_libs/tinyusb/src",
       "-Og",
       "-Wall",
       "-fdata-sections",
@@ -1232,15 +1312,15 @@
       "-MP",
       "-MFbuild/tusb.d",
       "-Wa,-a,-ad,-alms=build/tusb.lst",
-      "libs/tinyusb/tusb.c",
+      "../c_libs/tinyusb/tusb.c",
       "-o",
       "build/tusb.o"
     ],
-    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/firmware",
+    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/MacroKeyboardSTM32/firmware",
     "output": "build/tusb.o"
   },
   {
-    "file": "libs/tinyusb/common/tusb_fifo.c",
+    "file": "../c_libs/tinyusb/common/tusb_fifo.c",
     "arguments": [
       "/usr/bin/arm-none-eabi-gcc",
       "-c",
@@ -1260,8 +1340,8 @@
       "-Isrc/mod/buttons",
       "-Isrc/mod/usb",
       "-Isrc/stm",
-      "-Ilibs/tinyusb",
-      "-Ilibs/tinyusb/src",
+      "-I../c_libs/tinyusb",
+      "-I../c_libs/tinyusb/src",
       "-Og",
       "-Wall",
       "-fdata-sections",
@@ -1272,15 +1352,15 @@
       "-MP",
       "-MFbuild/tusb_fifo.d",
       "-Wa,-a,-ad,-alms=build/tusb_fifo.lst",
-      "libs/tinyusb/common/tusb_fifo.c",
+      "../c_libs/tinyusb/common/tusb_fifo.c",
       "-o",
       "build/tusb_fifo.o"
     ],
-    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/firmware",
+    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/MacroKeyboardSTM32/firmware",
     "output": "build/tusb_fifo.o"
   },
   {
-    "file": "libs/tinyusb/device/usbd.c",
+    "file": "../c_libs/tinyusb/device/usbd.c",
     "arguments": [
       "/usr/bin/arm-none-eabi-gcc",
       "-c",
@@ -1300,8 +1380,8 @@
       "-Isrc/mod/buttons",
       "-Isrc/mod/usb",
       "-Isrc/stm",
-      "-Ilibs/tinyusb",
-      "-Ilibs/tinyusb/src",
+      "-I../c_libs/tinyusb",
+      "-I../c_libs/tinyusb/src",
       "-Og",
       "-Wall",
       "-fdata-sections",
@@ -1312,15 +1392,15 @@
       "-MP",
       "-MFbuild/usbd.d",
       "-Wa,-a,-ad,-alms=build/usbd.lst",
-      "libs/tinyusb/device/usbd.c",
+      "../c_libs/tinyusb/device/usbd.c",
       "-o",
       "build/usbd.o"
     ],
-    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/firmware",
+    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/MacroKeyboardSTM32/firmware",
     "output": "build/usbd.o"
   },
   {
-    "file": "libs/tinyusb/class/cdc/cdc_device.c",
+    "file": "../c_libs/tinyusb/class/cdc/cdc_device.c",
     "arguments": [
       "/usr/bin/arm-none-eabi-gcc",
       "-c",
@@ -1340,8 +1420,8 @@
       "-Isrc/mod/buttons",
       "-Isrc/mod/usb",
       "-Isrc/stm",
-      "-Ilibs/tinyusb",
-      "-Ilibs/tinyusb/src",
+      "-I../c_libs/tinyusb",
+      "-I../c_libs/tinyusb/src",
       "-Og",
       "-Wall",
       "-fdata-sections",
@@ -1352,15 +1432,15 @@
       "-MP",
       "-MFbuild/cdc_device.d",
       "-Wa,-a,-ad,-alms=build/cdc_device.lst",
-      "libs/tinyusb/class/cdc/cdc_device.c",
+      "../c_libs/tinyusb/class/cdc/cdc_device.c",
       "-o",
       "build/cdc_device.o"
     ],
-    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/firmware",
+    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/MacroKeyboardSTM32/firmware",
     "output": "build/cdc_device.o"
   },
   {
-    "file": "libs/tinyusb/class/cdc/cdc_host.c",
+    "file": "../c_libs/tinyusb/class/cdc/cdc_host.c",
     "arguments": [
       "/usr/bin/arm-none-eabi-gcc",
       "-c",
@@ -1380,8 +1460,8 @@
       "-Isrc/mod/buttons",
       "-Isrc/mod/usb",
       "-Isrc/stm",
-      "-Ilibs/tinyusb",
-      "-Ilibs/tinyusb/src",
+      "-I../c_libs/tinyusb",
+      "-I../c_libs/tinyusb/src",
       "-Og",
       "-Wall",
       "-fdata-sections",
@@ -1392,15 +1472,15 @@
       "-MP",
       "-MFbuild/cdc_host.d",
       "-Wa,-a,-ad,-alms=build/cdc_host.lst",
-      "libs/tinyusb/class/cdc/cdc_host.c",
+      "../c_libs/tinyusb/class/cdc/cdc_host.c",
       "-o",
       "build/cdc_host.o"
     ],
-    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/firmware",
+    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/MacroKeyboardSTM32/firmware",
     "output": "build/cdc_host.o"
   },
   {
-    "file": "libs/tinyusb/class/hid/hid_device.c",
+    "file": "../c_libs/tinyusb/class/hid/hid_device.c",
     "arguments": [
       "/usr/bin/arm-none-eabi-gcc",
       "-c",
@@ -1420,8 +1500,8 @@
       "-Isrc/mod/buttons",
       "-Isrc/mod/usb",
       "-Isrc/stm",
-      "-Ilibs/tinyusb",
-      "-Ilibs/tinyusb/src",
+      "-I../c_libs/tinyusb",
+      "-I../c_libs/tinyusb/src",
       "-Og",
       "-Wall",
       "-fdata-sections",
@@ -1432,15 +1512,15 @@
       "-MP",
       "-MFbuild/hid_device.d",
       "-Wa,-a,-ad,-alms=build/hid_device.lst",
-      "libs/tinyusb/class/hid/hid_device.c",
+      "../c_libs/tinyusb/class/hid/hid_device.c",
       "-o",
       "build/hid_device.o"
     ],
-    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/firmware",
+    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/MacroKeyboardSTM32/firmware",
     "output": "build/hid_device.o"
   },
   {
-    "file": "libs/tinyusb/class/hid/hid_host.c",
+    "file": "../c_libs/tinyusb/class/hid/hid_host.c",
     "arguments": [
       "/usr/bin/arm-none-eabi-gcc",
       "-c",
@@ -1460,8 +1540,8 @@
       "-Isrc/mod/buttons",
       "-Isrc/mod/usb",
       "-Isrc/stm",
-      "-Ilibs/tinyusb",
-      "-Ilibs/tinyusb/src",
+      "-I../c_libs/tinyusb",
+      "-I../c_libs/tinyusb/src",
       "-Og",
       "-Wall",
       "-fdata-sections",
@@ -1472,15 +1552,15 @@
       "-MP",
       "-MFbuild/hid_host.d",
       "-Wa,-a,-ad,-alms=build/hid_host.lst",
-      "libs/tinyusb/class/hid/hid_host.c",
+      "../c_libs/tinyusb/class/hid/hid_host.c",
       "-o",
       "build/hid_host.o"
     ],
-    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/firmware",
+    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/MacroKeyboardSTM32/firmware",
     "output": "build/hid_host.o"
   },
   {
-    "file": "libs/tinyusb/portable/synopsys/dwc2/dcd_dwc2.c",
+    "file": "../c_libs/tinyusb/portable/synopsys/dwc2/dcd_dwc2.c",
     "arguments": [
       "/usr/bin/arm-none-eabi-gcc",
       "-c",
@@ -1500,8 +1580,8 @@
       "-Isrc/mod/buttons",
       "-Isrc/mod/usb",
       "-Isrc/stm",
-      "-Ilibs/tinyusb",
-      "-Ilibs/tinyusb/src",
+      "-I../c_libs/tinyusb",
+      "-I../c_libs/tinyusb/src",
       "-Og",
       "-Wall",
       "-fdata-sections",
@@ -1512,15 +1592,15 @@
       "-MP",
       "-MFbuild/dcd_dwc2.d",
       "-Wa,-a,-ad,-alms=build/dcd_dwc2.lst",
-      "libs/tinyusb/portable/synopsys/dwc2/dcd_dwc2.c",
+      "../c_libs/tinyusb/portable/synopsys/dwc2/dcd_dwc2.c",
       "-o",
       "build/dcd_dwc2.o"
     ],
-    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/firmware",
+    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/MacroKeyboardSTM32/firmware",
     "output": "build/dcd_dwc2.o"
   },
   {
-    "file": "libs/tinyusb/portable/synopsys/dwc2/dwc2_common.c",
+    "file": "../c_libs/tinyusb/portable/synopsys/dwc2/dwc2_common.c",
     "arguments": [
       "/usr/bin/arm-none-eabi-gcc",
       "-c",
@@ -1540,8 +1620,8 @@
       "-Isrc/mod/buttons",
       "-Isrc/mod/usb",
       "-Isrc/stm",
-      "-Ilibs/tinyusb",
-      "-Ilibs/tinyusb/src",
+      "-I../c_libs/tinyusb",
+      "-I../c_libs/tinyusb/src",
       "-Og",
       "-Wall",
       "-fdata-sections",
@@ -1552,15 +1632,15 @@
       "-MP",
       "-MFbuild/dwc2_common.d",
       "-Wa,-a,-ad,-alms=build/dwc2_common.lst",
-      "libs/tinyusb/portable/synopsys/dwc2/dwc2_common.c",
+      "../c_libs/tinyusb/portable/synopsys/dwc2/dwc2_common.c",
       "-o",
       "build/dwc2_common.o"
     ],
-    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/firmware",
+    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/MacroKeyboardSTM32/firmware",
     "output": "build/dwc2_common.o"
   },
   {
-    "file": "libs/tinyusb/portable/synopsys/dwc2/hcd_dwc2.c",
+    "file": "../c_libs/tinyusb/portable/synopsys/dwc2/hcd_dwc2.c",
     "arguments": [
       "/usr/bin/arm-none-eabi-gcc",
       "-c",
@@ -1580,8 +1660,8 @@
       "-Isrc/mod/buttons",
       "-Isrc/mod/usb",
       "-Isrc/stm",
-      "-Ilibs/tinyusb",
-      "-Ilibs/tinyusb/src",
+      "-I../c_libs/tinyusb",
+      "-I../c_libs/tinyusb/src",
       "-Og",
       "-Wall",
       "-fdata-sections",
@@ -1592,11 +1672,11 @@
       "-MP",
       "-MFbuild/hcd_dwc2.d",
       "-Wa,-a,-ad,-alms=build/hcd_dwc2.lst",
-      "libs/tinyusb/portable/synopsys/dwc2/hcd_dwc2.c",
+      "../c_libs/tinyusb/portable/synopsys/dwc2/hcd_dwc2.c",
       "-o",
       "build/hcd_dwc2.o"
     ],
-    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/firmware",
+    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/MacroKeyboardSTM32/firmware",
     "output": "build/hcd_dwc2.o"
   },
   {
@@ -1622,8 +1702,8 @@
       "-Isrc/mod/buttons",
       "-Isrc/mod/usb",
       "-Isrc/stm",
-      "-Ilibs/tinyusb",
-      "-Ilibs/tinyusb/src",
+      "-I../c_libs/tinyusb",
+      "-I../c_libs/tinyusb/src",
       "-Og",
       "-Wall",
       "-fdata-sections",
@@ -1637,7 +1717,7 @@
       "-o",
       "build/startup_stm32f411xe.o"
     ],
-    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/firmware",
+    "directory": "/home/mejxe/EmbeddedProjects/MacroKeyboard/MacroKeyboardSTM32/firmware",
     "output": "build/startup_stm32f411xe.o"
   }
 ]
