@@ -9,4 +9,4 @@ Repo consits of:
 * firmware - main logic and functionality
 * bootloader - bootloader that allows for programming through cdc
 * programmer - host only tool for programming macros and flashing firmware
-* c_libs - tinyusb build
+* c_libs - tinyusb src
