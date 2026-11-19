@@ -1,26 +1,5 @@
-/* USER CODE BEGIN Header */
-/**
- ******************************************************************************
- * @file           : main.c
- * @brief          : Main program body
- ******************************************************************************
- * @attention
- *
- * Copyright (c) 2026 STMicroelectronics.
- * All rights reserved.
- *
- * This software is licensed under terms that can be found in the LICENSE file
- * in the root directory of this software component.
- * If no LICENSE file comes with this software, it is provided AS-IS.
- *
- ******************************************************************************
- */
-/* USER CODE END Header */
-/* Includes ------------------------------------------------------------------*/
 #include "main.h"
 
-/* Private includes ----------------------------------------------------------*/
-/* USER CODE BEGIN Includes */
 #include "buttons.h"
 #include "encoder.h"
 #include "flash.h"
@@ -31,31 +10,11 @@
 #include "utils.h"
 #include <stdio.h>
 
-/* USER CODE END Includes */
-
-/* Private typedef -----------------------------------------------------------*/
-/* USER CODE BEGIN PTD */
-
-/* Defines ------------------------------------------------------------*/
-
-/* USER CODE END PTD */
-
-/* Private define ------------------------------------------------------------*/
-/* USER CODE BEGIN PD */
 #define MESSAGE_LENGTH_BYTES 668
-/* USER CODE END PD */
 
-/* Private macro -------------------------------------------------------------*/
-/* USER CODE BEGIN PM */
-
-/* USER CODE END PM */
-
-/* Private variables ---------------------------------------------------------*/
 TIM_HandleTypeDef htim2;
 TIM_HandleTypeDef htim9;
 RTC_HandleTypeDef hrtc;
-
-/* USER CODE BEGIN PV */
 
 bool SHOULD_REBOOT_FOR_FLASHING = false;
 
@@ -72,22 +31,12 @@ Encoder Encoder_Struct = {
     .direction = DIRECTION_NONE,
 };
 
-/* USER CODE END PV */
-
-/* Private function prototypes
-   -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_TIM2_Init(void);
 static void MX_TIM9_Init(void);
 static void MX_RTC_Init(void);
-/* USER CODE BEGIN PFP */
 
-/* USER CODE END PFP */
-
-/* Private user code
- * ---------------------------------------------------------*/
-/* USER CODE BEGIN 0 */
 void set_should_flash_firmware(void)
 {
   HAL_RTCEx_BKUPWrite(&hrtc, RTC_BKP_DR0, 1);
@@ -175,43 +124,18 @@ void dequeue_macros_task(MacroKeyboard *MK)
   }
 }
 
-/* USER CODE END 0 */
-
-/**
- * @brief  The application entry point.
- * @retval int
- */
 int main(void)
 {
-
-  /* USER CODE BEGIN 1 */
-
   HAL_Init();
   SCB->VTOR = APP_SECTOR_START;
 
   __enable_irq();
-  /* USER CODE END 1 */
 
-  /* MCU
-   * Configuration--------------------------------------------------------*/
   SystemClock_Config();
   MX_GPIO_Init();
   MX_TIM2_Init();
   MX_TIM9_Init();
   MX_RTC_Init();
-
-  /* Reset of all peripherals, Initializes the Flash interface and the
-   * Systick.
-   */
-
-  /* USER CODE BEGIN Init */
-  /* USER CODE END Init */
-
-  /* USER CODE BEGIN SysInit */
-
-  /* USER CODE END SysInit */
-
-  /* USER CODE BEGIN 2 */
 
   HAL_TIM_Base_Start_IT(&htim2);
   HAL_TIM_Base_Start_IT(&htim9);
@@ -227,9 +151,6 @@ int main(void)
                                  .speed = TUSB_SPEED_AUTO};
   tusb_init(0, &dev_init);
 
-  /* USER CODE END 2 */
-
-  /* USER CODE BEGIN WHILE */
   while (1)
   {
     tud_task();
@@ -241,29 +162,10 @@ int main(void)
     if (SHOULD_REBOOT_FOR_FLASHING)
       flash_firmware_mode();
   }
-  /* USER CODE END WHILE */
-
-  /* USER CODE BEGIN 3 */
-  /* USER CODE END 3 */
 }
-/**
- * @brief RTC Initialization Function
- * @param None
- * @retval None
- */
+
 static void MX_RTC_Init(void)
 {
-
-  /* USER CODE BEGIN RTC_Init 0 */
-
-  /* USER CODE END RTC_Init 0 */
-
-  /* USER CODE BEGIN RTC_Init 1 */
-
-  /* USER CODE END RTC_Init 1 */
-
-  /** Initialize RTC Only
-   */
   hrtc.Instance = RTC;
   hrtc.Init.HourFormat = RTC_HOURFORMAT_24;
   hrtc.Init.AsynchPrediv = 127;
@@ -275,27 +177,16 @@ static void MX_RTC_Init(void)
   {
     Error_Handler();
   }
-  /* USER CODE BEGIN RTC_Init 2 */
-
-  /* USER CODE END RTC_Init 2 */
 }
-/**
- * @brief System Clock Configuration
- * @retval None
- */
+
 void SystemClock_Config(void)
 {
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
 
-  /** Configure the main internal regulator output voltage
-   */
   __HAL_RCC_PWR_CLK_ENABLE();
   __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
 
-  /** Initializes the RCC Oscillators according to the specified parameters
-   * in the RCC_OscInitTypeDef structure.
-   */
   RCC_OscInitStruct.OscillatorType =
       RCC_OSCILLATORTYPE_LSI | RCC_OSCILLATORTYPE_HSE;
   RCC_OscInitStruct.LSIState = RCC_LSI_ON;
@@ -311,8 +202,6 @@ void SystemClock_Config(void)
     Error_Handler();
   }
 
-  /** Initializes the CPU, AHB and APB buses clocks
-   */
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK |
                                 RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
@@ -326,26 +215,14 @@ void SystemClock_Config(void)
   }
 }
 
-/**
- * @brief TIM2 Initialization Function
- * @param None
- * @retval None
- */
 static void MX_TIM2_Init(void)
 {
-
-  /* USER CODE BEGIN TIM2_Init 0 */
-
-  /* USER CODE END TIM2_Init 0 */
-
   TIM_ClockConfigTypeDef sClockSourceConfig = {0};
   TIM_MasterConfigTypeDef sMasterConfig = {0};
 
-  /* USER CODE BEGIN TIM2_Init 1 */
   htim2.Init.Prescaler = 999;
   htim2.Init.Period = 59;
 
-  /* USER CODE END TIM2_Init 1 */
   htim2.Instance = TIM2;
   htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
@@ -365,13 +242,9 @@ static void MX_TIM2_Init(void)
   {
     Error_Handler();
   }
-  /* USER CODE BEGIN TIM2_Init 2 */
-
-  /* USER CODE END TIM2_Init 2 */
 }
 static void MX_TIM9_Init(void)
 {
-
   htim9.Instance = TIM9;
 
   htim9.Init.Prescaler = 999;
@@ -386,65 +259,48 @@ static void MX_TIM9_Init(void)
   }
 }
 
-/**
- * @brief GPIO Initialization Function
- * @param None
- * @retval None
- */
 static void MX_GPIO_Init(void)
 {
   GPIO_InitTypeDef GPIO_InitStruct = {0};
-  /* USER CODE BEGIN MX_GPIO_Init_1 */
 
-  /* USER CODE END MX_GPIO_Init_1 */
-
-  /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOH_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
-  /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
 
-  /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, col0_Pin | col1_Pin | col2_Pin, GPIO_PIN_SET);
 
-  /*Configure GPIO pin : PC13 */
   GPIO_InitStruct.Pin = GPIO_PIN_13;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : button_Pin */
   GPIO_InitStruct.Pin = button_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(button_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : col0_Pin col1_Pin col2_Pin */
   GPIO_InitStruct.Pin = col0_Pin | col1_Pin | col2_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : row0_Pin row1_Pin row2_Pin */
-
   GPIO_InitStruct.Pin = row0_Pin | row1_Pin | row2_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : encoder rotation */
-
+  // encoder rotation
   GPIO_InitStruct.Pin = encoder_A_Pin | encoder_B_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(encoder_GPIO_PORT, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : encoder button */
+  // encoder button
   GPIO_InitStruct.Pin = encoder_Button_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
@@ -459,12 +315,10 @@ static void MX_GPIO_Init(void)
                     GPIO_PIN_RESET);
   HAL_GPIO_LockPin(encoder_Button_GPIO_PORT, encoder_Button_GND);
 
-  /* USER CODE BEGIN MX_GPIO_Init_2 */
   HAL_NVIC_SetPriority(EXTI0_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(EXTI0_IRQn);
   HAL_NVIC_SetPriority(EXTI9_5_IRQn, 5, 0);
   HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
-  /* USER CODE END MX_GPIO_Init_2 */
   __HAL_RCC_USB_OTG_FS_CLK_ENABLE();
 
   GPIO_InitStruct.Pin = GPIO_PIN_11 | GPIO_PIN_12;
@@ -474,8 +328,6 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Alternate = GPIO_AF10_OTG_FS;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 }
-
-/* USER CODE BEGIN 4 */
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
@@ -491,25 +343,14 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   }
 }
 
-/* USER CODE END 4 */
-
-/**
- * @brief  This function is executed in case of error occurrence.
- * @retval None
- */
 void Error_Handler(void)
 {
-  /* USER CODE BEGIN Error_Handler_Debug */
-  /* User can add his own implementation to report the HAL error return
-   * state
-   */
   __disable_irq();
   while (1)
   {
     HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
     HAL_Delay(1000);
   }
-  /* USER CODE END Error_Handler_Debug */
 }
 int _write(int file, char *ptr, int len)
 {
@@ -520,20 +361,9 @@ int _write(int file, char *ptr, int len)
   }
   return len;
 }
+
 #ifdef USE_FULL_ASSERT
-/**
- * @brief  Reports the name of the source file and the source line number
- *         where the assert_param error has occurred.
- * @param  file: pointer to the source file name
- * @param  line: assert_param error line source number
- * @retval None
- */
 void assert_failed(uint8_t *file, uint32_t line)
 {
-  /* USER CODE BEGIN 6 */
-  /* User can add his own implementation to report the file name and line
-     number, ex: printf("Wrong parameters value: file %s on line %d\r\n",
-     file, line) */
-  /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */
