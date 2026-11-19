@@ -37,10 +37,11 @@ endif
 ######################################
 # C sources
 C_SOURCES =  \
-Core/Src/main.c \
-Core/Src/stm32f4xx_it.c \
-Core/Src/stm32f4xx_hal_msp.c \
-Core/Src/usb_descriptors.c \
+src/main.c \
+src/flash/flasher.c \
+src/stm/stm32f4xx_it.c \
+src/stm/stm32f4xx_hal_msp.c \
+src/usb/usb_descriptors.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd_ex.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_usb.c \
@@ -58,9 +59,9 @@ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_exti.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_crc.c \
-Core/Src/system_stm32f4xx.c \
-Core/Src/sysmem.c \
-Core/Src/syscalls.c \
+src/stm/system_stm32f4xx.c \
+src/stm/sysmem.c \
+src/stm/syscalls.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rtc.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rtc_ex.c
 
@@ -129,6 +130,7 @@ C_INCLUDES =  \
 -IDrivers/CMSIS/Device/ST/STM32F4xx/Include \
 -IDrivers/CMSIS/Include
 
+C_INCLUDES += $(addprefix -I, $(shell find src -type d))
 
 # compile gcc flags
 ASFLAGS = $(MCU) $(AS_DEFS) $(AS_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections

@@ -32,23 +32,23 @@ pub fn find_bootloader_port() -> Result<String> {
 }
 
 /*
- * 4B mnumber, 8B size, 4B crc32 hash, 32b padding, size B program
+ * 4B mnumber, 4B size, 4B crc32 hash, 32b padding, size B program
  */
 pub fn flash(bootloader_port_name: String, binary: &mut File) -> Result<()> {
-    let mut message: Vec<u8> = vec![0; 64];
+    let mut message: Vec<u8> = vec![0; 12];
 
     message[0..4].copy_from_slice(&MAGIC_NUMBER);
 
-    let size: u64 = binary.metadata().unwrap().size();
-    message[4..12].copy_from_slice(&size.to_le_bytes());
+    let size: u32 = binary.metadata().unwrap().size() as u32;
+    message[4..8].copy_from_slice(&size.to_le_bytes());
 
     binary
         .read_to_end(&mut message)
         .map_err(|err| Error::BinaryError(err.to_string()))?;
 
-    let crc = calculate_crc(&message[64..]);
+    let crc = calculate_crc(&message[12..]);
     dbg!(&crc);
-    message[12..16].copy_from_slice(&crc.to_le_bytes());
+    message[8..12].copy_from_slice(&crc.to_le_bytes());
 
     let mut cdc_port = serialport::new(&bootloader_port_name, 115_200)
         .open()
