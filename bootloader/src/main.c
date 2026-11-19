@@ -23,6 +23,7 @@
 /* USER CODE BEGIN Includes */
 
 #include "flash_layout.h"
+#include "flasher.h"
 #include "tusb.h"
 #include <stdio.h>
 /* USER CODE END Includes */
@@ -30,54 +31,71 @@
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
 
+#define HEADER_LEN 12
 typedef enum
 {
   Idle,
-  FlashToUpdateBuffer,
-  FlashToAppBuffer,
-} FlasherMode;
+  Receive,
+  Copy,
+  Restart,
+} BootloaderState;
+
+typedef enum
+{
+  E_NothingHappened,
+  E_Failure,
+  E_ReceivingStarted,
+  E_ReceivingFinished,
+  E_CopyingFinished,
+} Event;
 
 typedef struct
 {
-  uint8_t *message_buf;
-  uint32_t in_buffer;
-  uint32_t flash_offset;
+  bool read_header;
+  uint32_t expected_crc_val;
+  uint8_t header[HEADER_LEN];
+  uint32_t all_read;
+  uint32_t binary_size;
+} CDC_State_T;
 
-  bool flash_ready;
-  bool should_flash;
-  bool should_finish;
-
-  FlasherMode mode;
-
-} Flasher_t;
-
+typedef struct
+{
+  uint32_t app_size_in_update_buf_B;
+  uint32_t all_read;
+} Copy_State_T;
 /* USER CODE END PTD */
 
-/* Private define ------------------------------------------------------------*/
+/* Private define
+   ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define MESSAGE_BUFSIZE 4096
 /* USER CODE END PD */
 
-/* Private macro -------------------------------------------------------------*/
+/* Private macro
+   -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
 /* USER CODE END PM */
 
-/* Private variables ---------------------------------------------------------*/
+/* Private variables
+   ---------------------------------------------------------*/
 RTC_HandleTypeDef hrtc;
 PCD_HandleTypeDef hpcd_USB_OTG_FS;
 CRC_HandleTypeDef hcrc;
 
 /* USER CODE BEGIN PV */
 
-bool should_copy_to_main_app;
-bool should_restart_after_flash;
+const uint8_t MAGIC_NUM[4] = {0x25, 0x07, 0xa0, 0x7a};
+uint32_t restart_dispatched_ts;
 
-uint32_t app_size_in_update_buf_B;
+BootloaderState State = Idle;
 
-uint32_t expected_crc_val;
+static const CDC_State_T CDC_STATE_INIT = {0};
+static const Copy_State_T COPY_STATE_INIT = {0};
+
+static CDC_State_T CdcState = CDC_STATE_INIT;
+static Copy_State_T CopyState = COPY_STATE_INIT;
 
 static uint8_t message_buf[MESSAGE_BUFSIZE];
-Flasher_t Flasher = {.message_buf = message_buf};
+Flasher_t Flasher = {.message_buf = message_buf, .hcrc = &hcrc};
 
 /* USER CODE END PV */
 
@@ -90,90 +108,67 @@ static void CRC_Init(void);
 /* USER CODE BEGIN PFP */
 bool should_flash_firmware(void);
 void set_should_not_flash_firmware(void);
-uint32_t write_buf_to_flash(uint32_t flash_address, uint32_t *buf,
-                            uint32_t bufsize);
-void write_flash(Flasher_t *flasher);
-void finish_flash(Flasher_t *flasher);
-uint32_t flasher_get_sector(Flasher_t *f);
-
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
-bool compare_crc_val() { return hcrc.Instance->DR == expected_crc_val; }
-
-void flash_task()
+void reset_program_state()
 {
-  if (!Flasher.flash_ready)
-    return;
-
-  if (Flasher.should_flash)
-  {
-    printf("Writing to flash buffer\r\n");
-    write_flash(&Flasher);
-    printf("Written to flash buffer\r\n");
-    Flasher.should_flash = false;
-    Flasher.in_buffer = 0;
-  }
-  else if (Flasher.should_finish)
-  {
-    finish_flash(&Flasher);
-  }
-  else if (Flasher.in_buffer >= MESSAGE_BUFSIZE)
-  {
-    Flasher.should_flash = true;
-  }
+  CdcState = CDC_STATE_INIT;
+  CopyState = COPY_STATE_INIT;
 }
-void finish_flash(Flasher_t *flasher)
+bool transition_state(BootloaderState *state, BootloaderState next_state)
 {
-  if (Flasher.in_buffer != 0)
+  switch (next_state)
   {
-    Flasher.should_flash = true;
-    printf("Finishing flash\r\n");
-    return;
+  case Idle:
+    if (*state == Restart)
+      return false;
+    if (*state == Receive || *state == Copy)
+    {
+      printf("CRC Value mismatch, flash aborted, try again.\r\n");
+    }
+    reset_program_state();
+    break;
+
+  case Receive:
+    if (*state == Idle)
+    {
+      if (!setup_flasher(&Flasher, UpdateBufSector))
+      {
+        Error_Handler();
+      }
+      CdcState.read_header = true;
+      printf("Starting to receive the firmware\r\n");
+    }
+    else
+      return false;
+    break;
+
+  case Copy:
+    if (*state == Receive)
+    {
+      if (!setup_flasher(&Flasher, AppSector))
+      {
+        Error_Handler();
+      }
+      CopyState.app_size_in_update_buf_B = CdcState.binary_size;
+      printf("Received correct firmware, copying to main memory\r\n");
+    }
+    else
+      return false;
+    break;
+
+  case Restart:
+    if (*state != Copy)
+      return false;
+    printf("Copying finished, ready to restart\r\n");
+    restart_dispatched_ts = HAL_GetTick();
+    break;
   }
-  Flasher.in_buffer = 0;
-  Flasher.should_flash = false;
-  Flasher.should_finish = false;
-  Flasher.mode = Idle;
-  Flasher.flash_offset = 0;
-  HAL_FLASH_Lock();
-
-  if (!compare_crc_val())
-  {
-    printf("CRC Value mismatch, flash aborted, try again.\n\r");
-    should_copy_to_main_app = false;
-    should_restart_after_flash = true;
-  }
-
-  printf("Finished flash\r\n");
-}
-
-void write_flash(Flasher_t *flasher)
-{
-  uint32_t cast_buffer[MESSAGE_BUFSIZE / 4 + 1];
-  uint32_t words_to_write = (flasher->in_buffer + 3) / 4;
-  uint32_t TARGET_FLASH_BUFFER = flasher_get_sector(flasher);
-
-  memcpy(cast_buffer, flasher->message_buf, flasher->in_buffer);
-
-  HAL_CRC_Accumulate(&hcrc, cast_buffer, words_to_write);
-
-  uint32_t words_written = write_buf_to_flash(
-      TARGET_FLASH_BUFFER + flasher->flash_offset, cast_buffer, words_to_write);
-
-  if (words_written != words_to_write)
-  {
-    Error_Handler();
-    return;
-  }
-  flasher->flash_offset += words_written * 4;
-}
-
-void *flasher_get_message_buf_pos(Flasher_t *f)
-{
-  return (f->message_buf + f->in_buffer);
+  *state = next_state;
+  return true;
 }
 
 typedef void (*func_pointer)(void);
@@ -200,125 +195,64 @@ void jump_to_app(void)
   app_entry();
 }
 
-// returns how much written
-uint32_t write_buf_to_flash(uint32_t flash_address, uint32_t *buf,
-                            uint32_t bufsize)
+Event cdc_task(CDC_State_T *cdc_state)
 {
-  uint32_t number_of_words = bufsize;
-  uint32_t written_words = 0;
+  const uint8_t PACKET_SIZE = 64;
+  // HEADER
+  const uint8_t MAGIC_LEN = 4;
+  const uint8_t SIZE_OFFSET = 4;
+  const uint8_t CRC_OFFSET = 8;
 
-  while (written_words < number_of_words)
+  if (!tud_cdc_available())
+    return E_NothingHappened;
+
+  if (!cdc_state->read_header)
   {
-    if (HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD, flash_address,
-                          buf[written_words]) == HAL_OK)
+    uint32_t read = tud_cdc_read(cdc_state->header, HEADER_LEN);
+
+    if (read != HEADER_LEN)
+      return E_NothingHappened;
+
+    if (memcmp(MAGIC_NUM, cdc_state->header, MAGIC_LEN))
+      return E_NothingHappened;
+
+    for (int i = 0; i < 4; i++)
     {
-      written_words++;
-      flash_address += sizeof(*buf);
+      cdc_state->binary_size |= (cdc_state->header[SIZE_OFFSET + i] << i * 8);
     }
-    else
+    for (int i = 0; i < 4; i++)
     {
-      /* Error occurred while writing data in Flash memory*/
-      HAL_FLASH_Lock();
-      return HAL_FLASH_GetError();
+      cdc_state->expected_crc_val |=
+          (cdc_state->header[CRC_OFFSET + i] << i * 8);
     }
+    printf("Read magic number, binary size: %d\r\n", cdc_state->binary_size);
+    return E_ReceivingStarted;
   }
-  return written_words;
-}
-
-uint32_t setup_flasher(Flasher_t *f, FlasherMode mode)
-{
-  static FLASH_EraseInitTypeDef EraseInitStruct;
-  uint32_t SECTORError;
-  uint8_t sector;
-  uint8_t nb_sectors;
-
-  switch (mode)
+  else
   {
-  case Idle:
-    return 101;
-    break;
-  case FlashToAppBuffer:
-    sector = FLASH_SECTOR_4;
-    nb_sectors = 3;
-    break;
-  case FlashToUpdateBuffer:
-    sector = FLASH_SECTOR_7;
-    nb_sectors = 1;
-    break;
-  }
+    uint8_t temp_buf[CFG_TUD_CDC_RX_BUFSIZE];
+    uint32_t left_to_read = cdc_state->binary_size - cdc_state->all_read;
 
-  /* Unlock the Flash to enable the flash control register access *************/
-  HAL_FLASH_Unlock();
+    uint8_t to_read = (left_to_read < PACKET_SIZE) && left_to_read != 0
+                          ? left_to_read
+                          : PACKET_SIZE;
 
-  /* Fill EraseInit structure*/
-  EraseInitStruct.TypeErase = FLASH_TYPEERASE_SECTORS;
-  EraseInitStruct.VoltageRange = FLASH_VOLTAGE_RANGE_3;
-  EraseInitStruct.Sector = sector;
-  EraseInitStruct.NbSectors = nb_sectors;
+    uint32_t read = tud_cdc_read(temp_buf, to_read);
+    if (!write_flash(&Flasher, temp_buf, read))
+      return E_Failure;
 
-  if (HAL_FLASHEx_Erase(&EraseInitStruct, &SECTORError) != HAL_OK)
-  {
-    HAL_FLASH_Lock();
-    return HAL_FLASH_GetError();
-  }
-  f->flash_ready = true;
-  f->mode = mode;
+    printf("in flash: %d\r\n", Flasher.in_buffer);
+    cdc_state->all_read += read;
 
-  __HAL_CRC_DR_RESET(&hcrc);
-  return 0;
-}
-
-void cdc_task()
-{
-  static bool magic_number_read = false;
-  static uint32_t all_read = 0;
-  static uint32_t binary_size = 0;
-
-  if (!tud_cdc_available() || Flasher.should_flash ||
-      Flasher.mode == FlashToAppBuffer)
-    return;
-
-  uint8_t temp_buf[CFG_TUD_CDC_RX_BUFSIZE];
-  uint32_t read = tud_cdc_read(temp_buf, 64);
-  if (!magic_number_read)
-  {
-    if (temp_buf[0] == 0x25 && temp_buf[1] == 0x07 && temp_buf[2] == 0xa0 &&
-        temp_buf[3] == 0x7a)
+    if (cdc_state->all_read >= cdc_state->binary_size)
     {
-      magic_number_read = true;
-      for (int i = 0; i < 8; i++)
-      {
-        binary_size |= (temp_buf[4 + i] << i * 8);
-      }
-      for (int i = 0; i < 4; i++)
-      {
-        expected_crc_val |= (temp_buf[12 + i] << i * 8);
-      }
-
-      setup_flasher(&Flasher, FlashToUpdateBuffer);
-      printf("Read magic number, binary size: %d\r\n", binary_size);
-      return;
+      printf("Read %lld bytes, finishing\r\n",
+             cdc_state->all_read + HEADER_LEN); // skipped one single window of
+                                                // headers hence the addition
+      return E_ReceivingFinished;
     }
-    else
-      return;
   }
-
-  memcpy(flasher_get_message_buf_pos(&Flasher), temp_buf, read);
-  Flasher.in_buffer += read;
-
-  printf("in flash: %d\r\n", Flasher.in_buffer);
-  all_read += read;
-
-  if (all_read >= binary_size)
-  {
-    printf("Read %d bytes, finishing\r\n",
-           all_read +
-               64); // skipped one single window of headers hence the addition
-    Flasher.should_finish = true;
-    app_size_in_update_buf_B = all_read;
-    magic_number_read = false;
-    should_copy_to_main_app = true;
-  }
+  return E_NothingHappened;
 }
 
 bool delay_non_blocking_ms(uint32_t interval, uint32_t *start_ms)
@@ -340,57 +274,63 @@ void blink_task()
   }
 }
 
-void deploy_app_task()
+Event copy_app_task(Copy_State_T *copy_state)
 {
-  if (!should_copy_to_main_app || Flasher.mode == FlashToUpdateBuffer ||
-      Flasher.should_flash)
-    return;
+  uint32_t left_to_read =
+      copy_state->app_size_in_update_buf_B - copy_state->all_read;
+  uint32_t to_read =
+      left_to_read > MESSAGE_BUFSIZE ? MESSAGE_BUFSIZE : left_to_read;
 
-  if (Flasher.mode == Idle)
+  if (!write_flash(&Flasher,
+                   (uint8_t *)(FLASH_UPDATE_BUF + copy_state->all_read),
+                   to_read))
+    return E_Failure;
+
+  copy_state->all_read += to_read;
+
+  if (copy_state->all_read == copy_state->app_size_in_update_buf_B)
   {
-    setup_flasher(&Flasher, FlashToAppBuffer);
+    copy_state->all_read = 0;
+    return E_CopyingFinished;
   }
-  static uint32_t all_read = 0;
-  uint32_t to_read = (app_size_in_update_buf_B - all_read) > MESSAGE_BUFSIZE
-                         ? MESSAGE_BUFSIZE
-                         : app_size_in_update_buf_B - all_read;
-  memcpy(Flasher.message_buf, (void *)FLASH_UPDATE_BUF + Flasher.flash_offset,
-         to_read);
-
-  Flasher.in_buffer = to_read;
-  all_read += to_read;
-  printf("read from updatebuf: %d\r\n", all_read);
-
-  if (all_read >= app_size_in_update_buf_B)
-  {
-    Flasher.should_finish = true;
-    should_copy_to_main_app = false;
-    should_restart_after_flash = true;
-  }
+  return E_NothingHappened;
 }
-void restart_after_flash_task()
+void restart()
 {
-  if (should_restart_after_flash && Flasher.mode == Idle)
+  if (delay_non_blocking_ms(2000, &restart_dispatched_ts))
   {
     set_should_not_flash_firmware();
     HAL_NVIC_SystemReset();
   }
 }
-uint32_t flasher_get_sector(Flasher_t *f)
-{
-  switch (f->mode)
-  {
-  case FlashToAppBuffer:
-    return APP_SECTOR_START;
-  case FlashToUpdateBuffer:
-    return FLASH_UPDATE_BUF;
-  case Idle:
-    return 0;
-  }
-}
 void set_should_not_flash_firmware(void)
 {
   HAL_RTCEx_BKUPWrite(&hrtc, RTC_BKP_DR0, 0);
+}
+
+void state_step(Event e)
+{
+  switch (e)
+  {
+  case E_ReceivingStarted:
+    transition_state(&State, Receive);
+    break;
+  case E_ReceivingFinished:
+    finish_flash(&Flasher, CdcState.expected_crc_val)
+        ? transition_state(&State, Copy)
+        : transition_state(&State, Idle);
+    break;
+  case E_CopyingFinished:
+    finish_flash(&Flasher, CdcState.expected_crc_val)
+        ? transition_state(&State, Restart)
+        : transition_state(&State, Idle);
+    break;
+  case E_Failure:
+    Error_Handler();
+    break;
+  default:
+    return;
+  }
 }
 /* USER CODE END 0 */
 
@@ -405,32 +345,21 @@ int main(void)
 
   /* USER CODE END 1 */
 
-  /* MCU Configuration--------------------------------------------------------*/
+  /* MCU
+   * Configuration--------------------------------------------------------*/
 
-  /* Reset of all peripherals, Initializes the Flash interface and the Systick.
+  /* Reset of all peripherals, Initializes the Flash interface and the
+   * Systick.
    */
   HAL_Init();
-
-  /* USER CODE BEGIN Init */
-
-  /* USER CODE END Init */
-
   /* Configure the system clock */
   SystemClock_Config();
-
-  /* USER CODE BEGIN SysInit */
-
-  /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_USB_OTG_FS_PCD_Init();
   MX_RTC_Init();
   CRC_Init();
-  /* USER CODE BEGIN 2 */
-
-  /* USER CODE END 2 */
-
   if (!should_flash_firmware())
   {
     jump_to_app();
@@ -442,18 +371,31 @@ int main(void)
   tusb_init(0, &dev_init);
   while (1)
   {
-    /* USER CODE END WHILE */
-
-    /* USER CODE BEGIN 3 */
+    Event task_event = E_NothingHappened;
     tud_task();
-    cdc_task();
-    flash_task();
     blink_task();
-    deploy_app_task();
 
-    restart_after_flash_task();
+    switch (State)
+    {
+    case Idle:
+      task_event = cdc_task(&CdcState);
+      break;
+
+    case Receive:
+      task_event = cdc_task(&CdcState);
+      break;
+
+    case Copy:
+      task_event = copy_app_task(&CopyState);
+      break;
+
+    case Restart:
+      restart();
+      break;
+    }
+
+    state_step(task_event);
   }
-  /* USER CODE END 3 */
 }
 
 /**
@@ -633,7 +575,8 @@ bool should_flash_firmware(void)
 void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
-  /* User can add his own implementation to report the HAL error return state */
+  /* User can add his own implementation to report the HAL error return state
+   */
   __disable_irq();
   while (1)
   {
@@ -654,8 +597,8 @@ void assert_failed(uint8_t *file, uint32_t line)
 {
   /* USER CODE BEGIN 6 */
   /* User can add his own implementation to report the file name and line
-     number, ex: printf("Wrong parameters value: file %s on line %d\r\n", file,
-     line) */
+     number, ex: printf("Wrong parameters value: file %s on line %d\r\n",
+     file, line) */
   /* USER CODE END 6 */
 }
 

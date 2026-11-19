@@ -31,7 +31,7 @@ pub(crate) fn calculate_crc(bytes: &[u8]) -> u32 {
         crc = calculate_crc_for_word(word, crc);
     }
     if rest.len() > 0 {
-        let mut last = [0u8; 4];
+        let mut last = [0xffu8; 4];
         last[..rest.len()].copy_from_slice(rest);
         crc = calculate_crc_for_word(&last, crc);
     }
