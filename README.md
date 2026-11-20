@@ -35,4 +35,4 @@ Repo consits of:
 
 ##### Disclaimer
 No AI code generation was used for this project to enchance the learning process.
-*It was hovewer, used for things like research and reading the datasheets to speed things up.*
+*It was however, used for things like research and reading the datasheets to speed things up.*
