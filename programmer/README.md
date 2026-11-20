@@ -5,9 +5,9 @@ A simple tool for flashing and programming macros.
 ## Programming macros
 
 **Before**
-- fill the config.toml
+- fill in config.toml
 - do not exceed 16 chars per macro
-- fill as much layers as you specify
+- fill as many layers as you specify
 
 **Then**
 `cargo run macro`
@@ -22,4 +22,4 @@ A simple tool for flashing and programming macros.
 `cargo run flash`
 
 The tool does not provide any feedback after transmitting the full firmware.
-You can inspect the cdc channel while flashing to see what is happening on the device.
+You can inspect the CDC channel while flashing to see what is happening on the device.
