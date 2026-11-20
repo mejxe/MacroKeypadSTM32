@@ -131,7 +131,7 @@ void buttons_task(MacroKeyboard *MK)
 }
 void button_time_hold_task()
 {
-  const static uint8_t HOLD_TIME_TO_REGISTER = 20;
+  const static uint8_t HOLD_TIME_TO_REGISTER = 100;
   for (int i = 0; i < 2; i++)
   {
     if (buttons[i]->internal_button->held &&

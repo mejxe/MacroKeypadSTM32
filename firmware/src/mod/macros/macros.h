@@ -80,8 +80,8 @@ void cycle_profiles(MacroKeyboard *MK_Struct);
 
 void print_macro_array(MacroKeyboard *MK_Struct);
 int32_t print_macro(Macro macro, char *buf, uint32_t bufsize);
-void default_setup_macros(MacroKeyboard *MK_Struct);
 
+void default_setup_macros(MacroKeyboard *MK_Struct);
 bool mq_is_empty(MacroQueue *mq);
 Macro *mq_dequeue(MacroQueue *mq);
 void print_mq(MacroKeyboard *MK);
